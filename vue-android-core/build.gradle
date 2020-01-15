@@ -1,0 +1,51 @@
+
+buildscript {
+    ext.kotlin_version = '1.3.61'
+
+    repositories {
+        jcenter()
+        google()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 1
+        targetSdkVersion 28
+        versionCode 1
+        versionName "0.0.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    google()
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+}
+
