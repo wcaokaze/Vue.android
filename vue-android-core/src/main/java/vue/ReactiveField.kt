@@ -11,6 +11,9 @@ interface ReactiveField<out T> {
 
    @UiThread
    fun addObserver(observer: (T) -> Unit)
+
+   @UiThread
+   fun removeObserver(observer: (T) -> Unit)
 }
 
 val <T> ReactiveField<T>.value: T

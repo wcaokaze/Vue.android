@@ -26,6 +26,37 @@ class State<T>(initialValue: T) : ReactiveField<T> {
       observers[observerCount++] = observer
    }
 
+   override fun removeObserver(observer: (T) -> Unit) {
+      val observers = observers
+
+      when (observerCount) {
+         0 -> return
+
+         1 -> {
+            if (observers[0] === observer) {
+               observers[0] = null
+               observerCount = 0
+            }
+
+            return
+         }
+
+         else -> {
+            var i = 0
+
+            while (true) {
+               if (i >= observerCount) { return }
+               if (observers[i] === observer) { break }
+               i++
+            }
+
+            System.arraycopy(observers, i + 1, observers, i, observerCount - i - 1)
+            observers[observerCount - 1] = null
+            observerCount--
+         }
+      }
+   }
+
    private fun notifyObservers(value: T) {
       val observers = observers
       val observerCount = observerCount
