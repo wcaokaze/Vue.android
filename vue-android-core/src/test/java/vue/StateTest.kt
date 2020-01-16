@@ -1,6 +1,6 @@
 package vue
 
-import org.junit.*
+import kotlin.test.*
 import org.junit.runner.*
 import org.junit.runners.*
 
@@ -23,5 +23,10 @@ class StateTest {
       state.addObserver { i = it }
       state.value = 1
       assert(i == 1)
+   }
+
+   @Test fun observerShouldNotCalled_onAddingObserver() {
+      val state = State(0)
+      state.addObserver { fail("observer should not called on added") }
    }
 }
