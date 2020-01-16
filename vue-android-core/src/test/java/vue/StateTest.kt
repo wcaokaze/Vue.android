@@ -7,10 +7,13 @@ import org.junit.runners.*
 @RunWith(JUnit4::class)
 class StateTest {
    @Test fun gettingInitialValue() {
-      val component = object : VueComponent {
-         val state = State(0)
-      }
+      val state = State(0)
+      assert(state.value == 0)
+   }
 
-      assert(component.state.value == 0)
+   @Test fun settingValue() {
+      val state = State(0)
+      state.value = 1
+      assert(state.value == 1)
    }
 }

@@ -1,5 +1,8 @@
 package vue
 
-class State<out T>(initialValue: T) : ReactiveField<T> {
-   override val `$vueInternal$value`: T = initialValue
+class State<T>(initialValue: T) : ReactiveField<T> {
+   override val `$vueInternal$value`: T
+      get() = value
+
+   var value: T = initialValue
 }
