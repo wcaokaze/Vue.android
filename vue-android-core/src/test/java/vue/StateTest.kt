@@ -29,4 +29,13 @@ class StateTest {
       val state = State(0)
       state.addObserver { fail("observer should not called on added") }
    }
+
+   @Test fun observerCount_increased() {
+      val state = State(0)
+
+      repeat (4) { count ->
+         assert(state.observerCount == count)
+         state.addObserver {}
+      }
+   }
 }

@@ -4,7 +4,9 @@ import androidx.annotation.*
 
 class State<T>(initialValue: T) : ReactiveField<T> {
    private var observers: Array<((T) -> Unit)?> = arrayOfNulls(2)
-   private var observerCount = 0
+
+   override var observerCount = 0
+      private set
 
    override val `$vueInternal$value`: T
       get() = value
