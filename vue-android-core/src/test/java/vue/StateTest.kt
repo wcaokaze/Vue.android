@@ -16,4 +16,12 @@ class StateTest {
       state.value = 1
       assert(state.value == 1)
    }
+
+   @Test fun observer() {
+      val state = State(0)
+      var i = -1
+      state.addObserver { i = it }
+      state.value = 1
+      assert(i == 1)
+   }
 }
