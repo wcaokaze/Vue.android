@@ -20,7 +20,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 1
+        minSdkVersion 9
         targetSdkVersion 28
         versionCode 1
         versionName "0.0.0"
@@ -47,6 +47,7 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+    compileOnly "androidx.annotation:annotation:1.1.0"
 
     testImplementation 'androidx.test:runner:1.2.0'
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"

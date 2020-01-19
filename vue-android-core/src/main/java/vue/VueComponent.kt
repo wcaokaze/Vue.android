@@ -1,0 +1,3 @@
+package vue
+
+interface VueComponent
