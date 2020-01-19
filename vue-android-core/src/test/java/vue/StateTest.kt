@@ -35,7 +35,7 @@ class StateTest {
 
       repeat (4) { count ->
          assert(state.observerCount == count)
-         state.addObserver {}
+         state.addObserver(Observer {})
       }
    }
 
@@ -131,7 +131,7 @@ class StateTest {
    @Test fun observerCount_decreased_fifo() {
       val state = State(0)
 
-      val observers = (0..3).map { fun (_: Int) {} }
+      val observers = (0..3).map { Observer<Int> {} }
 
       for (o in observers) {
          state.addObserver(o)
@@ -149,7 +149,7 @@ class StateTest {
    @Test fun observerCount_decreased_lifo() {
       val state = State(0)
 
-      val observers = (0..3).map { fun (_: Int) {} }
+      val observers = (0..3).map { Observer<Int> {} }
 
       for (o in observers) {
          state.addObserver(o)
@@ -167,7 +167,7 @@ class StateTest {
    @Test fun observerCount_decreased_random() {
       val state = State(0)
 
-      val observers = (0..3).map { fun (_: Int) {} }
+      val observers = (0..3).map { Observer<Int> {} }
 
       for (o in observers) {
          state.addObserver(o)
@@ -182,5 +182,29 @@ class StateTest {
                state.removeObserver(o)
                count--
             }
+   }
+
+   @Test fun addObserver_notDuplicated() {
+      val state = State(0)
+      val observer: (Int) -> Unit = {}
+
+      state.addObserver(observer)
+      state.addObserver(observer)
+
+      assert(state.observerCount == 1)
+   }
+
+   /**
+    * To waste kotlin optimizer.
+    *
+    * In Kotlin, lambda expressions that don't capture any values
+    * (i.e. non-closure lambdas) are not instantiated twice.
+    *
+    * This is a wrapper to create 2 or more instances for the observers.
+    */
+   private class Observer<T>(private val o: (T) -> Unit) : (T) -> Unit {
+      override fun invoke(p1: T) {
+         o(p1)
+      }
    }
 }

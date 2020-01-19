@@ -19,6 +19,8 @@ class State<T>(initialValue: T) : ReactiveField<T> {
       }
 
    override fun addObserver(observer: (T) -> Unit) {
+      if (containsObserver(observer)) { return }
+
       if (observerCount >= observers.size) {
          observers = observers.copyOf(newSize = observerCount * 2)
       }
@@ -64,5 +66,13 @@ class State<T>(initialValue: T) : ReactiveField<T> {
       for (i in 0 until observerCount) {
          observers[i]?.invoke(value)
       }
+   }
+
+   private fun containsObserver(observer: (T) -> Unit): Boolean {
+      for (o in observers) {
+         if (o === observer) { return true }
+      }
+
+      return false
    }
 }
