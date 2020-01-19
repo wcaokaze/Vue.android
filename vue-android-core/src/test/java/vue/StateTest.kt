@@ -194,6 +194,14 @@ class StateTest {
       assert(state.observerCount == 1)
    }
 
+   @Test fun removeObserver_nopForNonAddedObserver() {
+      val state = State(0)
+      val observer: (Int) -> Unit = {}
+
+      state.removeObserver(observer)
+      assert(state.observerCount == 0)
+   }
+
    /**
     * To waste kotlin optimizer.
     *

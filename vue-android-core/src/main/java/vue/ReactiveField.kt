@@ -20,6 +20,9 @@ interface ReactiveField<out T> {
 
    /**
     * remove an observer which was added via [addObserver].
+    *
+    * If the specified observer is not added to this ReactiveField,
+    * this function do nothing.
     */
    @UiThread
    fun removeObserver(observer: (T) -> Unit)
