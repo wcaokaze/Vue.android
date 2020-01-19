@@ -8,6 +8,7 @@ class State<T>(initialValue: T) : ReactiveField<T> {
    override var observerCount = 0
       private set
 
+   @Suppress("OverridingDeprecatedMember")
    override val `$vueInternal$value`: T
       get() = value
 
