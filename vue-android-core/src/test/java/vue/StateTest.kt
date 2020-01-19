@@ -127,4 +127,60 @@ class StateTest {
       assert(i2 == 1)
       assert(i3 == 2)
    }
+
+   @Test fun observerCount_decreased_fifo() {
+      val state = State(0)
+
+      val observers = (0..3).map { fun (_: Int) {} }
+
+      for (o in observers) {
+         state.addObserver(o)
+      }
+
+      var count = 4
+
+      for (o in observers) {
+         assert(state.observerCount == count)
+         state.removeObserver(o)
+         count--
+      }
+   }
+
+   @Test fun observerCount_decreased_lifo() {
+      val state = State(0)
+
+      val observers = (0..3).map { fun (_: Int) {} }
+
+      for (o in observers) {
+         state.addObserver(o)
+      }
+
+      var count = 4
+
+      for (o in observers.reversed()) {
+         assert(state.observerCount == count)
+         state.removeObserver(o)
+         count--
+      }
+   }
+
+   @Test fun observerCount_decreased_random() {
+      val state = State(0)
+
+      val observers = (0..3).map { fun (_: Int) {} }
+
+      for (o in observers) {
+         state.addObserver(o)
+      }
+
+      var count = 4
+
+      listOf(2, 3, 1)
+            .map { observers[it] }
+            .forEach { o ->
+               assert(state.observerCount == count)
+               state.removeObserver(o)
+               count--
+            }
+   }
 }
