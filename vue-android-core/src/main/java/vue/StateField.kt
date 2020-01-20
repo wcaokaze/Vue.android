@@ -2,7 +2,7 @@ package vue
 
 import androidx.annotation.*
 
-class State<T>(initialValue: T) : ReactiveField<T> {
+class StateField<T>(initialValue: T) : ReactiveField<T> {
    private var observers: Array<((T) -> Unit)?> = arrayOfNulls(2)
 
    override var observerCount = 0

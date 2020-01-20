@@ -7,18 +7,18 @@ import org.junit.runners.*
 @RunWith(JUnit4::class)
 class StateTest {
    @Test fun gettingInitialValue() {
-      val state = State(0)
+      val state = StateField(0)
       assert(state.value == 0)
    }
 
    @Test fun settingValue() {
-      val state = State(0)
+      val state = StateField(0)
       state.value = 1
       assert(state.value == 1)
    }
 
    @Test fun observer() {
-      val state = State(0)
+      val state = StateField(0)
       var i = -1
       state.addObserver { i = it }
       state.value = 1
@@ -26,12 +26,12 @@ class StateTest {
    }
 
    @Test fun observerShouldNotCalled_onAddingObserver() {
-      val state = State(0)
+      val state = StateField(0)
       state.addObserver { fail("observer should not called on added") }
    }
 
    @Test fun observerCount_increased() {
-      val state = State(0)
+      val state = StateField(0)
 
       repeat (4) { count ->
          assert(state.observerCount == count)
@@ -40,7 +40,7 @@ class StateTest {
    }
 
    @Test fun removeObserver() {
-      val state = State(0)
+      val state = StateField(0)
       var i = -1
       val observer: (Int) -> Unit = { i = it }
       state.addObserver(observer)
@@ -51,7 +51,7 @@ class StateTest {
    }
 
    @Test fun removeObserver_fifo() {
-      val state = State(0)
+      val state = StateField(0)
 
       var i1 = -1
       var i2 = -1
@@ -77,7 +77,7 @@ class StateTest {
    }
 
    @Test fun removeObserver_lifo() {
-      val state = State(0)
+      val state = StateField(0)
 
       var i1 = -1
       var i2 = -1
@@ -103,7 +103,7 @@ class StateTest {
    }
 
    @Test fun removeObserver_random() {
-      val state = State(0)
+      val state = StateField(0)
 
       var i1 = -1
       var i2 = -1
@@ -129,7 +129,7 @@ class StateTest {
    }
 
    @Test fun observerCount_decreased_fifo() {
-      val state = State(0)
+      val state = StateField(0)
 
       val observers = (0..3).map { Observer<Int> {} }
 
@@ -147,7 +147,7 @@ class StateTest {
    }
 
    @Test fun observerCount_decreased_lifo() {
-      val state = State(0)
+      val state = StateField(0)
 
       val observers = (0..3).map { Observer<Int> {} }
 
@@ -165,7 +165,7 @@ class StateTest {
    }
 
    @Test fun observerCount_decreased_random() {
-      val state = State(0)
+      val state = StateField(0)
 
       val observers = (0..3).map { Observer<Int> {} }
 
@@ -185,7 +185,7 @@ class StateTest {
    }
 
    @Test fun addObserver_notDuplicated() {
-      val state = State(0)
+      val state = StateField(0)
       val observer: (Int) -> Unit = {}
 
       state.addObserver(observer)
@@ -195,7 +195,7 @@ class StateTest {
    }
 
    @Test fun removeObserver_nopForNonAddedObserver() {
-      val state = State(0)
+      val state = StateField(0)
       val observer: (Int) -> Unit = {}
 
       state.removeObserver(observer)
