@@ -26,9 +26,11 @@ interface ReactiveField<out T> {
     *
     * Observers are not duplicated, meaning that this function will ignore
     * for the same observer twice.
+    *
+    * Observers are called on the Android UI Thread.
     */
    @UiThread
-   fun addObserver(observer: (T) -> Unit)
+   fun addObserver(@UiThread observer: (T) -> Unit)
 
    /**
     * remove an observer which was added via [addObserver].
@@ -41,8 +43,7 @@ interface ReactiveField<out T> {
 }
 
 /**
- * Returns the current value of this ReactiveField.
- * @return the current value of this ReactiveField
+ * The current value of this ReactiveField.
  */
 val <T> ReactiveField<T>.value: T
    get() {
@@ -52,5 +53,6 @@ val <T> ReactiveField<T>.value: T
 
 /**
  * A shorthand for [value].
+ * @return The current value of this ReactiveField
  */
 operator fun <T> ReactiveField<T>.invoke(): T = value
