@@ -34,7 +34,9 @@ class ReactivateeScope(private val getterField: GetterField<*>) {
    private val dependeeFields = HashSet<ReactiveField<*>>()
 
    private val observer = fun (_: Any?) {
-      getterField.reactivate()
+      val reactivatee = getterField.reactivatee
+      currentValueCache = reactivatee()
+      getterField.notifyObservers(currentValueCache)
    }
 
    private var isBoundToUpstream = false
@@ -134,12 +136,6 @@ class GetterField<out T>(@UiThread internal val reactivatee: Reactivatee<T>)
       return reactivateeScope.getValue() as T
    }
 
-   @UiThread
-   internal fun reactivate() {
-      val newValue = reactivateeScope.reactivatee()
-      notifyObservers(newValue)
-   }
-
    override fun addObserver(observer: (T) -> Unit) {
       if (containsObserver(observer)) { return }
 
@@ -188,7 +184,7 @@ class GetterField<out T>(@UiThread internal val reactivatee: Reactivatee<T>)
       }
    }
 
-   private fun notifyObservers(value: T) {
+   internal fun notifyObservers(value: @UnsafeVariance T) {
       val observers = observers
       val observerCount = observerCount
 

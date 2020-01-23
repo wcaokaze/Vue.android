@@ -9,21 +9,21 @@ class GetterTest {
    @Test fun getInitialValue_withNoObservers() {
       val state = StateField(1)
       val getter = GetterField { state() * 2 }
-      assert(getter.value == 2)
+      assertEquals(2, getter.value)
    }
 
    @Test fun getInitialValue_withNoObservers_viaAnotherGetter() {
       val state = StateField(1)
       val getter1 = GetterField { state() * 2 }
       val getter2 = GetterField { getter1() * 3 }
-      assert(getter2.value == 6)
+      assertEquals(6, getter2.value)
    }
 
    @Test fun getChangedValue_withNoObservers() {
       val state = StateField(1)
       val getter = GetterField { state() * 2 }
       state.value = 2
-      assert(getter.value == 4)
+      assertEquals(4, getter.value)
    }
 
    @Test fun getChangedValue_withNoObservers_viaAnotherGetter() {
@@ -31,7 +31,7 @@ class GetterTest {
       val getter1 = GetterField { state() * 2 }
       val getter2 = GetterField { getter1() * 3 }
       state.value = 2
-      assert(getter2.value == 12)
+      assertEquals(12, getter2.value)
    }
 
    @Test fun observer() {
@@ -41,7 +41,7 @@ class GetterTest {
       var i = -1
       getter.addObserver { i = it }
       state.value = 2
-      assert(i == 4)
+      assertEquals(4, i)
    }
 
    @Test fun observer_viaAnotherGetter() {
@@ -52,16 +52,16 @@ class GetterTest {
       var i = -1
       getter2.addObserver { i = it }
       state.value = 2
-      assert(i == 12)
+      assertEquals(12, i)
    }
 
    @Test fun connectToUpstream() {
       val state = StateField(1)
       val getter = GetterField { state() * 2 }
 
-      assert(state.observerCount == 0)
+      assertEquals(0, state.observerCount)
       getter.addObserver {}
-      assert(state.observerCount == 1)
+      assertEquals(1, state.observerCount)
    }
 
    @Test fun connectToUpstream_viaAnotherGetter() {
@@ -69,9 +69,9 @@ class GetterTest {
       val getter1 = GetterField { state() * 2 }
       val getter2 = GetterField { getter1() * 3 }
 
-      assert(state.observerCount == 0)
+      assertEquals(0, state.observerCount)
       getter2.addObserver {}
-      assert(state.observerCount == 1)
+      assertEquals(1, state.observerCount)
    }
 
    @Test fun disconnectFromUpstream() {
@@ -81,9 +81,9 @@ class GetterTest {
       val observer: (Int) -> Unit = {}
 
       getter.addObserver(observer)
-      assert(state.observerCount == 1)
+      assertEquals(1, state.observerCount)
       getter.removeObserver(observer)
-      assert(state.observerCount == 0)
+      assertEquals(0, state.observerCount)
    }
 
    @Test fun disconnectFromUpstream_viaAnotherGetter() {
@@ -94,8 +94,8 @@ class GetterTest {
       val observer: (Int) -> Unit = {}
 
       getter2.addObserver(observer)
-      assert(state.observerCount == 1)
+      assertEquals(1, state.observerCount)
       getter2.removeObserver(observer)
-      assert(state.observerCount == 0)
+      assertEquals(0, state.observerCount)
    }
 }
