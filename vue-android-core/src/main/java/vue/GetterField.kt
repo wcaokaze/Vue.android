@@ -75,7 +75,10 @@ class ReactivateeScope(private val getterField: GetterField<*>) {
       }
 
       dependeeFields += this
-      addObserver(observer)
+
+      if (isBoundToUpstream) {
+         addObserver(observer)
+      }
 
       @Suppress("DEPRECATION")
       return `$vueInternal$value`

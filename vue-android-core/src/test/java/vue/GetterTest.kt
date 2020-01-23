@@ -34,6 +34,13 @@ class GetterTest {
       assertEquals(12, getter2.value)
    }
 
+   @Test fun gettingValue_shouldNotBindToUpstream() {
+      val state = StateField(1)
+      val getter = GetterField { state() * 2 }
+      getter.value
+      assertEquals(0, state.observerCount)
+   }
+
    @Test fun observer() {
       val state = StateField(1)
       val getter = GetterField { state() * 2 }
