@@ -8,13 +8,13 @@ import org.junit.runners.*
 class StateTest {
    @Test fun gettingInitialValue() {
       val state = StateField(0)
-      assert(state.value == 0)
+      assertEquals(0, state.value)
    }
 
    @Test fun settingValue() {
       val state = StateField(0)
       state.value = 1
-      assert(state.value == 1)
+      assertEquals(1, state.value)
    }
 
    @Test fun observer() {
@@ -22,7 +22,7 @@ class StateTest {
       var i = -1
       state.addObserver { i = it }
       state.value = 1
-      assert(i == 1)
+      assertEquals(1, i)
    }
 
    @Test fun observerShouldNotCalled_onAddingObserver() {
@@ -34,7 +34,7 @@ class StateTest {
       val state = StateField(0)
 
       repeat (4) { count ->
-         assert(state.observerCount == count)
+         assertEquals(count, state.observerCount)
          state.addObserver(Observer {})
       }
    }
@@ -47,7 +47,7 @@ class StateTest {
       state.value = 1
       state.removeObserver(observer)
       state.value = 2
-      assert(i == 1)
+      assertEquals(1, i)
    }
 
    @Test fun removeObserver_fifo() {
@@ -71,9 +71,9 @@ class StateTest {
       state.value = 3
       state.removeObserver(observer3)
 
-      assert(i1 == 1)
-      assert(i2 == 2)
-      assert(i3 == 3)
+      assertEquals(1, i1)
+      assertEquals(2, i2)
+      assertEquals(3, i3)
    }
 
    @Test fun removeObserver_lifo() {
@@ -97,9 +97,9 @@ class StateTest {
       state.value = 3
       state.removeObserver(observer1)
 
-      assert(i1 == 3)
-      assert(i2 == 2)
-      assert(i3 == 1)
+      assertEquals(3, i1)
+      assertEquals(2, i2)
+      assertEquals(1, i3)
    }
 
    @Test fun removeObserver_random() {
@@ -123,9 +123,9 @@ class StateTest {
       state.value = 3
       state.removeObserver(observer1)
 
-      assert(i1 == 3)
-      assert(i2 == 1)
-      assert(i3 == 2)
+      assertEquals(3, i1)
+      assertEquals(1, i2)
+      assertEquals(2, i3)
    }
 
    @Test fun observerCount_decreased_fifo() {
@@ -140,7 +140,7 @@ class StateTest {
       var count = 4
 
       for (o in observers) {
-         assert(state.observerCount == count)
+         assertEquals(count, state.observerCount)
          state.removeObserver(o)
          count--
       }
@@ -158,7 +158,7 @@ class StateTest {
       var count = 4
 
       for (o in observers.reversed()) {
-         assert(state.observerCount == count)
+         assertEquals(count, state.observerCount)
          state.removeObserver(o)
          count--
       }
@@ -178,7 +178,7 @@ class StateTest {
       listOf(2, 3, 1)
             .map { observers[it] }
             .forEach { o ->
-               assert(state.observerCount == count)
+               assertEquals(count, state.observerCount)
                state.removeObserver(o)
                count--
             }
@@ -191,7 +191,7 @@ class StateTest {
       state.addObserver(observer)
       state.addObserver(observer)
 
-      assert(state.observerCount == 1)
+      assertEquals(1, state.observerCount)
    }
 
    @Test fun removeObserver_nopForNonAddedObserver() {
@@ -199,7 +199,7 @@ class StateTest {
       val observer: (Int) -> Unit = {}
 
       state.removeObserver(observer)
-      assert(state.observerCount == 0)
+      assertEquals(0, state.observerCount)
    }
 
    /**
