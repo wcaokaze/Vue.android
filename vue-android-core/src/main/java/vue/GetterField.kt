@@ -31,8 +31,34 @@ import androidx.annotation.*
 typealias Reactivatee<T> = ReactivateeScope.() -> T
 
 class ReactivateeScope(private val getterField: GetterField<*>) {
+   private val dependeeFields = HashSet<ReactiveField<*>>()
+
    private val observer = fun (_: Any?) {
       getterField.reactivate()
+   }
+
+   private var isBoundToUpstream = false
+
+   /**
+    * the value of GetterField doesn't not change while [isBoundToUpstream] == true.
+    * This prop stores a cache of the value.
+    */
+   private var currentValueCache: Any? = null
+
+   /**
+    * returns the cache of the current value if [isBoundToUpstream] == true.
+    * Or calls [GetterField.reactivatee] if [isBoundToUpstream] == false.
+    *
+    * The type of this prop is `Any?` since ReactivateeScope should not have any
+    * type parameters. But this value can casted to `GetterField.T` safely.
+    */
+   internal fun getValue(): Any? {
+      return if (isBoundToUpstream) {
+         currentValueCache
+      } else {
+         val reactivatee = getterField.reactivatee
+         reactivatee()
+      }
    }
 
    /**
@@ -41,6 +67,12 @@ class ReactivateeScope(private val getterField: GetterField<*>) {
     */
    @get:UiThread
    val <T> ReactiveField<T>.value: T get() {
+      if (this in dependeeFields) {
+         @Suppress("DEPRECATION")
+         return `$vueInternal$value`
+      }
+
+      dependeeFields += this
       addObserver(observer)
 
       @Suppress("DEPRECATION")
@@ -57,6 +89,33 @@ class ReactivateeScope(private val getterField: GetterField<*>) {
     */
    @UiThread
    operator fun <T> ReactiveField<T>.invoke(): T = value
+
+   @UiThread
+   internal fun bindToDependees() {
+      // make a clone since dependeeFields may be modified in addObserver
+      val dependeeFields = HashSet(dependeeFields)
+
+      for (d in dependeeFields) {
+         d.addObserver(observer)
+      }
+
+      isBoundToUpstream = true
+
+      val reactivetee = getterField.reactivatee
+      currentValueCache = reactivetee()
+   }
+
+   @UiThread
+   internal fun unbindFromDependees() {
+      isBoundToUpstream = false
+
+      // make a clone since dependeeFields may be modified in removeObserver
+      val dependeeFields = HashSet(dependeeFields)
+
+      for (d in dependeeFields) {
+         d.removeObserver(observer)
+      }
+   }
 }
 
 class GetterField<out T>(@UiThread internal val reactivatee: Reactivatee<T>)
@@ -70,8 +129,10 @@ class GetterField<out T>(@UiThread internal val reactivatee: Reactivatee<T>)
       private set
 
    @Suppress("OverridingDeprecatedMember")
-   override val `$vueInternal$value`: T
-      get() = reactivateeScope.reactivatee()
+   override val `$vueInternal$value`: T get() {
+      @Suppress("UNCHECKED_CAST")
+      return reactivateeScope.getValue() as T
+   }
 
    @UiThread
    internal fun reactivate() {
@@ -82,13 +143,17 @@ class GetterField<out T>(@UiThread internal val reactivatee: Reactivatee<T>)
    override fun addObserver(observer: (T) -> Unit) {
       if (containsObserver(observer)) { return }
 
-      reactivateeScope.reactivatee()
+      val shouldBind = observerCount == 0
 
       if (observerCount >= observers.size) {
          observers = observers.copyOf(newSize = observerCount * 2)
       }
 
       observers[observerCount++] = observer
+
+      if (shouldBind) {
+         reactivateeScope.bindToDependees()
+      }
    }
 
    override fun removeObserver(observer: (T) -> Unit) {
@@ -101,6 +166,7 @@ class GetterField<out T>(@UiThread internal val reactivatee: Reactivatee<T>)
             if (observers[0] === observer) {
                observers[0] = null
                observerCount = 0
+               reactivateeScope.unbindFromDependees()
             }
 
             return

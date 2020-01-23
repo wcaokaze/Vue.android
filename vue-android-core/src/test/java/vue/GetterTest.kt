@@ -28,4 +28,25 @@ class GetterTest {
       state.value = 2
       assert(i == 4)
    }
+
+   @Test fun connectToUpstream() {
+      val state = StateField(1)
+      val getter = GetterField { state() * 2 }
+
+      assert(state.observerCount == 0)
+      getter.addObserver {}
+      assert(state.observerCount == 1)
+   }
+
+   @Test fun disconnectFromUpstream() {
+      val state = StateField(1)
+      val getter = GetterField { state() * 2 }
+
+      val observer: (Int) -> Unit = {}
+
+      getter.addObserver(observer)
+      assert(state.observerCount == 1)
+      getter.removeObserver(observer)
+      assert(state.observerCount == 0)
+   }
 }
