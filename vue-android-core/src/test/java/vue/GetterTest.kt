@@ -77,6 +77,24 @@ class GetterTest {
       assertEquals(6, getter2.value)
    }
 
+   @Test fun getInitialValue_withObservers_shouldNotCallReactivatee() {
+      val state = StateField(1)
+
+      var shouldFail = false
+
+      val getter = GetterField {
+         if (shouldFail) {
+            fail()
+         }
+
+         state() * 2
+      }
+
+      getter.addObserver {}
+      shouldFail = true
+      getter()
+   }
+
    @Test fun getChangedValue_withObservers() {
       val state = StateField(1)
       val getter = GetterField { state() * 2 }
