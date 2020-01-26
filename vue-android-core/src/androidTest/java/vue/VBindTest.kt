@@ -43,6 +43,17 @@ class VBindTest {
       }
    }
 
+   @Test fun shouldNotBind_ifViewNotDisplayed() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = StateField(false)
+         val view = View(activity)
+         view.vBind.isVisible(state)
+         // activity.setContentView(view)
+
+         assertEquals(0, state.observerCount)
+      }
+   }
+
    @Test fun unbind_onViewRemoved() {
       activityScenarioRule.scenario.onActivity { activity ->
          val state = StateField(false)

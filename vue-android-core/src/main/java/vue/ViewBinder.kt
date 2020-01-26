@@ -17,10 +17,12 @@ inline fun <V : View, T> viewBinder(
 abstract class ViewBinder<V : View, T>(private val view: V)
       : VBinder<T>, (T) -> Unit
 {
+   private var isBinding = false
    private var boundReactiveField: ReactiveField<T>? = null
 
    private val onAttachStateChange = object : View.OnAttachStateChangeListener {
       override fun onViewAttachedToWindow(v: View?) {
+         bind()
       }
 
       override fun onViewDetachedFromWindow(v: View?) {
@@ -33,13 +35,29 @@ abstract class ViewBinder<V : View, T>(private val view: V)
    }
 
    override fun invoke(reactiveField: ReactiveField<T>) {
-      unbind()
-      boundReactiveField = reactiveField
-      reactiveField.addObserver(this)
-      invoke(reactiveField.value)
+      if (isBinding) {
+         unbind()
+         boundReactiveField = reactiveField
+         bind()
+      } else {
+         boundReactiveField = reactiveField
+      }
+   }
+
+   private fun bind() {
+      val boundReactiveField = boundReactiveField ?: return
+
+      if (isBinding) { return }
+      isBinding = true
+
+      boundReactiveField.addObserver(this)
+      invoke(boundReactiveField.value)
    }
 
    private fun unbind() {
+      if (!isBinding) { return }
+      isBinding = false
+
       boundReactiveField?.removeObserver(this)
    }
 }
