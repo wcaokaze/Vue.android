@@ -83,6 +83,25 @@ class VBindTest {
       assertEquals(0, state.observerCount)
    }
 
+   @Test fun vBind_returnsSameInstanceTwice() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val view = View(activity)
+         val firstVBind  = view.vBind
+         val secondVBind = view.vBind
+         assertSame(firstVBind, secondVBind)
+      }
+   }
+
+   @Test fun vBind_differenceInstanceForDifferenceView() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val view1 = View(activity)
+         val view2 = View(activity)
+         val vBind1 = view1.vBind
+         val vBind2 = view2.vBind
+         assertNotSame(vBind1, vBind2)
+      }
+   }
+
    @Test fun bind_unbindOldReactiveField() {
       activityScenarioRule.scenario.onActivity { activity ->
          val state1 = StateField(false)
