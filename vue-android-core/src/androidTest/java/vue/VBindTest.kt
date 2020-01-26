@@ -9,6 +9,8 @@ import kotlin.test.Test
 
 import android.app.*
 import android.view.*
+import android.widget.*
+import androidx.lifecycle.*
 
 class VBindTestActivity : Activity()
 
@@ -39,5 +41,34 @@ class VBindTest {
 
          assertEquals(View.INVISIBLE, view.visibility)
       }
+   }
+
+   @Test fun unbind_onViewRemoved() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = StateField(false)
+         val parentView = LinearLayout(activity)
+         val view = View(activity)
+         parentView.addView(view)
+         view.vBind.isVisible(state)
+         activity.setContentView(parentView)
+
+         assertEquals(1, state.observerCount)
+         parentView.removeView(view)
+         assertEquals(0, state.observerCount)
+      }
+   }
+
+   @Test fun unbind_onActivityFinish() {
+      val state = StateField(false)
+
+      activityScenarioRule.scenario.onActivity { activity ->
+         val view = View(activity)
+         view.vBind.isVisible(state)
+         activity.setContentView(view)
+      }
+
+      assertEquals(1, state.observerCount)
+      activityScenarioRule.scenario.moveToState(Lifecycle.State.DESTROYED)
+      assertEquals(0, state.observerCount)
    }
 }
