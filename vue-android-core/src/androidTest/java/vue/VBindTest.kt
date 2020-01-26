@@ -102,6 +102,15 @@ class VBindTest {
       }
    }
 
+   @Test fun isVisible_returnsSameInstanceTwice() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val view = View(activity)
+         val firstIsVisible  = view.vBind.isVisible
+         val secondIsVisible = view.vBind.isVisible
+         assertSame(firstIsVisible, secondIsVisible)
+      }
+   }
+
    @Test fun bind_unbindOldReactiveField() {
       activityScenarioRule.scenario.onActivity { activity ->
          val state1 = StateField(false)
