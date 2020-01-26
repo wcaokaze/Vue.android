@@ -82,4 +82,21 @@ class VBindTest {
       activityScenarioRule.scenario.moveToState(Lifecycle.State.DESTROYED)
       assertEquals(0, state.observerCount)
    }
+
+   @Test fun bind_unbindOldReactiveField() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state1 = StateField(false)
+         val state2 = StateField(false)
+
+         val view = View(activity)
+         view.vBind.isVisible(state1)
+         activity.setContentView(view)
+
+         assertEquals(1, state1.observerCount)
+         assertEquals(0, state2.observerCount)
+         view.vBind.isVisible(state2)
+         assertEquals(0, state1.observerCount)
+         assertEquals(1, state2.observerCount)
+      }
+   }
 }
