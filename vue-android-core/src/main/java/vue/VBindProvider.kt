@@ -12,31 +12,24 @@ class VBindProvider<out V : View>(val substance: V) {
          key: Any,
          crossinline binderAction: (view: V, value: T) -> Unit
    ): VBinder<T> {
-      var b = `$vueInternal$getVBinder`(key)
-
-      if (b != null) {
-         @Suppress("UNCHECKED_CAST")
-         return b as VBinder<T>
-      }
-
-      b = ViewBinder<V, T>(substance) {
-         binderAction(substance, it)
-      }
-
-      `$vueInternal$setVBinder`(key, b)
-      return b
+      return createVBinder(key) { value -> binderAction(substance, value) }
    }
 
-   fun `$vueInternal$getVBinder`(key: Any): VBinder<*>? {
+   @UiThread
+   fun <T> createVBinder(
+         key: Any,
+         binderAction: (value: T) -> Unit
+   ): VBinder<T> {
       for ((k, b) in binders) {
-         if (k == key) { return b }
+         if (k == key) {
+            @Suppress("UNCHECKED_CAST")
+            return b as VBinder<T>
+         }
       }
 
-      return null
-   }
-
-   fun `$vueInternal$setVBinder`(key: Any, vBinder: VBinder<*>) {
-      binders += key to vBinder
+      val b = ViewBinder(substance, binderAction)
+      binders += key to b
+      return b
    }
 }
 
