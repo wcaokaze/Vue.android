@@ -4,31 +4,33 @@ import android.view.*
 import androidx.annotation.*
 import com.wcaokaze.vue.android.*
 
+import kotlin.reflect.*
+
 class VBindProvider<out V : View>(val substance: V) {
    private var binders = emptyArray<Pair<Any, VBinder<*>>>()
 
    @UiThread
    inline fun <T> createVBinder(
-         key: Any,
+         prop: KCallable<VBinder<T>>,
          crossinline binderAction: (view: V, value: T) -> Unit
    ): VBinder<T> {
-      return createVBinder(key) { value -> binderAction(substance, value) }
+      return createVBinder(prop) { value -> binderAction(substance, value) }
    }
 
    @UiThread
    fun <T> createVBinder(
-         key: Any,
+         prop: KCallable<VBinder<T>>,
          binderAction: (value: T) -> Unit
    ): VBinder<T> {
-      for ((k, b) in binders) {
-         if (k == key) {
+      for ((p, b) in binders) {
+         if (p == prop) {
             @Suppress("UNCHECKED_CAST")
             return b as VBinder<T>
          }
       }
 
       val b = ViewBinder(substance, binderAction)
-      binders += key to b
+      binders += prop to b
       return b
    }
 }
