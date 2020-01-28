@@ -19,10 +19,8 @@ class VBindProvider<out V : View>(val substance: V) {
          return b as VBinder<T>
       }
 
-      b = object : ViewBinder<V, T>(substance) {
-         override fun invoke(value: T) {
-            binderAction(view, value)
-         }
+      b = ViewBinder<V, T>(substance) {
+         binderAction(substance, it)
       }
 
       `$vueInternal$setVBinder`(key, b)

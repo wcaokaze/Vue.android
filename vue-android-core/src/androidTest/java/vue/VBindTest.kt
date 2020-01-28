@@ -153,4 +153,29 @@ class VBindTest {
          assertEquals(0, state.observerCount)
       }
    }
+
+   @Test fun nonReactiveValue() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val view = View(activity)
+         view.visibility = View.VISIBLE
+         view.vBind.isVisible(false)
+         activity.setContentView(view)
+
+         assertEquals(View.INVISIBLE, view.visibility)
+      }
+   }
+
+   @Test fun nonReactiveValue_unbindOldReactiveField() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = StateField(false)
+
+         val view = View(activity)
+         view.vBind.isVisible(state)
+         activity.setContentView(view)
+
+         assertEquals(1, state.observerCount)
+         view.vBind.isVisible(false)
+         assertEquals(0, state.observerCount)
+      }
+   }
 }

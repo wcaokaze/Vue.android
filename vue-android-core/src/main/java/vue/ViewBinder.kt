@@ -6,9 +6,7 @@ import androidx.annotation.*
 /**
  * [VBinder] for [View]s
  */
-abstract class ViewBinder<V : View, T>(val view: V)
-      : VBinder<T>, (T) -> Unit
-{
+class ViewBinder<V : View, T>(view: V, private val binder: (T) -> Unit) : VBinder<T> {
    private var isBinding = false
    private var boundReactiveField: ReactiveField<T>? = null
 
@@ -26,7 +24,7 @@ abstract class ViewBinder<V : View, T>(val view: V)
       view.addOnAttachStateChangeListener(onAttachStateChange)
    }
 
-   final override fun invoke(reactiveField: ReactiveField<T>) {
+   override fun invoke(reactiveField: ReactiveField<T>) {
       if (isBinding) {
          unbind()
          boundReactiveField = reactiveField
@@ -36,9 +34,14 @@ abstract class ViewBinder<V : View, T>(val view: V)
       }
    }
 
-   final override fun invoke(reactivatee: Reactivatee<T>) {
+   override fun invoke(reactivatee: Reactivatee<T>) {
       val reactiveField = GetterField(reactivatee)
       invoke(reactiveField)
+   }
+
+   override fun invoke(nonReactiveValue: T) {
+      unbind()
+      binder(nonReactiveValue)
    }
 
    @UiThread
@@ -48,8 +51,8 @@ abstract class ViewBinder<V : View, T>(val view: V)
       if (isBinding) { return }
       isBinding = true
 
-      boundReactiveField.addObserver(this)
-      invoke(boundReactiveField.value)
+      boundReactiveField.addObserver(binder)
+      binder(boundReactiveField.value)
    }
 
    @UiThread
@@ -57,6 +60,6 @@ abstract class ViewBinder<V : View, T>(val view: V)
       if (!isBinding) { return }
       isBinding = false
 
-      boundReactiveField?.removeObserver(this)
+      boundReactiveField?.removeObserver(binder)
    }
 }
