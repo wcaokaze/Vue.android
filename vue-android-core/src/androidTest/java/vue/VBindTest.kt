@@ -127,4 +127,30 @@ class VBindTest {
          assertEquals(1, state2.observerCount)
       }
    }
+
+   @Test fun bind_withLambda() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = StateField(false)
+         val view = View(activity)
+         view.vBind.isVisible { state() }
+         activity.setContentView(view)
+
+         assertEquals(1, state.observerCount)
+      }
+   }
+
+   @Test fun unbind_withLambda() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = StateField(false)
+         val parentView = LinearLayout(activity)
+         val view = View(activity)
+         parentView.addView(view)
+         view.vBind.isVisible { state() }
+         activity.setContentView(parentView)
+
+         assertEquals(1, state.observerCount)
+         parentView.removeView(view)
+         assertEquals(0, state.observerCount)
+      }
+   }
 }

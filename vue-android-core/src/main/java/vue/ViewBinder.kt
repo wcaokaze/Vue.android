@@ -1,6 +1,7 @@
 package vue
 
 import android.view.*
+import androidx.annotation.*
 
 /**
  * [VBinder] for [View]s
@@ -35,6 +36,12 @@ abstract class ViewBinder<V : View, T>(val view: V)
       }
    }
 
+   final override fun invoke(reactivatee: Reactivatee<T>) {
+      val reactiveField = GetterField(reactivatee)
+      invoke(reactiveField)
+   }
+
+   @UiThread
    private fun bind() {
       val boundReactiveField = boundReactiveField ?: return
 
@@ -45,6 +52,7 @@ abstract class ViewBinder<V : View, T>(val view: V)
       invoke(boundReactiveField.value)
    }
 
+   @UiThread
    private fun unbind() {
       if (!isBinding) { return }
       isBinding = false
