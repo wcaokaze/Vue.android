@@ -40,4 +40,22 @@ class VOnTest {
          activity.setContentView(view)
       }
    }
+
+   @Test fun actionIsCalledOnMainThread() {
+      lateinit var view: View
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               view = View(activity)
+
+               view.vOn.click {
+                  assertTrue(activity.mainLooper.isCurrentThread)
+               }
+
+               activity.setContentView(view)
+            }
+            .onActivity {
+               view.performClick()
+            }
+   }
 }
