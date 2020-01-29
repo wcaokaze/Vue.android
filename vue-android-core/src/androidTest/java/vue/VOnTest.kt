@@ -8,6 +8,7 @@ import kotlin.test.*
 import kotlin.test.Test
 
 import android.view.*
+import kotlinx.coroutines.*
 
 @RunWith(AndroidJUnit4::class)
 class VOnTest {
@@ -29,5 +30,14 @@ class VOnTest {
             }
 
       assertTrue(isCalled)
+   }
+
+   // No assertions, always passes. This test is only to test compilability.
+   @Test fun actionCanCallSuspendFun() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val view = View(activity)
+         view.vOn.click { delay(1L) }
+         activity.setContentView(view)
+      }
    }
 }
