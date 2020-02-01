@@ -7,17 +7,14 @@ import org.junit.runner.*
 import kotlin.test.*
 import kotlin.test.Test
 
-import android.app.*
 import android.view.*
 import android.widget.*
 import androidx.lifecycle.*
 
-class VBindTestActivity : Activity()
-
 @RunWith(AndroidJUnit4::class)
 class VBindTest {
    @get:Rule
-   val activityScenarioRule = activityScenarioRule<VBindTestActivity>()
+   val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
    @Test fun bind() {
       activityScenarioRule.scenario.onActivity { activity ->

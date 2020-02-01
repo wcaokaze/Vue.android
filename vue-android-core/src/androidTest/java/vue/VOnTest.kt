@@ -13,7 +13,7 @@ import kotlinx.coroutines.*
 @RunWith(AndroidJUnit4::class)
 class VOnTest {
    @get:Rule
-   val activityScenarioRule = activityScenarioRule<VBindTestActivity>()
+   val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
    @Test fun bind() {
       var isCalled = false
