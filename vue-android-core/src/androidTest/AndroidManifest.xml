@@ -2,6 +2,6 @@
     package="com.wcaokaze.vue.android">
 
     <application>
-        <activity android:name="vue.VBindTestActivity"/>
+        <activity android:name="vue.EmptyTestActivity"/>
     </application>
 </manifest>

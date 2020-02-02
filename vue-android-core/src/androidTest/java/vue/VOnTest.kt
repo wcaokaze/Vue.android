@@ -13,7 +13,7 @@ import kotlinx.coroutines.*
 @RunWith(AndroidJUnit4::class)
 class VOnTest {
    @get:Rule
-   val activityScenarioRule = activityScenarioRule<VBindTestActivity>()
+   val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
    @Test fun bind() {
       var isCalled = false
@@ -50,6 +50,68 @@ class VOnTest {
 
                view.vOn.click {
                   assertTrue(activity.mainLooper.isCurrentThread)
+               }
+
+               activity.setContentView(view)
+            }
+            .onActivity {
+               view.performClick()
+            }
+   }
+
+   @Test fun coroutineContext() {
+      val job = Job()
+      lateinit var view: View
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               view = View(activity)
+
+               view.vOn.click(job) {
+                  delay(100L)
+                  fail("The action is not cancelled")
+               }
+
+               activity.setContentView(view)
+            }
+            .onActivity {
+               view.performClick()
+            }
+            .onActivity {
+               job.cancel()
+            }
+
+      Thread.sleep(200L)
+   }
+
+   @Test fun actionIsCalledOnMainThread_evenIfCoroutineContextSpecified() {
+      val job = Job()
+      lateinit var view: View
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               view = View(activity)
+
+               view.vOn.click(job) {
+                  assertTrue(activity.mainLooper.isCurrentThread)
+               }
+
+               activity.setContentView(view)
+            }
+            .onActivity {
+               view.performClick()
+            }
+   }
+
+   @Test fun dispatcherCanBeOverwritten() {
+      lateinit var view: View
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               view = View(activity)
+
+               view.vOn.click(Dispatchers.Default) {
+                  assertFalse(activity.mainLooper.isCurrentThread)
                }
 
                activity.setContentView(view)
