@@ -2,6 +2,8 @@ package vue
 
 import androidx.annotation.*
 
+fun <T> state(initialValue: T) = StateField(initialValue)
+
 class StateField<T>(initialValue: T) : ReactiveField<T> {
    private var observers: Array<((T) -> Unit)?> = arrayOfNulls(2)
 
