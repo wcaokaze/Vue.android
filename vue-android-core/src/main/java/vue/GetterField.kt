@@ -30,8 +30,33 @@ import androidx.annotation.*
  */
 typealias Reactivatee<T> = ReactivateeScope.() -> T
 
-class ReactivateeScope(private val getterField: GetterField<*>) {
-   private val dependeeFields = HashSet<ReactiveField<*>>()
+/**
+ * @see Reactivatee
+ */
+interface ReactivateeScope {
+   /**
+    * [adds][ReactiveField.addObserver] the current [Reactivatee] as an observer
+    * for this ReactiveField, and returns the current value of this ReactiveField.
+    */
+   @get:UiThread
+   val <T> ReactiveField<T>.value: T
+
+   /**
+    * A shorthand for [value].
+    *
+    * [adds][ReactiveField.addObserver] the current [Reactivatee] as an observer
+    * for this ReactiveField, and returns the current value of this ReactiveField.
+    *
+    * @return The current value of this ReactiveField
+    */
+   @UiThread
+   operator fun <T> ReactiveField<T>.invoke(): T = value
+}
+
+internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
+      : ReactivateeScope, VComponent.ComponentReactivateeScope
+{
+   private val dependeeFields = HashSet<Any>()
 
    private val observer = fun (_: Any?) {
       val reactivatee = getterField.reactivatee
@@ -63,12 +88,7 @@ class ReactivateeScope(private val getterField: GetterField<*>) {
       }
    }
 
-   /**
-    * [adds][ReactiveField.addObserver] the current [Reactivatee] as an observer
-    * for this ReactiveField, and returns the current value of this ReactiveField.
-    */
-   @get:UiThread
-   val <T> ReactiveField<T>.value: T get() {
+   override val <T> ReactiveField<T>.value: T get() {
       if (this in dependeeFields) {
          @Suppress("DEPRECATION")
          return `$vueInternal$value`
@@ -84,16 +104,19 @@ class ReactivateeScope(private val getterField: GetterField<*>) {
       return `$vueInternal$value`
    }
 
-   /**
-    * A shorthand for [value].
-    *
-    * [adds][ReactiveField.addObserver] the current [Reactivatee] as an observer
-    * for this ReactiveField, and returns the current value of this ReactiveField.
-    *
-    * @return The current value of this ReactiveField
-    */
-   @UiThread
-   operator fun <T> ReactiveField<T>.invoke(): T = value
+   override val <T> VComponent.ComponentVBinder<T>.value: T? get() {
+      if (this in dependeeFields) {
+         return field.value
+      }
+
+      dependeeFields += this
+
+      if (isBoundToUpstream) {
+         field.addObserver(observer)
+      }
+
+      return field.value
+   }
 
    @UiThread
    internal fun bindToDependees() {
@@ -101,7 +124,10 @@ class ReactivateeScope(private val getterField: GetterField<*>) {
       val dependeeFields = HashSet(dependeeFields)
 
       for (d in dependeeFields) {
-         d.addObserver(observer)
+         when (d) {
+            is ReactiveField<*>               -> d.addObserver(observer)
+            is VComponent.ComponentVBinder<*> -> d.field.addObserver(observer)
+         }
       }
 
       isBoundToUpstream = true
@@ -118,17 +144,23 @@ class ReactivateeScope(private val getterField: GetterField<*>) {
       val dependeeFields = HashSet(dependeeFields)
 
       for (d in dependeeFields) {
-         d.removeObserver(observer)
+         when (d) {
+            is ReactiveField<*>               -> d.removeObserver(observer)
+            is VComponent.ComponentVBinder<*> -> d.field.removeObserver(observer)
+         }
       }
    }
 }
 
-class GetterField<out T>(@UiThread internal val reactivatee: Reactivatee<T>)
+class GetterField<out T>
+      internal constructor(
+            @UiThread internal val reactivatee: ReactivateeScopeImpl.() -> T
+      )
       : ReactiveField<T>
 {
    private var observers: Array<((T) -> Unit)?> = arrayOfNulls(2)
 
-   private val reactivateeScope = ReactivateeScope(this)
+   private val reactivateeScope = ReactivateeScopeImpl(this)
 
    override var observerCount = 0
       private set
