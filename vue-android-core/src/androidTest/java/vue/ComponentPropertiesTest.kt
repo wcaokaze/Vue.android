@@ -85,6 +85,37 @@ class ComponentPropertiesTest {
             }
    }
 
+   @Test fun vBinder_bindToView_vBinder() {
+      class VBinderTestComponent(context: Context) : VComponent {
+         override val view: TextView
+         val text = vBinder<String>()
+
+         init {
+            view = TextView(context)
+            view.vBind.text(text)
+         }
+      }
+
+      lateinit var component: VBinderTestComponent
+      val state = state("0")
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               component = VBinderTestComponent(activity)
+               component.text(state)
+               activity.setContentView(component.view)
+            }
+            .onActivity {
+               assertEquals("0", component.view.text)
+            }
+            .onActivity {
+               state.value = "1"
+            }
+            .onActivity {
+               assertEquals("1", component.view.text)
+            }
+   }
+
    @Test fun vBinder_reactivation() {
       lateinit var component: VBinderTestComponent
       val state = state(0)

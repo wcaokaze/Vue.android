@@ -120,6 +120,12 @@ interface VComponent {
    }
 
    @UiThread
+   operator fun <T> VBinder<T?>.invoke(componentVBinder: ComponentVBinder<T>) {
+      val reactiveField = componentVBinder.field
+      invoke(reactiveField)
+   }
+
+   @UiThread
    operator fun <T> VBinder<T>.invoke(reactivatee: ComponentReactivatee<T>) {
       val reactiveField = GetterField(reactivatee)
       invoke(reactiveField)
