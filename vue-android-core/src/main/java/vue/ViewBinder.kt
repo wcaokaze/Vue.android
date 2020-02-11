@@ -34,11 +34,6 @@ class ViewBinder<V : View, T>(view: V, private val binder: (T) -> Unit) : VBinde
       }
    }
 
-   override fun invoke(reactivatee: Reactivatee<T>) {
-      val reactiveField = GetterField(reactivatee)
-      invoke(reactiveField)
-   }
-
    override fun invoke(nonReactiveValue: T) {
       unbind()
       binder(nonReactiveValue)
