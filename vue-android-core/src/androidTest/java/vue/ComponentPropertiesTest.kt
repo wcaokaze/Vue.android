@@ -105,4 +105,25 @@ class ComponentPropertiesTest {
                assertEquals("1", component.view.text)
             }
    }
+
+   @Test fun vBinder_reactivation_withLambda() {
+      lateinit var component: VBinderTestComponent
+      val state = state(0)
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               component = VBinderTestComponent(activity)
+               component.number { state() * 2 }
+               activity.setContentView(component.view)
+            }
+            .onActivity {
+               assertEquals("0", component.view.text)
+            }
+            .onActivity {
+               state.value = 1
+            }
+            .onActivity {
+               assertEquals("2", component.view.text)
+            }
+   }
 }
