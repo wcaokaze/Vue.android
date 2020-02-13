@@ -2,6 +2,8 @@ package vue
 
 import android.view.*
 import androidx.annotation.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.*
 
 /**
  * [Reactivatee] which can also be reactivated by [VComponent.ComponentVBinder].
@@ -163,5 +165,65 @@ interface VComponent {
        */
       @UiThread
       operator fun <T> ComponentVBinder<T>.invoke(): T? = value
+   }
+
+   // ==== ComponentVEvent =====================================================
+
+   /**
+    * [VEvent0] for a VComponent.
+    *
+    * Here is an example for VComponent.
+    * ```kotlin
+    * class SearchComponent(context: Context) : VComponent {
+    *    override val view: LinearLayout
+    *
+    *    val onSubmit = vEvent1<String>()
+    *
+    *    init {
+    *       view = koshian(context) {
+    *          linearLayout {
+    *             val editText = editText {
+    *             }
+    *
+    *             button {
+    *                view.text = "Search"
+    *
+    *                vOn.click {
+    *                   val text = editText.text.toString()
+    *                   onSubmit(text)
+    *                }
+    *             }
+    *          }
+    *       }
+    *    }
+    * }
+    * ```
+    *
+    * And this is an example for the use site:
+    * ```kotlin
+    * val component = SearchComponent()
+    * component.onSubmit { text -> search(text) }
+    * ```
+    */
+   fun vEvent0() = ComponentVEvent0()
+
+   class ComponentVEvent0 : VEvent0 {
+      private var coroutineContext: CoroutineContext = EmptyCoroutineContext
+      private var action: (suspend () -> Unit)? = null
+
+      override fun invoke(coroutineContext: CoroutineContext, action: suspend () -> Unit) {
+         this.coroutineContext = coroutineContext
+         this.action = action
+      }
+
+      internal fun dispatch() {
+         GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            action?.invoke()
+         }
+      }
+   }
+
+   operator fun ComponentVEvent0.invoke() {
+      dispatch()
    }
 }
