@@ -92,7 +92,7 @@ interface VComponent {
 
    class ComponentVBinder<T> : VBinder<T> {
       private var boundReactiveField: ReactiveField<T>? = null
-      internal val field = StateField<T?>(null)
+      internal val field = StateImpl<T?>(null)
 
       private val observer: (T) -> Unit = { field.value = it }
 
