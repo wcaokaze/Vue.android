@@ -226,4 +226,8 @@ interface VComponent {
    operator fun ComponentVEvent0.invoke() {
       dispatch()
    }
+
+   operator fun VEvent0.invoke(componentVEvent0: ComponentVEvent0) {
+      invoke { componentVEvent0.dispatch() }
+   }
 }
