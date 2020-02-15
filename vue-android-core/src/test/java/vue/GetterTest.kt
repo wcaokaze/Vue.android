@@ -8,42 +8,42 @@ import org.junit.runners.*
 class GetterTest {
    @Test fun getInitialValue_withNoObservers() {
       val state = state(1)
-      val getter = GetterField { state() * 2 }
+      val getter = getter { state() * 2 }
       assertEquals(2, getter.value)
    }
 
    @Test fun getInitialValue_withNoObservers_viaAnotherGetter() {
       val state = state(1)
-      val getter1 = GetterField { state() * 2 }
-      val getter2 = GetterField { getter1() * 3 }
+      val getter1 = getter { state() * 2 }
+      val getter2 = getter { getter1() * 3 }
       assertEquals(6, getter2.value)
    }
 
    @Test fun getChangedValue_withNoObservers() {
       val state = state(1)
-      val getter = GetterField { state() * 2 }
+      val getter = getter { state() * 2 }
       state.value = 2
       assertEquals(4, getter.value)
    }
 
    @Test fun getChangedValue_withNoObservers_viaAnotherGetter() {
       val state = state(1)
-      val getter1 = GetterField { state() * 2 }
-      val getter2 = GetterField { getter1() * 3 }
+      val getter1 = getter { state() * 2 }
+      val getter2 = getter { getter1() * 3 }
       state.value = 2
       assertEquals(12, getter2.value)
    }
 
    @Test fun gettingValue_shouldNotBindToUpstream() {
       val state = state(1)
-      val getter = GetterField { state() * 2 }
+      val getter = getter { state() * 2 }
       getter.value
       assertEquals(0, state.observerCount)
    }
 
    @Test fun observer() {
       val state = state(1)
-      val getter = GetterField { state() * 2 }
+      val getter = getter { state() * 2 }
 
       var i = -1
       getter.addObserver { i = it }
@@ -53,8 +53,8 @@ class GetterTest {
 
    @Test fun observer_viaAnotherGetter() {
       val state = state(1)
-      val getter1 = GetterField { state() * 2 }
-      val getter2 = GetterField { getter1() * 3 }
+      val getter1 = getter { state() * 2 }
+      val getter2 = getter { getter1() * 3 }
 
       var i = -1
       getter2.addObserver { i = it }
@@ -64,15 +64,15 @@ class GetterTest {
 
    @Test fun getInitialValue_withObservers() {
       val state = state(1)
-      val getter = GetterField { state() * 2 }
+      val getter = getter { state() * 2 }
       getter.addObserver {}
       assertEquals(2, getter.value)
    }
 
    @Test fun getInitialValue_withObservers_viaAnotherGetter() {
       val state = state(1)
-      val getter1 = GetterField { state() * 2 }
-      val getter2 = GetterField { getter1() * 3 }
+      val getter1 = getter { state() * 2 }
+      val getter2 = getter { getter1() * 3 }
       getter2.addObserver {}
       assertEquals(6, getter2.value)
    }
@@ -82,7 +82,7 @@ class GetterTest {
 
       var shouldFail = false
 
-      val getter = GetterField {
+      val getter = getter {
          if (shouldFail) {
             fail()
          }
@@ -97,7 +97,7 @@ class GetterTest {
 
    @Test fun getChangedValue_withObservers() {
       val state = state(1)
-      val getter = GetterField { state() * 2 }
+      val getter = getter { state() * 2 }
       getter.addObserver {}
       state.value = 2
       assertEquals(4, getter.value)
@@ -105,8 +105,8 @@ class GetterTest {
 
    @Test fun getChangedValue_withObservers_viaAnotherGetter() {
       val state = state(1)
-      val getter1 = GetterField { state() * 2 }
-      val getter2 = GetterField { getter1() * 3 }
+      val getter1 = getter { state() * 2 }
+      val getter2 = getter { getter1() * 3 }
       getter2.addObserver {}
       state.value = 2
       assertEquals(12, getter2.value)
@@ -114,7 +114,7 @@ class GetterTest {
 
    @Test fun connectToUpstream() {
       val state = state(1)
-      val getter = GetterField { state() * 2 }
+      val getter = getter { state() * 2 }
 
       assertEquals(0, state.observerCount)
       getter.addObserver {}
@@ -123,8 +123,8 @@ class GetterTest {
 
    @Test fun connectToUpstream_viaAnotherGetter() {
       val state = state(1)
-      val getter1 = GetterField { state() * 2 }
-      val getter2 = GetterField { getter1() * 3 }
+      val getter1 = getter { state() * 2 }
+      val getter2 = getter { getter1() * 3 }
 
       assertEquals(0, state.observerCount)
       getter2.addObserver {}
@@ -133,7 +133,7 @@ class GetterTest {
 
    @Test fun disconnectFromUpstream() {
       val state = state(1)
-      val getter = GetterField { state() * 2 }
+      val getter = getter { state() * 2 }
 
       val observer: (Int) -> Unit = {}
 
@@ -145,8 +145,8 @@ class GetterTest {
 
    @Test fun disconnectFromUpstream_viaAnotherGetter() {
       val state = state(1)
-      val getter1 = GetterField { state() * 2 }
-      val getter2 = GetterField { getter1() * 3 }
+      val getter1 = getter { state() * 2 }
+      val getter2 = getter { getter1() * 3 }
 
       val observer: (Int) -> Unit = {}
 
