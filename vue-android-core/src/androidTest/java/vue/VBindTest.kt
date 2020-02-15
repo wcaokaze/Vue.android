@@ -18,7 +18,7 @@ class VBindTest {
 
    @Test fun bind() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val state = StateField(false)
+         val state = state(false)
          val view = View(activity)
          view.vBind.isVisible(state)
          activity.setContentView(view)
@@ -29,7 +29,7 @@ class VBindTest {
 
    @Test fun bind_initialValue() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val state = StateField(false)
+         val state = state(false)
          val view = View(activity)
 
          view.visibility = View.VISIBLE
@@ -42,7 +42,7 @@ class VBindTest {
 
    @Test fun shouldNotBind_ifViewNotDisplayed() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val state = StateField(false)
+         val state = state(false)
          val view = View(activity)
          view.vBind.isVisible(state)
          // activity.setContentView(view)
@@ -53,7 +53,7 @@ class VBindTest {
 
    @Test fun unbind_onViewRemoved() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val state = StateField(false)
+         val state = state(false)
          val parentView = LinearLayout(activity)
          val view = View(activity)
          parentView.addView(view)
@@ -67,7 +67,7 @@ class VBindTest {
    }
 
    @Test fun unbind_onActivityFinish() {
-      val state = StateField(false)
+      val state = state(false)
 
       activityScenarioRule.scenario.onActivity { activity ->
          val view = View(activity)
@@ -110,8 +110,8 @@ class VBindTest {
 
    @Test fun bind_unbindOldReactiveField() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val state1 = StateField(false)
-         val state2 = StateField(false)
+         val state1 = state(false)
+         val state2 = state(false)
 
          val view = View(activity)
          view.vBind.isVisible(state1)
@@ -127,7 +127,7 @@ class VBindTest {
 
    @Test fun bind_withLambda() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val state = StateField(false)
+         val state = state(false)
          val view = View(activity)
          view.vBind.isVisible { state() }
          activity.setContentView(view)
@@ -138,7 +138,7 @@ class VBindTest {
 
    @Test fun unbind_withLambda() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val state = StateField(false)
+         val state = state(false)
          val parentView = LinearLayout(activity)
          val view = View(activity)
          parentView.addView(view)
@@ -164,7 +164,7 @@ class VBindTest {
 
    @Test fun nonReactiveValue_unbindOldReactiveField() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val state = StateField(false)
+         val state = state(false)
 
          val view = View(activity)
          view.vBind.isVisible(state)
