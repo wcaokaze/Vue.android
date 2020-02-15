@@ -22,7 +22,7 @@ class ComponentVEventTest {
 
          init {
             view = View(context)
-            view.vOn.click { onClick() }
+            view.vOn.click { onClick.emit() }
          }
       }
 

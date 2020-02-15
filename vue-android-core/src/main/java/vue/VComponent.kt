@@ -223,7 +223,7 @@ interface VComponent {
       }
    }
 
-   operator fun ComponentVEvent0.invoke() {
+   fun ComponentVEvent0.emit() {
       dispatch()
    }
 
