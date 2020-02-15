@@ -19,6 +19,23 @@ typealias ComponentReactivatee<T> = VComponent.ComponentReactivateeScope.() -> T
 interface VComponent {
    val view: View
 
+   // ==== ReadonlyState ===============================================================
+
+   /**
+    * [state] that cannot be written from outside a Component.
+    */
+   fun <T> readonlyState(initialValue: T) = ReadonlyState(StateImpl(initialValue))
+
+   class ReadonlyState<T>
+         internal constructor(internal val delegate: StateImpl<T>)
+         : ReactiveField<T> by delegate
+
+   var <T> ReadonlyState<T>.value: T
+      get() = delegate.value
+      set(value) {
+         delegate.value = value
+      }
+
    // ==== ComponentVBinder ====================================================
 
    /*
