@@ -167,7 +167,7 @@ interface VComponent {
       operator fun <T> ComponentVBinder<T>.invoke(): T? = value
    }
 
-   // ==== ComponentVEvent =====================================================
+   // ==== ComponentVEvent0 ====================================================
 
    /**
     * [VEvent0] for a VComponent.
@@ -227,7 +227,535 @@ interface VComponent {
       dispatch()
    }
 
-   operator fun VEvent0.invoke(componentVEvent0: ComponentVEvent0) {
-      invoke { componentVEvent0.dispatch() }
+   operator fun VEvent0.invoke(componentVEvent: ComponentVEvent0) {
+      invoke { componentVEvent.dispatch() }
+   }
+
+   // ==== ComponentVEvent1 ====================================================
+
+   /**
+    * [VEvent1] for a VComponent.
+    *
+    * Here is an example for VComponent.
+    * ```kotlin
+    * class SearchComponent(context: Context) : VComponent {
+    *    override val view: LinearLayout
+    *
+    *    val onSubmit = vEvent1<String>()
+    *
+    *    init {
+    *       view = koshian(context) {
+    *          linearLayout {
+    *             val editText = editText {
+    *             }
+    *
+    *             button {
+    *                view.text = "Search"
+    *
+    *                vOn.click {
+    *                   val text = editText.text.toString()
+    *                   onSubmit(text)
+    *                }
+    *             }
+    *          }
+    *       }
+    *    }
+    * }
+    * ```
+    *
+    * And this is an example for the use site:
+    * ```kotlin
+    * val component = SearchComponent()
+    * component.onSubmit { text -> search(text) }
+    * ```
+    */
+   fun <A> vEvent1() = ComponentVEvent1<A>()
+
+   class ComponentVEvent1<A> : VEvent1<A> {
+      private var coroutineContext: CoroutineContext = EmptyCoroutineContext
+      private var action: (suspend (A) -> Unit)? = null
+
+      override fun invoke(coroutineContext: CoroutineContext, action: suspend (A) -> Unit) {
+         this.coroutineContext = coroutineContext
+         this.action = action
+      }
+
+      internal fun dispatch(arg0: A) {
+         GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            action?.invoke(arg0)
+         }
+      }
+   }
+
+   fun <A> ComponentVEvent1<A>.emit(arg0: A) {
+      dispatch(arg0)
+   }
+
+   operator fun <A> VEvent1<A>.invoke(componentVEvent: ComponentVEvent1<A>) {
+      invoke { arg0 ->
+         componentVEvent.dispatch(arg0)
+      }
+   }
+
+   // ==== ComponentVEvent2 ====================================================
+
+   /**
+    * [VEvent2] for a VComponent.
+    *
+    * Here is an example for VComponent.
+    * ```kotlin
+    * class SearchComponent(context: Context) : VComponent {
+    *    override val view: LinearLayout
+    *
+    *    val onSubmit = vEvent1<String>()
+    *
+    *    init {
+    *       view = koshian(context) {
+    *          linearLayout {
+    *             val editText = editText {
+    *             }
+    *
+    *             button {
+    *                view.text = "Search"
+    *
+    *                vOn.click {
+    *                   val text = editText.text.toString()
+    *                   onSubmit(text)
+    *                }
+    *             }
+    *          }
+    *       }
+    *    }
+    * }
+    * ```
+    *
+    * And this is an example for the use site:
+    * ```kotlin
+    * val component = SearchComponent()
+    * component.onSubmit { text -> search(text) }
+    * ```
+    */
+   fun <A, B> vEvent2() = ComponentVEvent2<A, B>()
+
+   class ComponentVEvent2<A, B> : VEvent2<A, B> {
+      private var coroutineContext: CoroutineContext = EmptyCoroutineContext
+      private var action: (suspend (A, B) -> Unit)? = null
+
+      override fun invoke(coroutineContext: CoroutineContext, action: suspend (A, B) -> Unit) {
+         this.coroutineContext = coroutineContext
+         this.action = action
+      }
+
+      internal fun dispatch(arg0: A, arg1: B) {
+         GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            action?.invoke(arg0, arg1)
+         }
+      }
+   }
+
+   fun <A, B> ComponentVEvent2<A, B>.emit(arg0: A, arg1: B) {
+      dispatch(arg0, arg1)
+   }
+
+   operator fun <A, B> VEvent2<A, B>.invoke(componentVEvent: ComponentVEvent2<A, B>) {
+      invoke { arg0, arg1 ->
+         componentVEvent.dispatch(arg0, arg1)
+      }
+   }
+
+   // ==== ComponentVEvent3 ====================================================
+
+   /**
+    * [VEvent3] for a VComponent.
+    *
+    * Here is an example for VComponent.
+    * ```kotlin
+    * class SearchComponent(context: Context) : VComponent {
+    *    override val view: LinearLayout
+    *
+    *    val onSubmit = vEvent1<String>()
+    *
+    *    init {
+    *       view = koshian(context) {
+    *          linearLayout {
+    *             val editText = editText {
+    *             }
+    *
+    *             button {
+    *                view.text = "Search"
+    *
+    *                vOn.click {
+    *                   val text = editText.text.toString()
+    *                   onSubmit(text)
+    *                }
+    *             }
+    *          }
+    *       }
+    *    }
+    * }
+    * ```
+    *
+    * And this is an example for the use site:
+    * ```kotlin
+    * val component = SearchComponent()
+    * component.onSubmit { text -> search(text) }
+    * ```
+    */
+   fun <A, B, C> vEvent3() = ComponentVEvent3<A, B, C>()
+
+   class ComponentVEvent3<A, B, C> : VEvent3<A, B, C> {
+      private var coroutineContext: CoroutineContext = EmptyCoroutineContext
+      private var action: (suspend (A, B, C) -> Unit)? = null
+
+      override fun invoke(coroutineContext: CoroutineContext, action: suspend (A, B, C) -> Unit) {
+         this.coroutineContext = coroutineContext
+         this.action = action
+      }
+
+      internal fun dispatch(arg0: A, arg1: B, arg2: C) {
+         GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            action?.invoke(arg0, arg1, arg2)
+         }
+      }
+   }
+
+   fun <A, B, C> ComponentVEvent3<A, B, C>.emit(arg0: A, arg1: B, arg2: C) {
+      dispatch(arg0, arg1, arg2)
+   }
+
+   operator fun <A, B, C> VEvent3<A, B, C>.invoke(componentVEvent: ComponentVEvent3<A, B, C>) {
+      invoke { arg0, arg1, arg2 ->
+         componentVEvent.dispatch(arg0, arg1, arg2)
+      }
+   }
+
+   // ==== ComponentVEvent4 ====================================================
+
+   /**
+    * [VEvent4] for a VComponent.
+    *
+    * Here is an example for VComponent.
+    * ```kotlin
+    * class SearchComponent(context: Context) : VComponent {
+    *    override val view: LinearLayout
+    *
+    *    val onSubmit = vEvent1<String>()
+    *
+    *    init {
+    *       view = koshian(context) {
+    *          linearLayout {
+    *             val editText = editText {
+    *             }
+    *
+    *             button {
+    *                view.text = "Search"
+    *
+    *                vOn.click {
+    *                   val text = editText.text.toString()
+    *                   onSubmit(text)
+    *                }
+    *             }
+    *          }
+    *       }
+    *    }
+    * }
+    * ```
+    *
+    * And this is an example for the use site:
+    * ```kotlin
+    * val component = SearchComponent()
+    * component.onSubmit { text -> search(text) }
+    * ```
+    */
+   fun <A, B, C, D> vEvent4() = ComponentVEvent4<A, B, C, D>()
+
+   class ComponentVEvent4<A, B, C, D> : VEvent4<A, B, C, D> {
+      private var coroutineContext: CoroutineContext = EmptyCoroutineContext
+      private var action: (suspend (A, B, C, D) -> Unit)? = null
+
+      override fun invoke(coroutineContext: CoroutineContext, action: suspend (A, B, C, D) -> Unit) {
+         this.coroutineContext = coroutineContext
+         this.action = action
+      }
+
+      internal fun dispatch(arg0: A, arg1: B, arg2: C, arg3: D) {
+         GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            action?.invoke(arg0, arg1, arg2, arg3)
+         }
+      }
+   }
+
+   fun <A, B, C, D> ComponentVEvent4<A, B, C, D>.emit(arg0: A, arg1: B, arg2: C, arg3: D) {
+      dispatch(arg0, arg1, arg2, arg3)
+   }
+
+   operator fun <A, B, C, D> VEvent4<A, B, C, D>.invoke(componentVEvent: ComponentVEvent4<A, B, C, D>) {
+      invoke { arg0, arg1, arg2, arg3 ->
+         componentVEvent.dispatch(arg0, arg1, arg2, arg3)
+      }
+   }
+
+   // ==== ComponentVEvent5 ====================================================
+
+   /**
+    * [VEvent5] for a VComponent.
+    *
+    * Here is an example for VComponent.
+    * ```kotlin
+    * class SearchComponent(context: Context) : VComponent {
+    *    override val view: LinearLayout
+    *
+    *    val onSubmit = vEvent1<String>()
+    *
+    *    init {
+    *       view = koshian(context) {
+    *          linearLayout {
+    *             val editText = editText {
+    *             }
+    *
+    *             button {
+    *                view.text = "Search"
+    *
+    *                vOn.click {
+    *                   val text = editText.text.toString()
+    *                   onSubmit(text)
+    *                }
+    *             }
+    *          }
+    *       }
+    *    }
+    * }
+    * ```
+    *
+    * And this is an example for the use site:
+    * ```kotlin
+    * val component = SearchComponent()
+    * component.onSubmit { text -> search(text) }
+    * ```
+    */
+   fun <A, B, C, D, E> vEvent5() = ComponentVEvent5<A, B, C, D, E>()
+
+   class ComponentVEvent5<A, B, C, D, E> : VEvent5<A, B, C, D, E> {
+      private var coroutineContext: CoroutineContext = EmptyCoroutineContext
+      private var action: (suspend (A, B, C, D, E) -> Unit)? = null
+
+      override fun invoke(coroutineContext: CoroutineContext, action: suspend (A, B, C, D, E) -> Unit) {
+         this.coroutineContext = coroutineContext
+         this.action = action
+      }
+
+      internal fun dispatch(arg0: A, arg1: B, arg2: C, arg3: D, arg4: E) {
+         GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            action?.invoke(arg0, arg1, arg2, arg3, arg4)
+         }
+      }
+   }
+
+   fun <A, B, C, D, E> ComponentVEvent5<A, B, C, D, E>.emit(arg0: A, arg1: B, arg2: C, arg3: D, arg4: E) {
+      dispatch(arg0, arg1, arg2, arg3, arg4)
+   }
+
+   operator fun <A, B, C, D, E> VEvent5<A, B, C, D, E>.invoke(componentVEvent: ComponentVEvent5<A, B, C, D, E>) {
+      invoke { arg0, arg1, arg2, arg3, arg4 ->
+         componentVEvent.dispatch(arg0, arg1, arg2, arg3, arg4)
+      }
+   }
+
+   // ==== ComponentVEvent6 ====================================================
+
+   /**
+    * [VEvent6] for a VComponent.
+    *
+    * Here is an example for VComponent.
+    * ```kotlin
+    * class SearchComponent(context: Context) : VComponent {
+    *    override val view: LinearLayout
+    *
+    *    val onSubmit = vEvent1<String>()
+    *
+    *    init {
+    *       view = koshian(context) {
+    *          linearLayout {
+    *             val editText = editText {
+    *             }
+    *
+    *             button {
+    *                view.text = "Search"
+    *
+    *                vOn.click {
+    *                   val text = editText.text.toString()
+    *                   onSubmit(text)
+    *                }
+    *             }
+    *          }
+    *       }
+    *    }
+    * }
+    * ```
+    *
+    * And this is an example for the use site:
+    * ```kotlin
+    * val component = SearchComponent()
+    * component.onSubmit { text -> search(text) }
+    * ```
+    */
+   fun <A, B, C, D, E, F> vEvent6() = ComponentVEvent6<A, B, C, D, E, F>()
+
+   class ComponentVEvent6<A, B, C, D, E, F> : VEvent6<A, B, C, D, E, F> {
+      private var coroutineContext: CoroutineContext = EmptyCoroutineContext
+      private var action: (suspend (A, B, C, D, E, F) -> Unit)? = null
+
+      override fun invoke(coroutineContext: CoroutineContext, action: suspend (A, B, C, D, E, F) -> Unit) {
+         this.coroutineContext = coroutineContext
+         this.action = action
+      }
+
+      internal fun dispatch(arg0: A, arg1: B, arg2: C, arg3: D, arg4: E, arg5: F) {
+         GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            action?.invoke(arg0, arg1, arg2, arg3, arg4, arg5)
+         }
+      }
+   }
+
+   fun <A, B, C, D, E, F> ComponentVEvent6<A, B, C, D, E, F>.emit(arg0: A, arg1: B, arg2: C, arg3: D, arg4: E, arg5: F) {
+      dispatch(arg0, arg1, arg2, arg3, arg4, arg5)
+   }
+
+   operator fun <A, B, C, D, E, F> VEvent6<A, B, C, D, E, F>.invoke(componentVEvent: ComponentVEvent6<A, B, C, D, E, F>) {
+      invoke { arg0, arg1, arg2, arg3, arg4, arg5 ->
+         componentVEvent.dispatch(arg0, arg1, arg2, arg3, arg4, arg5)
+      }
+   }
+
+   // ==== ComponentVEvent7 ====================================================
+
+   /**
+    * [VEvent7] for a VComponent.
+    *
+    * Here is an example for VComponent.
+    * ```kotlin
+    * class SearchComponent(context: Context) : VComponent {
+    *    override val view: LinearLayout
+    *
+    *    val onSubmit = vEvent1<String>()
+    *
+    *    init {
+    *       view = koshian(context) {
+    *          linearLayout {
+    *             val editText = editText {
+    *             }
+    *
+    *             button {
+    *                view.text = "Search"
+    *
+    *                vOn.click {
+    *                   val text = editText.text.toString()
+    *                   onSubmit(text)
+    *                }
+    *             }
+    *          }
+    *       }
+    *    }
+    * }
+    * ```
+    *
+    * And this is an example for the use site:
+    * ```kotlin
+    * val component = SearchComponent()
+    * component.onSubmit { text -> search(text) }
+    * ```
+    */
+   fun <A, B, C, D, E, F, G> vEvent7() = ComponentVEvent7<A, B, C, D, E, F, G>()
+
+   class ComponentVEvent7<A, B, C, D, E, F, G> : VEvent7<A, B, C, D, E, F, G> {
+      private var coroutineContext: CoroutineContext = EmptyCoroutineContext
+      private var action: (suspend (A, B, C, D, E, F, G) -> Unit)? = null
+
+      override fun invoke(coroutineContext: CoroutineContext, action: suspend (A, B, C, D, E, F, G) -> Unit) {
+         this.coroutineContext = coroutineContext
+         this.action = action
+      }
+
+      internal fun dispatch(arg0: A, arg1: B, arg2: C, arg3: D, arg4: E, arg5: F, arg6: G) {
+         GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            action?.invoke(arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+         }
+      }
+   }
+
+   fun <A, B, C, D, E, F, G> ComponentVEvent7<A, B, C, D, E, F, G>.emit(arg0: A, arg1: B, arg2: C, arg3: D, arg4: E, arg5: F, arg6: G) {
+      dispatch(arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+   }
+
+   operator fun <A, B, C, D, E, F, G> VEvent7<A, B, C, D, E, F, G>.invoke(componentVEvent: ComponentVEvent7<A, B, C, D, E, F, G>) {
+      invoke { arg0, arg1, arg2, arg3, arg4, arg5, arg6 ->
+         componentVEvent.dispatch(arg0, arg1, arg2, arg3, arg4, arg5, arg6)
+      }
+   }
+
+   // ==== ComponentVEvent8 ====================================================
+
+   /**
+    * [VEvent8] for a VComponent.
+    *
+    * Here is an example for VComponent.
+    * ```kotlin
+    * class SearchComponent(context: Context) : VComponent {
+    *    override val view: LinearLayout
+    *
+    *    val onSubmit = vEvent1<String>()
+    *
+    *    init {
+    *       view = koshian(context) {
+    *          linearLayout {
+    *             val editText = editText {
+    *             }
+    *
+    *             button {
+    *                view.text = "Search"
+    *
+    *                vOn.click {
+    *                   val text = editText.text.toString()
+    *                   onSubmit(text)
+    *                }
+    *             }
+    *          }
+    *       }
+    *    }
+    * }
+    * ```
+    *
+    * And this is an example for the use site:
+    * ```kotlin
+    * val component = SearchComponent()
+    * component.onSubmit { text -> search(text) }
+    * ```
+    */
+   fun <A, B, C, D, E, F, G, H> vEvent8() = ComponentVEvent8<A, B, C, D, E, F, G, H>()
+
+   class ComponentVEvent8<A, B, C, D, E, F, G, H> : VEvent8<A, B, C, D, E, F, G, H> {
+      private var coroutineContext: CoroutineContext = EmptyCoroutineContext
+      private var action: (suspend (A, B, C, D, E, F, G, H) -> Unit)? = null
+
+      override fun invoke(coroutineContext: CoroutineContext, action: suspend (A, B, C, D, E, F, G, H) -> Unit) {
+         this.coroutineContext = coroutineContext
+         this.action = action
+      }
+
+      internal fun dispatch(arg0: A, arg1: B, arg2: C, arg3: D, arg4: E, arg5: F, arg6: G, arg7: H) {
+         GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            action?.invoke(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+         }
+      }
+   }
+
+   fun <A, B, C, D, E, F, G, H> ComponentVEvent8<A, B, C, D, E, F, G, H>.emit(arg0: A, arg1: B, arg2: C, arg3: D, arg4: E, arg5: F, arg6: G, arg7: H) {
+      dispatch(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+   }
+
+   operator fun <A, B, C, D, E, F, G, H> VEvent8<A, B, C, D, E, F, G, H>.invoke(componentVEvent: ComponentVEvent8<A, B, C, D, E, F, G, H>) {
+      invoke { arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7 ->
+         componentVEvent.dispatch(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
+      }
    }
 }
