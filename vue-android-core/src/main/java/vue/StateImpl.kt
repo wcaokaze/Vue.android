@@ -2,7 +2,7 @@ package vue
 
 import androidx.annotation.*
 
-internal class ReadonlyState<T>(initialValue: T) : ReactiveField<T> {
+internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
    private var observers: Array<((T) -> Unit)?> = arrayOfNulls(2)
 
    override var observerCount = 0
