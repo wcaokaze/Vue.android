@@ -23,11 +23,11 @@ class VBinderTestComponent(context: Context) : VComponent {
 }
 
 @RunWith(AndroidJUnit4::class)
-class ComponentPropertiesTest {
+class ComponentVBinderTest {
    @get:Rule
    val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
-   @Test fun vBinder_initialValueNull() {
+   @Test fun initialValueNull() {
       lateinit var component: VBinderTestComponent
 
       activityScenarioRule.scenario
@@ -40,7 +40,7 @@ class ComponentPropertiesTest {
             }
    }
 
-   @Test fun vBinder_bindValue_state() {
+   @Test fun bindValue_state() {
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -55,7 +55,7 @@ class ComponentPropertiesTest {
             }
    }
 
-   @Test fun vBinder_bindValue_reactivatee() {
+   @Test fun bindValue_reactivatee() {
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -70,7 +70,7 @@ class ComponentPropertiesTest {
             }
    }
 
-   @Test fun vBinder_bindToView() {
+   @Test fun bindToView() {
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -85,7 +85,7 @@ class ComponentPropertiesTest {
             }
    }
 
-   @Test fun vBinder_bindToView_vBinder() {
+   @Test fun bindToView_vBinder() {
       class VBinderTestComponent(context: Context) : VComponent {
          override val view: TextView
          val text = vBinder<String>()
@@ -116,7 +116,7 @@ class ComponentPropertiesTest {
             }
    }
 
-   @Test fun vBinder_reactivation() {
+   @Test fun reactivation() {
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -137,7 +137,7 @@ class ComponentPropertiesTest {
             }
    }
 
-   @Test fun vBinder_reactivation_withLambda() {
+   @Test fun reactivation_withLambda() {
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
