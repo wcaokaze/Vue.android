@@ -1,8 +1,10 @@
 package vue.vuex
 
+import kotlinx.coroutines.*
 import kotlin.test.*
 import org.junit.runner.*
 import org.junit.runners.*
+import vue.*
 
 @RunWith(JUnit4::class)
 class StoreTest {
@@ -86,6 +88,44 @@ class StoreTest {
    @Test fun actionCannotInstantiateWithoutStore() {
       assertFailsWith<IllegalStateException> {
          TestAction()
+      }
+   }
+
+   @Test fun integration() {
+      class TestState : VuexState() {
+         val count = state(0)
+      }
+
+      class TestMutation : VuexMutation<TestState>() {
+         fun increment() {
+            state.count.value++
+         }
+      }
+
+      class TestGetter : VuexGetter<TestState>() {
+         val conutText: V<String> = getter { state.count().toString() }
+      }
+
+      class TestAction : VuexAction<TestState, TestMutation, TestGetter>() {
+         suspend fun increment() {
+            delay(50L)
+            mutation.increment()
+         }
+      }
+
+      class TestStore : VuexStore<TestState, TestMutation, TestAction, TestGetter>() {
+         override fun createState()    = TestState()
+         override fun createMutation() = TestMutation()
+         override fun createAction()   = TestAction()
+         override fun createGetter()   = TestGetter()
+      }
+
+      runBlocking {
+         val store = TestStore()
+
+         assertEquals("0", store.getter.conutText())
+         store.action.increment()
+         assertEquals("1", store.getter.conutText())
       }
    }
 }
