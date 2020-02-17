@@ -1,3 +1,11 @@
 package vue.vuex
 
-abstract class VuexMutation<S> where S : VuexState
+import androidx.annotation.*
+
+abstract class VuexMutation<S> where S : VuexState {
+   var <T> VuexState.StateField<T>.value: T
+      get() = value
+      @UiThread set(v) {
+         value = v
+      }
+}
