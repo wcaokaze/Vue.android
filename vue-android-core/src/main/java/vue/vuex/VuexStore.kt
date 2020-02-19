@@ -54,6 +54,8 @@ abstract class VuexStore<S, M, A, G>
       return _modules as ModuleMap
    }
 
+   val rootModule: VuexStore<*, *, *, *>
+      get() = modules.rootModule
 
    class Module
          private constructor(val key: Key<*, *, *, *>,
@@ -80,7 +82,14 @@ abstract class VuexStore<S, M, A, G>
                   G : VuexGetter<S>
    }
 
-   inner class ModuleMap(private val moduleMap: Map<Module.Key<*, *, *, *>, VuexStore<*, *, *, *>>) {
+   inner class ModuleMap(
+         internal var rootModule: VuexStore<*, *, *, *>,
+         private val moduleMap: Map<Module.Key<*, *, *, *>, VuexStore<*, *, *, *>>
+   ) {
+      init {
+         setRootModule(rootModule)
+      }
+
       operator fun <MS, MM, MA, MG>
             get(key: Module.Key<MS, MM, MA, MG>): VuexStore<MS, MM, MA, MG>
             where MS : VuexState,
@@ -96,6 +105,14 @@ abstract class VuexStore<S, M, A, G>
          @Suppress("UNCHECKED_CAST")
          return module as VuexStore<MS, MM, MA, MG>
       }
+
+      private fun setRootModule(newRootModule: VuexStore<*, *, *, *>) {
+         rootModule = newRootModule
+
+         for (store in moduleMap.values) {
+            store.modules.setRootModule(newRootModule)
+         }
+      }
    }
 
    private fun ready() {
@@ -110,7 +127,8 @@ abstract class VuexStore<S, M, A, G>
          storeStack.addLast(this)
 
          _modules = ModuleMap(
-               createModules()
+               rootModule = this,
+               moduleMap = createModules()
                      .asSequence()
                      .map { Pair(it.key, it.store) }
                      .toMap()
