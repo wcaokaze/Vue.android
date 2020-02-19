@@ -1,0 +1,6 @@
+.DS_Store
+vue-android-core/.gradle
+vue-android-core/.idea
+vue-android-core/build
+vue-android-core/vue-android-core.iml
+vue-android-core/local.properties
