@@ -25,4 +25,33 @@ abstract class VuexState {
             delegate.value = value
          }
    }
+
+   val modules: ModuleMap
+
+   init {
+      val storeStack = storeStack.get()
+
+      if (storeStack.isNullOrEmpty()) {
+         throw IllegalStateException(
+               "No VuexStore is ready. " +
+               "Maybe you attempt to instantiate VuexState without VuexStore?")
+      }
+
+      @Suppress("UNCHECKED_CAST")
+      val store = storeStack.last as VuexStore<*, *, *, *>
+
+      modules = ModuleMap(store.modules)
+   }
+
+   inner class ModuleMap(private val storeModules: VuexStore<*, *, *, *>.ModuleMap) {
+      operator fun <MS, MM, MA, MG>
+            get(key: VuexStore.Module.Key<MS, MM, MA, MG>): MS
+            where MS : VuexState,
+                  MM : VuexMutation<MS>,
+                  MA : VuexAction<MS, MM, MG>,
+                  MG : VuexGetter<MS>
+      {
+         return storeModules[key].state
+      }
+   }
 }

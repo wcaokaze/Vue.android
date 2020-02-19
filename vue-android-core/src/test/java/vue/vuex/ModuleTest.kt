@@ -56,4 +56,25 @@ class ModuleTest {
       assertNotNull(message)
       assert("SubStore" in message)
    }
+
+   @Test fun gettingSubmoduleFromState() {
+      val superStore = SuperStore()
+      val superState = superStore.state
+
+      val subState = superState.modules[SuperStore.ModuleKeys.SUBMODULE]
+      assertSame(superStore.modules[SuperStore.ModuleKeys.SUBMODULE].state, subState)
+   }
+
+   @Test fun moduleFromStateNotFoundException() {
+      val subStore = SubStore()
+      val subState = subStore.state
+
+      val exception = assertFailsWith<NoSuchElementException> {
+         subState.modules[SuperStore.ModuleKeys.SUBMODULE]
+      }
+
+      val message = exception.message
+      assertNotNull(message)
+      assert("SubStore" in message)
+   }
 }
