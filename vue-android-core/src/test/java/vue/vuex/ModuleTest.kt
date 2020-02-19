@@ -48,10 +48,12 @@ class ModuleTest {
    @Test fun moduleNotFoundException() {
       val submodule = SubStore()
 
-      assertFailsWith<NoSuchElementException>(
-            "vue.vuex.ModuleTest\$SubStore does not have the specified module") {
-
+      val exception = assertFailsWith<NoSuchElementException> {
          submodule.modules[SuperStore.ModuleKeys.SUBMODULE]
       }
+
+      val message = exception.message
+      assertNotNull(message)
+      assert("SubStore" in message)
    }
 }
