@@ -26,3 +26,8 @@ abstract class VuexState {
          }
    }
 }
+
+var <T> VuexState.StateField<T>.value: T
+   get() = value
+   @Deprecated("VuexState can be written only via VuexMutation", level = DeprecationLevel.ERROR)
+   set(_) = throw UnsupportedOperationException()
