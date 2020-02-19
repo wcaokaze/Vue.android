@@ -43,7 +43,7 @@ abstract class VuexState {
       modules = ModuleMap(store.modules)
    }
 
-   inner class ModuleMap(private val storeModules: VuexStore<*, *, *, *>.ModuleMap) {
+   class ModuleMap(private val storeModules: VuexStore<*, *, *, *>.ModuleMap) {
       operator fun <MS, MM, MA, MG>
             get(key: VuexStore.Module.Key<MS, MM, MA, MG>): MS
             where MS : VuexState,

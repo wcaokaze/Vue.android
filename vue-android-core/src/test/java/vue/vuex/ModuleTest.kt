@@ -77,4 +77,67 @@ class ModuleTest {
       assertNotNull(message)
       assert("SubStore" in message)
    }
+
+   @Test fun gettingSubmoduleFromMutation() {
+      val superStore = SuperStore()
+      val superMutation = superStore.mutation
+
+      val subMutation = superMutation.modules[SuperStore.ModuleKeys.SUBMODULE]
+      assertSame(superStore.modules[SuperStore.ModuleKeys.SUBMODULE].mutation, subMutation)
+   }
+
+   @Test fun moduleFromMutationNotFoundException() {
+      val subStore = SubStore()
+      val subMutation = subStore.mutation
+
+      val exception = assertFailsWith<NoSuchElementException> {
+         subMutation.modules[SuperStore.ModuleKeys.SUBMODULE]
+      }
+
+      val message = exception.message
+      assertNotNull(message)
+      assert("SubStore" in message)
+   }
+
+   @Test fun gettingSubmoduleFromAction() {
+      val superStore = SuperStore()
+      val superAction = superStore.action
+
+      val subAction = superAction.modules[SuperStore.ModuleKeys.SUBMODULE]
+      assertSame(superStore.modules[SuperStore.ModuleKeys.SUBMODULE].action, subAction)
+   }
+
+   @Test fun moduleFromActionNotFoundException() {
+      val subStore = SubStore()
+      val subAction = subStore.action
+
+      val exception = assertFailsWith<NoSuchElementException> {
+         subAction.modules[SuperStore.ModuleKeys.SUBMODULE]
+      }
+
+      val message = exception.message
+      assertNotNull(message)
+      assert("SubStore" in message)
+   }
+
+   @Test fun gettingSubmoduleFromGetter() {
+      val superStore = SuperStore()
+      val superGetter = superStore.getter
+
+      val subGetter = superGetter.modules[SuperStore.ModuleKeys.SUBMODULE]
+      assertSame(superStore.modules[SuperStore.ModuleKeys.SUBMODULE].getter, subGetter)
+   }
+
+   @Test fun moduleFromGetterNotFoundException() {
+      val subStore = SubStore()
+      val subGetter = subStore.getter
+
+      val exception = assertFailsWith<NoSuchElementException> {
+         subGetter.modules[SuperStore.ModuleKeys.SUBMODULE]
+      }
+
+      val message = exception.message
+      assertNotNull(message)
+      assert("SubStore" in message)
+   }
 }
