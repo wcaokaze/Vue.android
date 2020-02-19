@@ -166,10 +166,62 @@ class ModuleTest {
       assertSame(superStore, superStore.rootModule)
    }
 
+   @Test fun gettingRootModuleFromRootModule_state() {
+      val superStore = SuperStore()
+      val superState = superStore.state
+      assertSame(superState, superState.rootModule)
+   }
+
+   @Test fun gettingRootModuleFromRootModule_mutation() {
+      val superStore = SuperStore()
+      val superMutation = superStore.mutation
+      assertSame(superMutation, superMutation.rootModule)
+   }
+
+   @Test fun gettingRootModuleFromRootModule_action() {
+      val superStore = SuperStore()
+      val superAction = superStore.action
+      assertSame(superAction, superAction.rootModule)
+   }
+
+   @Test fun gettingRootModuleFromRootModule_getter() {
+      val superStore = SuperStore()
+      val superGetter = superStore.getter
+      assertSame(superGetter, superGetter.rootModule)
+   }
+
    @Test fun gettingRootModuleFromSubModule() {
       val superStore = SuperStore()
       val subStore = superStore.modules[SuperStore.ModuleKeys.SUB_MODULE]
       assertSame(superStore, subStore.rootModule)
+   }
+
+   @Test fun gettingRootModuleFromSubModule_state() {
+      val superStore = SuperStore()
+      val subStore = superStore.modules[SuperStore.ModuleKeys.SUB_MODULE]
+      val subState = subStore.state
+      assertSame(superStore.state, subState.rootModule)
+   }
+
+   @Test fun gettingRootModuleFromSubModule_mutation() {
+      val superStore = SuperStore()
+      val subStore = superStore.modules[SuperStore.ModuleKeys.SUB_MODULE]
+      val subMutation = subStore.mutation
+      assertSame(superStore.mutation, subMutation.rootModule)
+   }
+
+   @Test fun gettingRootModuleFromSubModule_action() {
+      val superStore = SuperStore()
+      val subStore = superStore.modules[SuperStore.ModuleKeys.SUB_MODULE]
+      val subAction = subStore.action
+      assertSame(superStore.action, subAction.rootModule)
+   }
+
+   @Test fun gettingRootModuleFromSubModule_getter() {
+      val superStore = SuperStore()
+      val subStore = superStore.modules[SuperStore.ModuleKeys.SUB_MODULE]
+      val subGetter = subStore.getter
+      assertSame(superStore.getter, subGetter.rootModule)
    }
 
    @Test fun gettingRootModuleFromGrandSubModule() {
@@ -177,5 +229,37 @@ class ModuleTest {
       val subStore = superStore.modules[SuperStore.ModuleKeys.SUB_MODULE]
       val grandSubStore = subStore.modules[SubStore.ModuleKeys.GRAND_SUBMODULE]
       assertSame(superStore, grandSubStore.rootModule)
+   }
+
+   @Test fun gettingRootModuleFromGrandSubModule_state() {
+      val superStore = SuperStore()
+      val subStore = superStore.modules[SuperStore.ModuleKeys.SUB_MODULE]
+      val grandSubStore = subStore.modules[SubStore.ModuleKeys.GRAND_SUBMODULE]
+      val grandSubState = grandSubStore.state
+      assertSame(superStore.state, grandSubState.rootModule)
+   }
+
+   @Test fun gettingRootModuleFromGrandSubModule_mutation() {
+      val superStore = SuperStore()
+      val subStore = superStore.modules[SuperStore.ModuleKeys.SUB_MODULE]
+      val grandSubStore = subStore.modules[SubStore.ModuleKeys.GRAND_SUBMODULE]
+      val grandSubMutation = grandSubStore.mutation
+      assertSame(superStore.mutation, grandSubMutation.rootModule)
+   }
+
+   @Test fun gettingRootModuleFromGrandSubModule_action() {
+      val superStore = SuperStore()
+      val subStore = superStore.modules[SuperStore.ModuleKeys.SUB_MODULE]
+      val grandSubStore = subStore.modules[SubStore.ModuleKeys.GRAND_SUBMODULE]
+      val grandSubAction = grandSubStore.action
+      assertSame(superStore.action, grandSubAction.rootModule)
+   }
+
+   @Test fun gettingRootModuleFromGrandSubModule_getter() {
+      val superStore = SuperStore()
+      val subStore = superStore.modules[SuperStore.ModuleKeys.SUB_MODULE]
+      val grandSubStore = subStore.modules[SubStore.ModuleKeys.GRAND_SUBMODULE]
+      val grandSubGetter = grandSubStore.getter
+      assertSame(superStore.getter, grandSubGetter.rootModule)
    }
 }

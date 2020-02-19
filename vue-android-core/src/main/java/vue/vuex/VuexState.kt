@@ -27,6 +27,7 @@ abstract class VuexState {
    }
 
    val modules: ModuleMap
+   val rootModule: VuexState get() = modules.rootModule.state
 
    init {
       val storeStack = storeStack.get()
@@ -53,5 +54,7 @@ abstract class VuexState {
       {
          return storeModules[key].state
       }
+
+      internal val rootModule get() = storeModules.rootModule
    }
 }

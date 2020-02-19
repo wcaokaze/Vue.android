@@ -5,6 +5,7 @@ import androidx.annotation.*
 abstract class VuexMutation<S> where S : VuexState {
    val state: S
    val modules: ModuleMap
+   val rootModule: VuexMutation<*> get() = modules.rootModule.mutation
 
    init {
       val storeStack = storeStack.get()
@@ -32,6 +33,8 @@ abstract class VuexMutation<S> where S : VuexState {
       {
          return storeModules[key].mutation
       }
+
+      internal val rootModule get() = storeModules.rootModule
    }
 
    var <T> VuexState.StateField<T>.value: T

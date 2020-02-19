@@ -9,6 +9,7 @@ abstract class VuexAction<S, M, G>
    val mutation: M
    val getter: G
    val modules: ModuleMap
+   val rootModule: VuexAction<*, *, *> get() = modules.rootModule.action
 
    init {
       val storeStack = storeStack.get()
@@ -38,5 +39,7 @@ abstract class VuexAction<S, M, G>
       {
          return storeModules[key].action
       }
+
+      internal val rootModule get() = storeModules.rootModule
    }
 }

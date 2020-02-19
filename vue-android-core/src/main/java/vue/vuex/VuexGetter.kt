@@ -3,6 +3,7 @@ package vue.vuex
 abstract class VuexGetter<S> where S : VuexState {
    val state: S
    val modules: ModuleMap
+   val rootModule: VuexGetter<*> get() = modules.rootModule.getter
 
    init {
       val storeStack = storeStack.get()
@@ -30,5 +31,7 @@ abstract class VuexGetter<S> where S : VuexState {
       {
          return storeModules[key].getter
       }
+
+      internal val rootModule get() = storeModules.rootModule
    }
 }
