@@ -62,4 +62,54 @@ class ComponentLifecycleTest {
             .onActivity { containerView.addView(component.view) }
             .onActivity { assertEquals(2, count) }
    }
+
+   @Test fun onDetachedFromActivity() {
+      lateinit var containerView: FrameLayout
+      lateinit var component: LifecycleTestComponent
+      var detached = false
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               containerView = FrameLayout(activity)
+               activity.setContentView(containerView)
+
+               component = LifecycleTestComponent(activity)
+
+               component.componentLifecycle.onDetachedFromActivity += {
+                  detached = true
+               }
+            }
+            .onActivity { assertFalse(detached) }
+            .onActivity { containerView.addView(component.view) }
+            .onActivity { assertFalse(detached) }
+            .onActivity { containerView.removeView(component.view) }
+            .onActivity { assertTrue(detached) }
+   }
+
+   @Test fun onDetachedActivity_twice() {
+      lateinit var containerView: FrameLayout
+      lateinit var component: LifecycleTestComponent
+      var count = 0
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               containerView = FrameLayout(activity)
+               activity.setContentView(containerView)
+
+               component = LifecycleTestComponent(activity)
+
+               component.componentLifecycle.onDetachedFromActivity += {
+                  count++
+               }
+            }
+            .onActivity { assertEquals(0, count) }
+            .onActivity { containerView.addView(component.view) }
+            .onActivity { assertEquals(0, count) }
+            .onActivity { containerView.removeView(component.view) }
+            .onActivity { assertEquals(1, count) }
+            .onActivity { containerView.addView(component.view) }
+            .onActivity { assertEquals(1, count) }
+            .onActivity { containerView.removeView(component.view) }
+            .onActivity { assertEquals(2, count) }
+   }
 }

@@ -19,7 +19,8 @@ class ComponentLifecycle(private val component: VComponent) {
       }
    }
 
-   val onAttachedToActivity = ListenerSet()
+   val onAttachedToActivity   = ListenerSet()
+   val onDetachedFromActivity = ListenerSet()
 
    init {
       GlobalScope.launch(Dispatchers.Main) {
@@ -30,6 +31,7 @@ class ComponentLifecycle(private val component: VComponent) {
                   }
 
                   override fun onViewDetachedFromWindow(v: View?) {
+                     onDetachedFromActivity.emit()
                   }
                }
          )
