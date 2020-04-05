@@ -1,6 +1,7 @@
 package vue
 
 import android.view.*
+import androidx.annotation.*
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -8,10 +9,12 @@ class ComponentLifecycle(private val component: VComponent) {
    class ListenerSet {
       private val listeners = LinkedList<() -> Unit>()
 
+      @UiThread
       operator fun plusAssign(listener: () -> Unit) {
          listeners += listener
       }
 
+      @UiThread
       operator fun minusAssign(listener: () -> Unit) {
          listeners -= listener
       }
