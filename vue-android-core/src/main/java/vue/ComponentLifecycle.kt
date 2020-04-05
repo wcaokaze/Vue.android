@@ -12,6 +12,10 @@ class ComponentLifecycle(private val component: VComponent) {
          listeners += listener
       }
 
+      operator fun minusAssign(listener: () -> Unit) {
+         listeners -= listener
+      }
+
       internal fun emit() {
          for (l in listeners) {
             l()
