@@ -5,7 +5,9 @@ import androidx.annotation.*
 import kotlin.coroutines.*
 import kotlinx.coroutines.*
 
-class VOnProvider<out V : View>(val substance: V) {
+class VOnProvider<out V : View>(val coroutineScope: CoroutineScope,
+                                val substance: V)
+{
    inline fun VEvent0(
          crossinline binder: (actionDispatcher: () -> Unit) -> Unit
    ): VEvent0 = object : VEvent0 {
@@ -14,7 +16,7 @@ class VOnProvider<out V : View>(val substance: V) {
             action: suspend () -> Unit
       ) {
          binder {
-            GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            coroutineScope.launch(Dispatchers.Main.immediate + coroutineContext) {
                action()
             }
          }
@@ -29,7 +31,7 @@ class VOnProvider<out V : View>(val substance: V) {
             action: suspend (A) -> Unit
       ) {
          binder { a ->
-            GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            coroutineScope.launch(Dispatchers.Main.immediate + coroutineContext) {
                action(a)
             }
          }
@@ -44,7 +46,7 @@ class VOnProvider<out V : View>(val substance: V) {
             action: suspend (A, B) -> Unit
       ) {
          binder { a, b ->
-            GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            coroutineScope.launch(Dispatchers.Main.immediate + coroutineContext) {
                action(a, b)
             }
          }
@@ -59,7 +61,7 @@ class VOnProvider<out V : View>(val substance: V) {
             action: suspend (A, B, C) -> Unit
       ) {
          binder { a, b, c ->
-            GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            coroutineScope.launch(Dispatchers.Main.immediate + coroutineContext) {
                action(a, b, c)
             }
          }
@@ -74,7 +76,7 @@ class VOnProvider<out V : View>(val substance: V) {
             action: suspend (A, B, C, D) -> Unit
       ) {
          binder { a, b, c, d ->
-            GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            coroutineScope.launch(Dispatchers.Main.immediate + coroutineContext) {
                action(a, b, c, d)
             }
          }
@@ -89,7 +91,7 @@ class VOnProvider<out V : View>(val substance: V) {
             action: suspend (A, B, C, D, E) -> Unit
       ) {
          binder { a, b, c, d, e ->
-            GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            coroutineScope.launch(Dispatchers.Main.immediate + coroutineContext) {
                action(a, b, c, d, e)
             }
          }
@@ -104,7 +106,7 @@ class VOnProvider<out V : View>(val substance: V) {
             action: suspend (A, B, C, D, E, F) -> Unit
       ) {
          binder { a, b, c, d, e, f ->
-            GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            coroutineScope.launch(Dispatchers.Main.immediate + coroutineContext) {
                action(a, b, c, d, e, f)
             }
          }
@@ -119,7 +121,7 @@ class VOnProvider<out V : View>(val substance: V) {
             action: suspend (A, B, C, D, E, F, G) -> Unit
       ) {
          binder { a, b, c, d, e, f, g ->
-            GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            coroutineScope.launch(Dispatchers.Main.immediate + coroutineContext) {
                action(a, b, c, d, e, f, g)
             }
          }
@@ -134,7 +136,7 @@ class VOnProvider<out V : View>(val substance: V) {
             action: suspend (A, B, C, D, E, F, G, H) -> Unit
       ) {
          binder { a, b, c, d, e, f, g, h ->
-            GlobalScope.launch(Dispatchers.Main.immediate + coroutineContext) {
+            coroutineScope.launch(Dispatchers.Main.immediate + coroutineContext) {
                action(a, b, c, d, e, f, g, h)
             }
          }
@@ -143,4 +145,4 @@ class VOnProvider<out V : View>(val substance: V) {
 }
 
 @get:UiThread
-val <V : View> V.vOn: VOnProvider<V> get() = VOnProvider(this)
+val <V : View> V.vOn: VOnProvider<V> get() = VOnProvider(GlobalScope, this)

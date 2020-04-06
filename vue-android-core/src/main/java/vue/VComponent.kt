@@ -6,20 +6,51 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.*
 
 /**
- * [Reactivatee] which can also be reactivated by [VComponent.ComponentVBinder].
+ * [Reactivatee] which can also be reactivated by [VComponentInterface.ComponentVBinder].
  *
- * In other words, [ComponentVBinder][VComponent.ComponentVBinder] notifies
+ * In other words, [ComponentVBinder][VComponentInterface.ComponentVBinder] notifies
  * only ComponentReactivatee, doesn't notify normal [Reactivatee].
  * [ReactiveField] notifies both [Reactivatee] and ComponentReactivatee.
  *
  * @see Reactivatee
  */
-typealias ComponentReactivatee<T> = VComponent.ComponentReactivateeScope.() -> T
+typealias ComponentReactivatee<T> = VComponentInterface.ComponentReactivateeScope.() -> T
 
-interface VComponent {
+abstract class VComponent : VComponentInterface {
+   @Suppress("LeakingThis")
+   override val componentLifecycle = ComponentLifecycle(this)
+}
+
+interface VComponentInterface : CoroutineScope {
    val view: View
 
-   // ==== ReadonlyState ===============================================================
+   val componentLifecycle: ComponentLifecycle
+
+   override val coroutineContext: CoroutineContext
+      get() = componentLifecycle.coroutineContext
+
+   val <V : View> V.vOn: VOnProvider<V>
+      @UiThread get() = VOnProvider(this@VComponentInterface, this)
+
+   // ==== watcher =============================================================
+
+   /**
+    * observes a [ReactiveField].
+    *
+    * watcher invokes [removeObserver][ReactiveField.removeObserver] automatically.
+    * You don't have to manage the Component's lifetime.
+    */
+   fun <T> watcher(watchedReactiveField: ReactiveField<T>, watcher: (T) -> Unit) {
+      componentLifecycle.onAttachedToActivity += {
+         watchedReactiveField.addObserver(watcher)
+      }
+
+      componentLifecycle.onDetachedFromActivity += {
+         watchedReactiveField.removeObserver(watcher)
+      }
+   }
+
+   // ==== ReadonlyState =======================================================
 
    /**
     * [state] that cannot be written from outside a Component.

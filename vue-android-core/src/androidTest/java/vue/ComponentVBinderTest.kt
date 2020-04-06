@@ -10,7 +10,7 @@ import kotlin.test.Test
 import android.content.*
 import android.widget.*
 
-class VBinderTestComponent(context: Context) : VComponent {
+class VBinderTestComponent(context: Context) : VComponent() {
    override val view: TextView
    val number = vBinder<Int>()
 
@@ -86,7 +86,7 @@ class ComponentVBinderTest {
    }
 
    @Test fun bindToView_vBinder() {
-      class VBinderTestComponent(context: Context) : VComponent {
+      class VBinderTestComponent(context: Context) : VComponent() {
          override val view: TextView
          val text = vBinder<String>()
 
