@@ -17,9 +17,8 @@ class ComponentVEventTest {
    val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
    @Test fun emitManually() {
-      class Component(context: Context) : VComponentInterface {
+      class Component(context: Context) : VComponent() {
          override val view: View
-         override val componentLifecycle = ComponentLifecycle(this)
          val onClick = vEvent0()
 
          init {
@@ -45,9 +44,8 @@ class ComponentVEventTest {
    }
 
    @Test fun bindToAnotherVEvent() {
-      class Component(context: Context) : VComponentInterface {
+      class Component(context: Context) : VComponent() {
          override val view: View
-         override val componentLifecycle = ComponentLifecycle(this)
          val onClick = vEvent0()
 
          init {
@@ -73,9 +71,8 @@ class ComponentVEventTest {
    }
 
    @Test fun actionIsCalledOnMainThread() {
-      class Component(context: Context) : VComponentInterface {
+      class Component(context: Context) : VComponent() {
          override val view: View
-         override val componentLifecycle = ComponentLifecycle(this)
          val onClick = vEvent0()
 
          init {
@@ -102,9 +99,8 @@ class ComponentVEventTest {
    }
 
    @Test fun actionIsCalledOnMainThread_evenIfAnotherDispatcherIsSpecifiedInComponent() {
-      class Component(context: Context) : VComponentInterface {
+      class Component(context: Context) : VComponent() {
          override val view: View
-         override val componentLifecycle = ComponentLifecycle(this)
          val onClick = vEvent0()
 
          init {
@@ -131,9 +127,8 @@ class ComponentVEventTest {
    }
 
    @Test fun coroutineContext() {
-      class Component(context: Context) : VComponentInterface {
+      class Component(context: Context) : VComponent() {
          override val view: View
-         override val componentLifecycle = ComponentLifecycle(this)
          val onClick = vEvent0()
 
          init {
@@ -167,9 +162,8 @@ class ComponentVEventTest {
    }
 
    @Test fun actionIsCalledOnMainThread_evenIfCoroutineContextSpecified() {
-      class Component(context: Context) : VComponentInterface {
+      class Component(context: Context) : VComponent() {
          override val view: View
-         override val componentLifecycle = ComponentLifecycle(this)
          val onClick = vEvent0()
 
          init {
@@ -197,9 +191,8 @@ class ComponentVEventTest {
    }
 
    @Test fun dispatcherCanBeOverwritten() {
-      class Component(context: Context) : VComponentInterface {
+      class Component(context: Context) : VComponent() {
          override val view: View
-         override val componentLifecycle = ComponentLifecycle(this)
          val onClick = vEvent0()
 
          init {

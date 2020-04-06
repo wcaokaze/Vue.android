@@ -11,9 +11,8 @@ import android.content.*
 import android.view.*
 import android.widget.*
 
-class LifecycleTestComponent(context: Context) : VComponentInterface {
+class LifecycleTestComponent(context: Context) : VComponent() {
    override val view = View(context)
-   override val componentLifecycle = ComponentLifecycle(this)
 }
 
 @RunWith(AndroidJUnit4::class)

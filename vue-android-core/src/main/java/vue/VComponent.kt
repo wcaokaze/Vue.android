@@ -16,6 +16,11 @@ import kotlin.coroutines.*
  */
 typealias ComponentReactivatee<T> = VComponentInterface.ComponentReactivateeScope.() -> T
 
+abstract class VComponent : VComponentInterface {
+   @Suppress("LeakingThis")
+   override val componentLifecycle = ComponentLifecycle(this)
+}
+
 interface VComponentInterface : CoroutineScope {
    val view: View
 
