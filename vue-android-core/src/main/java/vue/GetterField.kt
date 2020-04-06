@@ -141,7 +141,7 @@ interface ReactivateeScope {
 }
 
 internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
-      : ReactivateeScope, VComponent.ComponentReactivateeScope
+      : ReactivateeScope, VComponentInterface.ComponentReactivateeScope
 {
    private val dependeeFields = HashSet<Any>()
 
@@ -191,7 +191,7 @@ internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
       return `$vueInternal$value`
    }
 
-   override val <T> VComponent.ComponentVBinder<T>.value: T? get() {
+   override val <T> VComponentInterface.ComponentVBinder<T>.value: T? get() {
       if (this in dependeeFields) {
          return field.value
       }
@@ -213,7 +213,7 @@ internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
       for (d in dependeeFields) {
          when (d) {
             is ReactiveField<*>               -> d.addObserver(observer)
-            is VComponent.ComponentVBinder<*> -> d.field.addObserver(observer)
+            is VComponentInterface.ComponentVBinder<*> -> d.field.addObserver(observer)
          }
       }
 
@@ -233,7 +233,7 @@ internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
       for (d in dependeeFields) {
          when (d) {
             is ReactiveField<*>               -> d.removeObserver(observer)
-            is VComponent.ComponentVBinder<*> -> d.field.removeObserver(observer)
+            is VComponentInterface.ComponentVBinder<*> -> d.field.removeObserver(observer)
          }
       }
    }
