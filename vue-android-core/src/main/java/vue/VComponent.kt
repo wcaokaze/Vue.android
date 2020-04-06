@@ -29,6 +29,9 @@ interface VComponentInterface : CoroutineScope {
    override val coroutineContext: CoroutineContext
       get() = componentLifecycle.coroutineContext
 
+   val <V : View> V.vOn: VOnProvider<V>
+      @UiThread get() = VOnProvider(this@VComponentInterface, this)
+
    // ==== ReadonlyState ===============================================================
 
    /**
