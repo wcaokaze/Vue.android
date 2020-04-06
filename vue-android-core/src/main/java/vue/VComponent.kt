@@ -6,17 +6,17 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.*
 
 /**
- * [Reactivatee] which can also be reactivated by [VComponent.ComponentVBinder].
+ * [Reactivatee] which can also be reactivated by [VComponentInterface.ComponentVBinder].
  *
- * In other words, [ComponentVBinder][VComponent.ComponentVBinder] notifies
+ * In other words, [ComponentVBinder][VComponentInterface.ComponentVBinder] notifies
  * only ComponentReactivatee, doesn't notify normal [Reactivatee].
  * [ReactiveField] notifies both [Reactivatee] and ComponentReactivatee.
  *
  * @see Reactivatee
  */
-typealias ComponentReactivatee<T> = VComponent.ComponentReactivateeScope.() -> T
+typealias ComponentReactivatee<T> = VComponentInterface.ComponentReactivateeScope.() -> T
 
-interface VComponent : CoroutineScope {
+interface VComponentInterface : CoroutineScope {
    val view: View
 
    val componentLifecycle: ComponentLifecycle

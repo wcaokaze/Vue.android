@@ -6,7 +6,7 @@ import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.*
 
-class ComponentLifecycle(private val component: VComponent) {
+class ComponentLifecycle(private val component: VComponentInterface) {
    class ListenerSet {
       private val listeners = LinkedList<() -> Unit>()
 

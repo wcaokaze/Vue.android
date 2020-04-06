@@ -11,7 +11,7 @@ import android.content.*
 import android.widget.*
 import androidx.lifecycle.*
 
-class SimpleComponent(context: Context) : VComponent {
+class SimpleComponent(context: Context) : VComponentInterface {
    override val componentLifecycle = ComponentLifecycle(this)
 
    override val view: LinearLayout
