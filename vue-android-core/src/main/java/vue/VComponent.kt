@@ -16,8 +16,13 @@ import kotlin.coroutines.*
  */
 typealias ComponentReactivatee<T> = VComponent.ComponentReactivateeScope.() -> T
 
-interface VComponent {
+interface VComponent : CoroutineScope {
    val view: View
+
+   val componentLifecycle: ComponentLifecycle
+
+   override val coroutineContext: CoroutineContext
+      get() = componentLifecycle.coroutineContext
 
    // ==== ReadonlyState ===============================================================
 

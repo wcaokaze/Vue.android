@@ -11,9 +11,9 @@ import android.content.*
 import android.view.*
 import kotlinx.coroutines.*
 
-class CoroutineScopeTestComponent(context: Context) : VComponent, CoroutineScope {
+class CoroutineScopeTestComponent(context: Context) : VComponent {
    override val view = View(context)
-   override val coroutineContext by ComponentScope()
+   override val componentLifecycle = ComponentLifecycle(this)
 }
 
 @RunWith(AndroidJUnit4::class)

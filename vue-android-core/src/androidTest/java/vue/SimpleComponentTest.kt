@@ -12,6 +12,8 @@ import android.widget.*
 import androidx.lifecycle.*
 
 class SimpleComponent(context: Context) : VComponent {
+   override val componentLifecycle = ComponentLifecycle(this)
+
    override val view: LinearLayout
    val countView: TextView
    val incrementButton: Button

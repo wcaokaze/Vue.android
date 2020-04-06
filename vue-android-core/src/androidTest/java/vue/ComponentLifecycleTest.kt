@@ -13,7 +13,7 @@ import android.widget.*
 
 class LifecycleTestComponent(context: Context) : VComponent {
    override val view = View(context)
-   val componentLifecycle = ComponentLifecycle(this)
+   override val componentLifecycle = ComponentLifecycle(this)
 }
 
 @RunWith(AndroidJUnit4::class)

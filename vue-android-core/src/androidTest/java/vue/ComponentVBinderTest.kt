@@ -12,6 +12,7 @@ import android.widget.*
 
 class VBinderTestComponent(context: Context) : VComponent {
    override val view: TextView
+   override val componentLifecycle = ComponentLifecycle(this)
    val number = vBinder<Int>()
 
    fun getCurrentNumber() = number()
@@ -88,6 +89,7 @@ class ComponentVBinderTest {
    @Test fun bindToView_vBinder() {
       class VBinderTestComponent(context: Context) : VComponent {
          override val view: TextView
+         override val componentLifecycle = ComponentLifecycle(this)
          val text = vBinder<String>()
 
          init {
