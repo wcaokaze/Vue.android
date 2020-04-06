@@ -32,7 +32,25 @@ interface VComponentInterface : CoroutineScope {
    val <V : View> V.vOn: VOnProvider<V>
       @UiThread get() = VOnProvider(this@VComponentInterface, this)
 
-   // ==== ReadonlyState ===============================================================
+   // ==== watcher =============================================================
+
+   /**
+    * observes a [ReactiveField].
+    *
+    * watcher invokes [removeObserver][ReactiveField.removeObserver] automatically.
+    * You don't have to manage the Component's lifetime.
+    */
+   fun <T> watcher(watchedReactiveField: ReactiveField<T>, watcher: (T) -> Unit) {
+      componentLifecycle.onAttachedToActivity += {
+         watchedReactiveField.addObserver(watcher)
+      }
+
+      componentLifecycle.onDetachedFromActivity += {
+         watchedReactiveField.removeObserver(watcher)
+      }
+   }
+
+   // ==== ReadonlyState =======================================================
 
    /**
     * [state] that cannot be written from outside a Component.

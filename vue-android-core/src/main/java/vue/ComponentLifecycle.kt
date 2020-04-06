@@ -43,6 +43,7 @@ class ComponentLifecycle(private val component: VComponentInterface) {
             // already attached.
             // addOnAttachStateChangeListener is too late,
             // and onViewAttachedToWindow will not be called.
+            onAttachedToActivity.emit()
          } else {
             // not yet attached.
             // cancel the current coroutine scope
