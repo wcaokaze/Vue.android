@@ -214,7 +214,7 @@ internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
 
       for (d in dependeeFields) {
          when (d) {
-            is ReactiveField<*>               -> d.addObserver(observer)
+            is ReactiveField<*> -> d.addObserver(observer)
             is VComponentInterface.ComponentVBinder<*> -> d.field.addObserver(observer)
          }
       }
@@ -234,7 +234,7 @@ internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
 
       for (d in dependeeFields) {
          when (d) {
-            is ReactiveField<*>               -> d.removeObserver(observer)
+            is ReactiveField<*> -> d.removeObserver(observer)
             is VComponentInterface.ComponentVBinder<*> -> d.field.removeObserver(observer)
          }
       }
