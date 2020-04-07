@@ -146,9 +146,11 @@ internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
    private val dependeeFields = HashSet<Any>()
 
    private val observer = fun (_: Any?) {
+      val getterField = getterField as GetterField<Any?>
       val reactivatee = getterField.reactivatee
-      currentValueCache = reactivatee()
-      getterField.notifyObservers(currentValueCache)
+      val newValue = reactivatee()
+      currentValueCache = newValue
+      getterField.notifyObservers(newValue)
    }
 
    private var isBoundToUpstream = false
