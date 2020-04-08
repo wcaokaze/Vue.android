@@ -1,3 +1,20 @@
+/*
+ * Copyright 2020 wcaokaze
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+final VERSION = '0.1.0'
 
 buildscript {
     ext.kotlin_version = '1.3.61'
@@ -10,11 +27,18 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.10.1'
+
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.dokka'
+
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 28
@@ -33,8 +57,7 @@ android {
         }
 
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled false
         }
     }
 }
@@ -65,3 +88,124 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
+dokka {
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/docs"
+
+    configuration {
+        moduleName = 'Vue.android'
+
+        includes = []
+        jdkVersion = 6
+
+        skipEmptyPackages = true
+        reportUndocumented = false
+
+        sourceLink {
+            path = "src/main/java"
+            url = 'https://github.com/wcaokaze/Vue.android/blob/master/vue-android-core/src/main/java'
+            lineSuffix = '#L'
+        }
+
+        externalDocumentationLink {
+            url = new URL("https://developer.android.com/reference/")
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier.set('javadoc')
+    from dokka.outputDirectory
+}
+
+javadocJar.dependsOn(dokka)
+
+final pomConfig = {
+    licenses {
+        license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+        }
+    }
+
+    developers {
+        developer {
+            id 'wcaokaze'
+            name 'wcaokaze'
+            email 'wcaokaze@gmail.com'
+        }
+    }
+
+    scm {
+        url 'https://github.com/wcaokaze/Vue.android.git'
+        connection 'scm:git:https://github.com/wcaokaze/Vue.android.git'
+        developerConnection 'scm:git:https://github.com/wcaokaze/Vue.android.git'
+    }
+}
+
+publishing {
+    publications {
+        Vue_android(MavenPublication) {
+            groupId 'com.wcaokaze.vue.android'
+            artifactId 'vue-android-core'
+            version VERSION
+
+            artifact sourcesJar
+            artifact javadocJar
+            artifact "$buildDir/outputs/aar/vue-android-core-release.aar"
+
+            pom.withXml {
+                final rootNode = asNode()
+
+                final dependenciesNode = rootNode['dependencies'][0]
+                        ?: rootNode.appendNode('dependencies')
+
+                rootNode.appendNode('name', 'Vue.android')
+
+                for (dependency in configurations.implementation.allDependencies) {
+                    if (dependency.name == 'unspecified') { continue }
+
+                    final dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId',    dependency.group)
+                    dependencyNode.appendNode('artifactId', dependency.name)
+                    dependencyNode.appendNode('version',    dependency.version)
+                }
+
+                rootNode.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+publish.dependsOn(sourcesJar, javadocJar, 'assembleRelease')
+
+bintray {
+    final props = new Properties()
+    props.load(project.file('local.properties').newDataInputStream())
+
+    user = props.getProperty('bintray.user')
+    key = props.getProperty('bintray.apiKey')
+
+    publications = ['Vue_android']
+
+    pkg {
+        repo = 'maven'
+        name = 'Vue.android'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/wcaokaze/Vue.android'
+
+        version {
+            name = VERSION
+            released = new Date()
+            vcsTag = "v$VERSION"
+        }
+    }
+}
+
+bintrayUpload.dependsOn(publish)
