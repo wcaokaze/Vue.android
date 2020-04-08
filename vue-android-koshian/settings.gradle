@@ -15,3 +15,7 @@
  */
 
 rootProject.name = 'vue-android-koshian'
+
+include 'vue-android-core'
+project(':vue-android-core').projectDir = file('../vue-android-core')
+
