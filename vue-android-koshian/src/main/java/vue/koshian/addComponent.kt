@@ -16,9 +16,23 @@
 
 package vue.koshian
 
+import android.view.*
 import koshian.*
 import vue.*
 import kotlin.contracts.*
+
+/**
+ * adds the specified [VComponent], with Koshian.
+ */
+@ExperimentalContracts
+@Suppress("FunctionName")
+inline fun <L, C : VComponent> Koshian<ViewManager, *, L, KoshianMode.Creator>.Component(
+      vComponent: C,
+      creatorAction: ViewCreator<C, L>.() -> Unit
+): C {
+   contract { callsInPlace(creatorAction, InvocationKind.EXACTLY_ONCE) }
+   return VComponent(vComponent, creatorAction)
+}
 
 /**
  * adds the specified [VComponent], with Koshian.
@@ -34,6 +48,21 @@ inline fun <L, C : VComponent> CreatorParent<L>.VComponent(
    val koshian = ViewCreator<C, L>(vComponent)
    koshian.creatorAction()
    return vComponent
+}
+
+/**
+ * If the next View is the specified Component, applies Koshian to it.
+ *
+ * Otherwise, inserts the specified Component to the current position.
+ */
+@Suppress("FunctionName")
+inline fun <L, C : VComponent, S : KoshianStyle>
+      ApplierParent<L, S>.Component(
+            vComponent: C,
+            applierAction: ViewApplier<C, L, S>.() -> Unit
+      )
+{
+   VComponent(vComponent, applierAction)
 }
 
 /**
