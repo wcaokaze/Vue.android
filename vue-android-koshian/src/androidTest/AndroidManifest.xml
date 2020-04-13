@@ -15,4 +15,9 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.wcaokaze.vue.android.koshian"/>
+          package="com.wcaokaze.vue.android.koshian">
+
+    <application>
+        <activity android:name="vue.koshian.EmptyTestActivity"/>
+    </application>
+</manifest>
