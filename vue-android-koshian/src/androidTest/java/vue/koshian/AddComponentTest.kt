@@ -56,4 +56,24 @@ class AddComponentTest {
          assertSame(rootView.getChildAt(0), componentAsResult.view)
       }
    }
+
+   @Test fun applyComponent() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val component1: AddComponentTestComponent
+
+         @OptIn(ExperimentalContracts::class)
+         val rootView = koshian(activity) {
+            FrameLayout {
+               component1 = Component(AddComponentTestComponent(activity)) {
+               }
+            }
+         }
+
+         rootView.applyKoshian {
+            Component(component1) {
+               assertSame(component1, component)
+            }
+         }
+      }
+   }
 }
