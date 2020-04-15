@@ -26,7 +26,7 @@ class GetterField<out T>
       )
       : ReactiveField<T>
 {
-   private var observers: Array<((T) -> Unit)?> = arrayOfNulls(2)
+   private var downstreams: Array<((T) -> Unit)?> = arrayOfNulls(2)
 
    private val reactivateeScope = ReactivateeScopeImpl(this)
 
@@ -44,11 +44,11 @@ class GetterField<out T>
 
       val shouldBind = observerCount == 0
 
-      if (observerCount >= observers.size) {
-         observers = observers.copyOf(newSize = observerCount * 2)
+      if (observerCount >= downstreams.size) {
+         downstreams = downstreams.copyOf(newSize = observerCount * 2)
       }
 
-      observers[observerCount++] = observer
+      downstreams[observerCount++] = observer
 
       if (shouldBind) {
          reactivateeScope.bindToDependees()
@@ -56,7 +56,7 @@ class GetterField<out T>
    }
 
    override fun removeObserver(observer: (T) -> Unit) {
-      val observers = observers
+      val observers = downstreams
 
       when (observerCount) {
          0 -> return
@@ -88,7 +88,7 @@ class GetterField<out T>
    }
 
    internal fun notifyObservers(value: @UnsafeVariance T) {
-      val observers = observers
+      val observers = downstreams
       val observerCount = observerCount
 
       for (i in 0 until observerCount) {
@@ -97,7 +97,7 @@ class GetterField<out T>
    }
 
    private fun containsObserver(observer: (T) -> Unit): Boolean {
-      for (o in observers) {
+      for (o in downstreams) {
          if (o === observer) { return true }
       }
 
