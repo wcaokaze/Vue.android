@@ -41,6 +41,8 @@ class GetterField<out T>
     */
    private var currentValueCache: Any? = null
 
+   private val dependeeFields = HashSet<Any>()
+
    private var downstreams: Array<((T) -> Unit)?> = arrayOfNulls(2)
 
    private val reactivateeScope = ReactivateeScopeImpl(this)
@@ -119,8 +121,22 @@ class GetterField<out T>
    }
 
    internal fun startToObserve(field: ReactiveField<*>) {
+      if (field in dependeeFields) { return }
+
+      dependeeFields += field
+
       if (isBoundToUpstream) {
          field.addObserver(upstreamObserver)
+      }
+   }
+
+   internal fun startToObserve(vBinder: VComponentInterface.ComponentVBinder<*>) {
+      if (vBinder in dependeeFields) { return }
+
+      dependeeFields += vBinder
+
+      if (isBoundToUpstream) {
+         vBinder.field.addObserver(upstreamObserver)
       }
    }
 
@@ -144,7 +160,7 @@ class GetterField<out T>
    @UiThread
    private fun bindToDependees() {
       // make a clone since dependeeFields may be modified in addObserver
-      val dependeeFields = HashSet(reactivateeScope.dependeeFields)
+      val dependeeFields = HashSet(dependeeFields)
 
       for (d in dependeeFields) {
          when (d) {
@@ -164,7 +180,7 @@ class GetterField<out T>
       isBoundToUpstream = false
 
       // make a clone since dependeeFields may be modified in removeObserver
-      val dependeeFields = HashSet(reactivateeScope.dependeeFields)
+      val dependeeFields = HashSet(dependeeFields)
 
       for (d in dependeeFields) {
          when (d) {
@@ -229,15 +245,7 @@ interface ReactivateeScope {
 internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
       : ReactivateeScope, VComponentInterface.ComponentReactivateeScope
 {
-   internal val dependeeFields = HashSet<Any>()
-
    override val <T> ReactiveField<T>.value: T get() {
-      if (this in dependeeFields) {
-         @Suppress("DEPRECATION")
-         return `$vueInternal$value`
-      }
-
-      dependeeFields += this
       getterField.startToObserve(this)
 
       @Suppress("DEPRECATION")
@@ -245,13 +253,7 @@ internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
    }
 
    override val <T> VComponentInterface.ComponentVBinder<T>.value: T? get() {
-      if (this in dependeeFields) {
-         return field.value
-      }
-
-      dependeeFields += this
-      getterField.startToObserve(field)
-
+      getterField.startToObserve(this)
       return field.value
    }
 }
