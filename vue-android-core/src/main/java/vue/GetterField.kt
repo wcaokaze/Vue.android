@@ -121,20 +121,18 @@ class GetterField<out T>
    internal fun startToObserve(field: ReactiveField<*>) {
       if (field in dependeeFields) { return }
 
-      dependeeFields += field
-
       if (isBoundToUpstream) {
          field.addObserver(upstreamObserver)
+         dependeeFields += field
       }
    }
 
    internal fun startToObserve(vBinder: VComponentInterface.ComponentVBinder<*>) {
       if (vBinder in dependeeFields) { return }
 
-      dependeeFields += vBinder
-
       if (isBoundToUpstream) {
          vBinder.field.addObserver(upstreamObserver)
+         dependeeFields += vBinder
       }
    }
 
