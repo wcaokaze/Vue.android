@@ -28,7 +28,7 @@ class GetterField<out T>
 {
    private val upstreamObserver = fun (_: Any?) {
       val reactivatee = reactivatee
-      val newValue = reactivateeScope.reactivatee()
+      val newValue = ReactivateeScopeImpl(this).reactivatee()
       currentValueCache = newValue
       notifyObservers(newValue)
    }
@@ -45,8 +45,6 @@ class GetterField<out T>
 
    private var downstreams: Array<((T) -> Unit)?> = arrayOfNulls(2)
 
-   private val reactivateeScope = ReactivateeScopeImpl(this)
-
    override var observerCount = 0
       private set
 
@@ -62,7 +60,7 @@ class GetterField<out T>
          currentValueCache
       } else {
          val reactivatee = reactivatee
-         reactivateeScope.reactivatee()
+         ReactivateeScopeImpl(this).reactivatee()
       }
    }
 
@@ -172,7 +170,7 @@ class GetterField<out T>
       isBoundToUpstream = true
 
       val reactivatee = reactivatee
-      currentValueCache = reactivateeScope.reactivatee()
+      currentValueCache = ReactivateeScopeImpl(this).reactivatee()
    }
 
    @UiThread
