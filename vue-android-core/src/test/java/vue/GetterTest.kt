@@ -171,4 +171,26 @@ class GetterTest {
       getter2.removeObserver(observer)
       assertEquals(0, state.observerCount)
    }
+
+   @Test fun shouldNotObserveUnreachableReactiveField() {
+      val state1 = state(1)
+      val state2 = state(2)
+      val conditionState = state(true)
+
+      val getter = getter {
+         if (conditionState()) {
+            state1()
+         } else {
+            state2()
+         }
+      }
+
+      getter.addObserver {}
+      assertEquals(1, state1.observerCount)
+      assertEquals(0, state2.observerCount)
+
+      conditionState.value = false
+      assertEquals(0, state1.observerCount)
+      assertEquals(1, state2.observerCount)
+   }
 }
