@@ -27,9 +27,7 @@ class GetterField<out T>
       : ReactiveField<T>
 {
    private val upstreamObserver = fun (_: Any?) {
-      val reactivatee = reactivatee
-      val newValue = ReactivateeScopeImpl(this).reactivatee()
-      currentValueCache = newValue
+      val newValue = invokeReactivatee()
       notifyObservers(newValue)
    }
 
@@ -59,8 +57,7 @@ class GetterField<out T>
       return if (isBoundToUpstream) {
          currentValueCache
       } else {
-         val reactivatee = reactivatee
-         ReactivateeScopeImpl(this).reactivatee()
+         invokeReactivatee()
       }
    }
 
@@ -136,6 +133,46 @@ class GetterField<out T>
       }
    }
 
+   private fun stopObserving(field: ReactiveField<*>) {
+      if (field !in dependeeFields) { return }
+
+      field.removeObserver(upstreamObserver)
+      dependeeFields -= field
+   }
+
+   private fun stopObserving(vBinder: VComponentInterface.ComponentVBinder<*>) {
+      if (vBinder !in dependeeFields) { return }
+
+      vBinder.field.removeObserver(upstreamObserver)
+      dependeeFields -= vBinder
+   }
+
+   private fun invokeReactivatee(): T {
+      val reactivatee = reactivatee
+      val reactivateeScope = ReactivateeScopeImpl(this)
+
+      val newValue = reactivateeScope.reactivatee()
+      currentValueCache = newValue
+
+      removeNoLongerUsedObservers(reactivateeScope.calledReactiveFields)
+
+      return newValue
+   }
+
+   private fun removeNoLongerUsedObservers(usedObservers: Set<Any>) {
+      // make a clone since dependeeFields may be modified in removeObserver
+      val dependeeFields = HashSet(dependeeFields)
+
+      for (d in dependeeFields) {
+         if (d in usedObservers) { continue }
+
+         when (d) {
+            is ReactiveField<*>                        -> stopObserving(d)
+            is VComponentInterface.ComponentVBinder<*> -> stopObserving(d)
+         }
+      }
+   }
+
    private fun notifyObservers(value: @UnsafeVariance T) {
       val observers = downstreams
       val observerCount = observerCount
@@ -166,9 +203,7 @@ class GetterField<out T>
       }
 
       isBoundToUpstream = true
-
-      val reactivatee = reactivatee
-      currentValueCache = ReactivateeScopeImpl(this).reactivatee()
+      invokeReactivatee()
    }
 
    @UiThread
@@ -241,8 +276,11 @@ interface ReactivateeScope {
 internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
       : ReactivateeScope, VComponentInterface.ComponentReactivateeScope
 {
+   val calledReactiveFields = HashSet<Any>()
+
    override val <T> ReactiveField<T>.value: T get() {
       getterField.startToObserve(this)
+      calledReactiveFields += this
 
       @Suppress("DEPRECATION")
       return `$vueInternal$value`
@@ -250,6 +288,8 @@ internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
 
    override val <T> VComponentInterface.ComponentVBinder<T>.value: T? get() {
       getterField.startToObserve(this)
+      calledReactiveFields += this
+
       return field.value
    }
 }
