@@ -57,12 +57,17 @@ interface VComponentInterface : CoroutineScope {
     * You don't have to manage the Component's lifetime.
     */
    fun <T> watcher(watchedReactiveField: ReactiveField<T>, watcher: (T) -> Unit) {
+      val observer = fun (r: Result<T>) {
+         val v = r.getOrNull() ?: return
+         watcher(v)
+      }
+
       componentLifecycle.onAttachedToActivity += {
-         watchedReactiveField.addObserver(watcher)
+         watchedReactiveField.addObserver(observer)
       }
 
       componentLifecycle.onDetachedFromActivity += {
-         watchedReactiveField.removeObserver(watcher)
+         watchedReactiveField.removeObserver(observer)
       }
    }
 
@@ -158,7 +163,10 @@ interface VComponentInterface : CoroutineScope {
       private var boundReactiveField: ReactiveField<T>? = null
       internal val field = StateImpl<T?>(null)
 
-      private val observer: (T) -> Unit = { field.value = it }
+      private val observer: (Result<T>) -> Unit = { result ->
+         result.onSuccess { field.value = it }
+               .onFailure { field.setFailure(it) }
+      }
 
       override fun invoke(reactiveField: ReactiveField<T>) {
          unbind()
@@ -168,7 +176,7 @@ interface VComponentInterface : CoroutineScope {
 
       override fun invoke(nonReactiveValue: T) {
          unbind()
-         observer(nonReactiveValue)
+         observer(Result.success(nonReactiveValue))
       }
 
       @UiThread

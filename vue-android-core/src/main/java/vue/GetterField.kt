@@ -27,7 +27,12 @@ class GetterField<out T>
       : ReactiveField<T>
 {
    private val upstreamObserver = fun (_: Any?) {
-      val newValue = invokeReactivatee()
+      val newValue: Result<T> = try {
+         Result.success(invokeReactivatee())
+      } catch (e: Throwable) {
+         Result.failure(e)
+      }
+
       notifyObservers(newValue)
    }
 
@@ -41,7 +46,7 @@ class GetterField<out T>
 
    private val dependeeFields = HashSet<Any>()
 
-   private var downstreams: Array<((T) -> Unit)?> = arrayOfNulls(2)
+   private var downstreams: Array<((Result<T>) -> Unit)?> = arrayOfNulls(2)
 
    override var observerCount = 0
       private set
@@ -67,7 +72,7 @@ class GetterField<out T>
       return getValue() as T
    }
 
-   override fun addObserver(observer: (T) -> Unit) {
+   override fun addObserver(observer: (Result<T>) -> Unit) {
       if (containsObserver(observer)) { return }
 
       val shouldBind = observerCount == 0
@@ -83,7 +88,7 @@ class GetterField<out T>
       }
    }
 
-   override fun removeObserver(observer: (T) -> Unit) {
+   override fun removeObserver(observer: (Result<T>) -> Unit) {
       val observers = downstreams
 
       when (observerCount) {
@@ -173,7 +178,7 @@ class GetterField<out T>
       }
    }
 
-   private fun notifyObservers(value: @UnsafeVariance T) {
+   private fun notifyObservers(value: Result<T>) {
       val observers = downstreams
       val observerCount = observerCount
 
@@ -182,7 +187,7 @@ class GetterField<out T>
       }
    }
 
-   private fun containsObserver(observer: (T) -> Unit): Boolean {
+   private fun containsObserver(observer: (Result<T>) -> Unit): Boolean {
       for (o in downstreams) {
          if (o === observer) { return true }
       }

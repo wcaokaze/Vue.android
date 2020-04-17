@@ -20,6 +20,8 @@ import kotlin.test.*
 import org.junit.runner.*
 import org.junit.runners.*
 
+import kotlin.Result
+
 @RunWith(JUnit4::class)
 class GetterTest {
    @Test fun getInitialValue_withNoObservers() {
@@ -62,7 +64,7 @@ class GetterTest {
       val getter = getter { state() * 2 }
 
       var i = -1
-      getter.addObserver { i = it }
+      getter.addObserver { i = it.getOrThrow() }
       state.value = 2
       assertEquals(4, i)
    }
@@ -73,7 +75,7 @@ class GetterTest {
       val getter2 = getter { getter1() * 3 }
 
       var i = -1
-      getter2.addObserver { i = it }
+      getter2.addObserver { i = it.getOrThrow() }
       state.value = 2
       assertEquals(12, i)
    }
@@ -151,7 +153,7 @@ class GetterTest {
       val state = state(1)
       val getter = getter { state() * 2 }
 
-      val observer: (Int) -> Unit = {}
+      val observer: (Result<Int>) -> Unit = {}
 
       getter.addObserver(observer)
       assertEquals(1, state.observerCount)
@@ -164,7 +166,7 @@ class GetterTest {
       val getter1 = getter { state() * 2 }
       val getter2 = getter { getter1() * 3 }
 
-      val observer: (Int) -> Unit = {}
+      val observer: (Result<Int>) -> Unit = {}
 
       getter2.addObserver(observer)
       assertEquals(1, state.observerCount)

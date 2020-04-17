@@ -20,6 +20,8 @@ import kotlin.test.*
 import org.junit.runner.*
 import org.junit.runners.*
 
+import kotlin.Result
+
 @RunWith(JUnit4::class)
 class StateTest {
    @Test fun gettingInitialValue() {
@@ -36,7 +38,7 @@ class StateTest {
    @Test fun observer() {
       val state = state(0)
       var i = -1
-      state.addObserver { i = it }
+      state.addObserver { i = it.getOrThrow() }
       state.value = 1
       assertEquals(1, i)
    }
@@ -58,7 +60,7 @@ class StateTest {
    @Test fun removeObserver() {
       val state = state(0)
       var i = -1
-      val observer: (Int) -> Unit = { i = it }
+      val observer: (Result<Int>) -> Unit = { i = it.getOrThrow() }
       state.addObserver(observer)
       state.value = 1
       state.removeObserver(observer)
@@ -72,9 +74,9 @@ class StateTest {
       var i1 = -1
       var i2 = -1
       var i3 = -1
-      val observer1: (Int) -> Unit = { i1 = it }
-      val observer2: (Int) -> Unit = { i2 = it }
-      val observer3: (Int) -> Unit = { i3 = it }
+      val observer1: (Result<Int>) -> Unit = { i1 = it.getOrThrow() }
+      val observer2: (Result<Int>) -> Unit = { i2 = it.getOrThrow() }
+      val observer3: (Result<Int>) -> Unit = { i3 = it.getOrThrow() }
 
       state.addObserver(observer1)
       state.addObserver(observer2)
@@ -98,9 +100,9 @@ class StateTest {
       var i1 = -1
       var i2 = -1
       var i3 = -1
-      val observer1: (Int) -> Unit = { i1 = it }
-      val observer2: (Int) -> Unit = { i2 = it }
-      val observer3: (Int) -> Unit = { i3 = it }
+      val observer1: (Result<Int>) -> Unit = { i1 = it.getOrThrow() }
+      val observer2: (Result<Int>) -> Unit = { i2 = it.getOrThrow() }
+      val observer3: (Result<Int>) -> Unit = { i3 = it.getOrThrow() }
 
       state.addObserver(observer1)
       state.addObserver(observer2)
@@ -124,9 +126,9 @@ class StateTest {
       var i1 = -1
       var i2 = -1
       var i3 = -1
-      val observer1: (Int) -> Unit = { i1 = it }
-      val observer2: (Int) -> Unit = { i2 = it }
-      val observer3: (Int) -> Unit = { i3 = it }
+      val observer1: (Result<Int>) -> Unit = { i1 = it.getOrThrow() }
+      val observer2: (Result<Int>) -> Unit = { i2 = it.getOrThrow() }
+      val observer3: (Result<Int>) -> Unit = { i3 = it.getOrThrow() }
 
       state.addObserver(observer1)
       state.addObserver(observer2)
@@ -147,7 +149,7 @@ class StateTest {
    @Test fun observerCount_decreased_fifo() {
       val state = state(0)
 
-      val observers = (0..3).map { Observer<Int> {} }
+      val observers = (0..3).map { Observer<Result<Int>> {} }
 
       for (o in observers) {
          state.addObserver(o)
@@ -165,7 +167,7 @@ class StateTest {
    @Test fun observerCount_decreased_lifo() {
       val state = state(0)
 
-      val observers = (0..3).map { Observer<Int> {} }
+      val observers = (0..3).map { Observer<Result<Int>> {} }
 
       for (o in observers) {
          state.addObserver(o)
@@ -183,7 +185,7 @@ class StateTest {
    @Test fun observerCount_decreased_random() {
       val state = state(0)
 
-      val observers = (0..3).map { Observer<Int> {} }
+      val observers = (0..3).map { Observer<Result<Int>> {} }
 
       for (o in observers) {
          state.addObserver(o)
@@ -202,7 +204,7 @@ class StateTest {
 
    @Test fun addObserver_notDuplicated() {
       val state = state(0)
-      val observer: (Int) -> Unit = {}
+      val observer: (Result<Int>) -> Unit = {}
 
       state.addObserver(observer)
       state.addObserver(observer)
@@ -212,7 +214,7 @@ class StateTest {
 
    @Test fun removeObserver_nopForNonAddedObserver() {
       val state = state(0)
-      val observer: (Int) -> Unit = {}
+      val observer: (Result<Int>) -> Unit = {}
 
       state.removeObserver(observer)
       assertEquals(0, state.observerCount)
