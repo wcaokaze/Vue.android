@@ -184,7 +184,12 @@ interface VComponentInterface : CoroutineScope {
          val boundReactiveField = boundReactiveField ?: return
 
          boundReactiveField.addObserver(observer)
-         field.value = boundReactiveField.value
+
+         try {
+            field.value = boundReactiveField.value
+         } catch (e: Throwable) {
+            field.setFailure(e)
+         }
       }
 
       @UiThread

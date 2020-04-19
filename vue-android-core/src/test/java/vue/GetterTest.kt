@@ -30,11 +30,30 @@ class GetterTest {
       assertEquals(2, getter.value)
    }
 
+   @Test fun getInitialValue_failure() {
+      val getter = getter<Int> { throw Exception("Exception from getter") }
+
+      val exception = assertFails { getter() }
+      val message = exception.message
+      assertNotNull(message)
+      assertEquals("Exception from getter", message)
+   }
+
    @Test fun getInitialValue_withNoObservers_viaAnotherGetter() {
       val state = state(1)
       val getter1 = getter { state() * 2 }
       val getter2 = getter { getter1() * 3 }
       assertEquals(6, getter2.value)
+   }
+
+   @Test fun getInitialValue_failure_withNoObservers_viaAnotherGetter() {
+      val getter1 = getter<Int> { throw Exception("Exception from getter") }
+      val getter2 = getter { getter1() }
+
+      val exception = assertFails { getter2() }
+      val message = exception.message
+      assertNotNull(message)
+      assertEquals("Exception from getter", message)
    }
 
    @Test fun getChangedValue_withNoObservers() {
@@ -69,6 +88,27 @@ class GetterTest {
       assertEquals(4, i)
    }
 
+   @Test fun observer_failure() {
+      val state = state(1)
+
+      val getter = getter<Int> {
+         state()
+         throw Exception("Exception from getter")
+      }
+
+      var r: Result<Int>? = null
+      getter.addObserver { r = it }
+      state.value = 2
+
+      val result = r
+      assertNotNull(result)
+      assertTrue(result.isFailure)
+      val exception = result.exceptionOrNull()
+      val message = exception?.message
+      assertNotNull(message)
+      assertEquals("Exception from getter", message)
+   }
+
    @Test fun observer_viaAnotherGetter() {
       val state = state(1)
       val getter1 = getter { state() * 2 }
@@ -80,11 +120,44 @@ class GetterTest {
       assertEquals(12, i)
    }
 
+   @Test fun observer_failure_viaAnotherGetter() {
+      val state = state(1)
+
+      val getter1 = getter<Int> {
+         state()
+         throw Exception("Exception from getter")
+      }
+
+      val getter2 = getter { getter1() }
+
+      var r: Result<Int>? = null
+      getter2.addObserver { r = it }
+      state.value = 2
+
+      val result = r
+      assertNotNull(result)
+      assertTrue(result.isFailure)
+      val exception = result.exceptionOrNull()
+      val message = exception?.message
+      assertNotNull(message)
+      assertEquals("Exception from getter", message)
+   }
+
    @Test fun getInitialValue_withObservers() {
       val state = state(1)
       val getter = getter { state() * 2 }
       getter.addObserver {}
       assertEquals(2, getter.value)
+   }
+
+   @Test fun getInitialValue_failure_withObservers() {
+      val getter = getter<Int> { throw Exception("Exception from getter") }
+      getter.addObserver {}
+
+      val exception = assertFails { getter() }
+      val message = exception.message
+      assertNotNull(message)
+      assertEquals("Exception from getter", message)
    }
 
    @Test fun getInitialValue_withObservers_viaAnotherGetter() {
@@ -93,6 +166,17 @@ class GetterTest {
       val getter2 = getter { getter1() * 3 }
       getter2.addObserver {}
       assertEquals(6, getter2.value)
+   }
+
+   @Test fun getInitialValue_failure_withObservers_viaAnotherGetter() {
+      val getter1 = getter<Int> { throw Exception("Exception from getter") }
+      val getter2 = getter { getter1() }
+      getter2.addObserver {}
+
+      val exception = assertFails { getter2() }
+      val message = exception.message
+      assertNotNull(message)
+      assertEquals("Exception from getter", message)
    }
 
    @Test fun getInitialValue_withObservers_shouldNotCallReactivatee() {
