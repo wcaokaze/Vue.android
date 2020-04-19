@@ -46,7 +46,7 @@ interface ReactiveField<out T> {
     * Observers are called on the Android UI Thread.
     */
    @UiThread
-   fun addObserver(@UiThread observer: (T) -> Unit)
+   fun addObserver(@UiThread observer: (Result<T>) -> Unit)
 
    /**
     * remove an observer which was added via [addObserver].
@@ -55,7 +55,7 @@ interface ReactiveField<out T> {
     * this function do nothing.
     */
    @UiThread
-   fun removeObserver(observer: (T) -> Unit)
+   fun removeObserver(observer: (Result<T>) -> Unit)
 }
 
 /**

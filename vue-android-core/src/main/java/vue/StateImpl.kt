@@ -19,7 +19,7 @@ package vue
 import androidx.annotation.*
 
 internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
-   private var observers: Array<((T) -> Unit)?> = arrayOfNulls(2)
+   private var observers: Array<((Result<T>) -> Unit)?> = arrayOfNulls(2)
 
    override var observerCount = 0
       private set
@@ -28,14 +28,24 @@ internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
    override val `$vueInternal$value`: T
       get() = value
 
-   var value: T = initialValue
-      @UiThread
+   private var _value: Result<T> = Result.success(initialValue)
       set(value) {
          field = value
          notifyObservers(value)
       }
 
-   override fun addObserver(observer: (T) -> Unit) {
+   var value: T
+      get() = _value.getOrThrow()
+      @UiThread
+      set(value) {
+         _value = Result.success(value)
+      }
+
+   fun setFailure(cause: Throwable) {
+      _value = Result.failure(cause)
+   }
+
+   override fun addObserver(observer: (Result<T>) -> Unit) {
       if (containsObserver(observer)) { return }
 
       if (observerCount >= observers.size) {
@@ -45,7 +55,7 @@ internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
       observers[observerCount++] = observer
    }
 
-   override fun removeObserver(observer: (T) -> Unit) {
+   override fun removeObserver(observer: (Result<T>) -> Unit) {
       val observers = observers
 
       when (observerCount) {
@@ -76,7 +86,7 @@ internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
       }
    }
 
-   private fun notifyObservers(value: T) {
+   private fun notifyObservers(value: Result<T>) {
       val observers = observers
       val observerCount = observerCount
 
@@ -85,7 +95,7 @@ internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
       }
    }
 
-   private fun containsObserver(observer: (T) -> Unit): Boolean {
+   private fun containsObserver(observer: (Result<T>) -> Unit): Boolean {
       for (o in observers) {
          if (o === observer) { return true }
       }

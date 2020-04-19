@@ -27,8 +27,8 @@ class GetterField<out T>
       : ReactiveField<T>
 {
    private val upstreamObserver = fun (_: Any?) {
-      val newValue = invokeReactivatee()
-      notifyObservers(newValue)
+      invokeReactivatee()
+      notifyObservers(currentValueCache)
    }
 
    private var isBoundToUpstream = false
@@ -37,11 +37,12 @@ class GetterField<out T>
     * the value of GetterField doesn't not change while [isBoundToUpstream] == true.
     * This prop stores a cache of the value.
     */
-   private var currentValueCache: Any? = null
+   private var currentValueCache: Result<T>
+         = Result.failure(Exception("GetterField has not been initialized yet"))
 
    private val dependeeFields = HashSet<Any>()
 
-   private var downstreams: Array<((T) -> Unit)?> = arrayOfNulls(2)
+   private var downstreams: Array<((Result<T>) -> Unit)?> = arrayOfNulls(2)
 
    override var observerCount = 0
       private set
@@ -54,11 +55,11 @@ class GetterField<out T>
     * type parameters. But this value can casted to `GetterField.T` safely.
     */
    internal fun getValue(): Any? {
-      return if (isBoundToUpstream) {
-         currentValueCache
-      } else {
+      if (!isBoundToUpstream) {
          invokeReactivatee()
       }
+
+      return currentValueCache.getOrThrow()
    }
 
    @Suppress("OverridingDeprecatedMember")
@@ -67,7 +68,7 @@ class GetterField<out T>
       return getValue() as T
    }
 
-   override fun addObserver(observer: (T) -> Unit) {
+   override fun addObserver(observer: (Result<T>) -> Unit) {
       if (containsObserver(observer)) { return }
 
       val shouldBind = observerCount == 0
@@ -83,7 +84,7 @@ class GetterField<out T>
       }
    }
 
-   override fun removeObserver(observer: (T) -> Unit) {
+   override fun removeObserver(observer: (Result<T>) -> Unit) {
       val observers = downstreams
 
       when (observerCount) {
@@ -147,16 +148,19 @@ class GetterField<out T>
       dependeeFields -= vBinder
    }
 
-   private fun invokeReactivatee(): T {
+   private fun invokeReactivatee() {
       val reactivatee = reactivatee
       val reactivateeScope = ReactivateeScopeImpl(this)
 
-      val newValue = reactivateeScope.reactivatee()
+      val newValue: Result<T> = try {
+         Result.success(reactivateeScope.reactivatee())
+      } catch (e: Throwable) {
+         Result.failure(e)
+      }
+
       currentValueCache = newValue
 
       removeNoLongerUsedObservers(reactivateeScope.calledReactiveFields)
-
-      return newValue
    }
 
    private fun removeNoLongerUsedObservers(usedObservers: Set<Any>) {
@@ -173,7 +177,7 @@ class GetterField<out T>
       }
    }
 
-   private fun notifyObservers(value: @UnsafeVariance T) {
+   private fun notifyObservers(value: Result<T>) {
       val observers = downstreams
       val observerCount = observerCount
 
@@ -182,7 +186,7 @@ class GetterField<out T>
       }
    }
 
-   private fun containsObserver(observer: (T) -> Unit): Boolean {
+   private fun containsObserver(observer: (Result<T>) -> Unit): Boolean {
       for (o in downstreams) {
          if (o === observer) { return true }
       }

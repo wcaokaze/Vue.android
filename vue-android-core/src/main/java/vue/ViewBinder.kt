@@ -22,7 +22,7 @@ import androidx.annotation.*
 /**
  * [VBinder] for [View]s
  */
-class ViewBinder<V : View, T>(view: V, private val binder: (T) -> Unit) : VBinder<T> {
+class ViewBinder<V : View, T>(view: V, private val binder: (Result<T>) -> Unit) : VBinder<T> {
    private var isBinding = false
    private var boundReactiveField: ReactiveField<T>? = null
 
@@ -52,7 +52,7 @@ class ViewBinder<V : View, T>(view: V, private val binder: (T) -> Unit) : VBinde
 
    override fun invoke(nonReactiveValue: T) {
       unbind()
-      binder(nonReactiveValue)
+      binder(Result.success(nonReactiveValue))
    }
 
    @UiThread
@@ -63,7 +63,14 @@ class ViewBinder<V : View, T>(view: V, private val binder: (T) -> Unit) : VBinde
       isBinding = true
 
       boundReactiveField.addObserver(binder)
-      binder(boundReactiveField.value)
+
+      val currentValue: Result<T> = try {
+         Result.success(boundReactiveField.value)
+      } catch (e: Throwable) {
+         Result.failure(e)
+      }
+
+      binder(currentValue)
    }
 
    @UiThread
