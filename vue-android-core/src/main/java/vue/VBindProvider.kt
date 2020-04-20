@@ -30,13 +30,15 @@ class VBindProvider<out V : View>(val substance: V) {
          prop: KCallable<VBinder<T>>,
          crossinline binderAction: (view: V, value: T) -> Unit
    ): VBinder<T> {
-      return createVBinder(prop) { value -> binderAction(substance, value) }
+      return createVBinder(prop) { value ->
+         binderAction(substance, value.getOrThrow())
+      }
    }
 
    @UiThread
    fun <T> createVBinder(
          prop: KCallable<VBinder<T>>,
-         binderAction: (value: T) -> Unit
+         binderAction: (value: Result<T>) -> Unit
    ): VBinder<T> {
       for ((p, b) in binders) {
          if (p == prop) {

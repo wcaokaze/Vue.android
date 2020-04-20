@@ -24,6 +24,7 @@ import kotlin.test.*
 import kotlin.test.Test
 
 import android.content.*
+import android.view.*
 import android.widget.*
 
 class VBinderTestComponent(context: Context) : VComponent() {
@@ -171,6 +172,97 @@ class ComponentVBinderTest {
             }
             .onActivity {
                assertEquals("2", component.view.text)
+            }
+   }
+
+   @Test fun getFailure() {
+      class GetFailureTestComponent(context: Context) : VComponent() {
+         override val view = View(context)
+         val number = vBinder<Int>()
+
+         fun getCurrentNumber() = number()
+      }
+
+      lateinit var component: GetFailureTestComponent
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               component = GetFailureTestComponent(activity)
+               component.number { throw Exception("Exception from bound reactivatee") }
+
+               activity.setContentView(component.view)
+            }
+            .onActivity {
+               val exception = assertFails {
+                  component.getCurrentNumber()
+               }
+
+               val message = exception.message
+               assertNotNull(message)
+               assertEquals("Exception from bound reactivatee", message)
+            }
+   }
+
+   @Test fun boundFailureToView() {
+      class BoundFailureToViewTestComponent(context: Context) : VComponent() {
+         override val view = TextView(context)
+         val number = vBinder<Int>()
+
+         init {
+            view.vBind.text { number().toString() }
+         }
+      }
+
+      lateinit var component: BoundFailureToViewTestComponent
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               component = BoundFailureToViewTestComponent(activity)
+               activity.setContentView(component.view)
+            }
+            .onActivity {
+               val exception = assertFails {
+                  component.number { throw Exception("Exception from bound reactivatee") }
+               }
+
+               val message = exception.message
+               assertNotNull(message)
+               assertEquals("Exception from bound reactivatee", message)
+            }
+   }
+
+   @Test fun failureAfterBinding() {
+      class FailureAfterBindingTestComponent(context: Context) : VComponent() {
+         override val view = TextView(context)
+         val number = vBinder<Int>()
+
+         init {
+            view.vBind.text { number().toString() }
+         }
+      }
+
+      lateinit var component: FailureAfterBindingTestComponent
+      val state = state(false)
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               component = FailureAfterBindingTestComponent(activity)
+
+               component.number {
+                  if (state()) { throw Exception("Exception from bound reactivatee") }
+                  0
+               }
+
+               activity.setContentView(component.view)
+            }
+            .onActivity {
+               val exception = assertFails {
+                  state.value = true
+               }
+
+               val message = exception.message
+               assertNotNull(message)
+               assertEquals("Exception from bound reactivatee", message)
             }
    }
 }

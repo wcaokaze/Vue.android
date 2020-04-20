@@ -4,3 +4,8 @@ vue-android-core/.idea
 vue-android-core/build
 vue-android-core/vue-android-core.iml
 vue-android-core/local.properties
+vue-android-koshian/.gradle
+vue-android-koshian/.idea
+vue-android-koshian/build
+vue-android-koshian/vue-android-koshian.iml
+vue-android-koshian/local.properties

@@ -191,4 +191,37 @@ class VBindTest {
          assertEquals(0, state.observerCount)
       }
    }
+
+   @Test fun bindToFailureField() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val failureGetter = getter<Boolean> { throw Exception() }
+
+         val view = View(activity)
+         view.vBind.isVisible(failureGetter)
+
+         assertFails {
+            activity.setContentView(view)
+         }
+      }
+   }
+
+   @Test fun reactiveWithFailureValue() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = state(false)
+
+         val failureGetter = getter {
+            if (state()) { throw Exception() }
+            true
+         }
+
+         val view = View(activity)
+         view.vBind.isVisible(failureGetter)
+
+         activity.setContentView(view)
+
+         assertFails {
+            state.value = true
+         }
+      }
+   }
 }
