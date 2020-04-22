@@ -71,8 +71,8 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-    api "com.wcaokaze.vue.android:vue-android-core:$VERSION"
-    api 'com.wcaokaze.koshian:koshian-core:0.4.1'
+    api "com.wcaokaze.vue.android:vue-android-koshian:$VERSION"
+    api 'com.wcaokaze.koshian:koshian-recyclerview:0.4.1'
 
     androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -83,5 +83,6 @@ dependencies {
 configurations.all {
     resolutionStrategy.dependencySubstitution {
         substitute module("com.wcaokaze.vue.android:vue-android-core:$VERSION") with project(':vue-android-core')
+        substitute module("com.wcaokaze.vue.android:vue-android-koshian:$VERSION") with project(':vue-android-koshian')
     }
 }
