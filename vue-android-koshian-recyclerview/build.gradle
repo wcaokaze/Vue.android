@@ -71,8 +71,8 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-    implementation "com.wcaokaze.vue.android:vue-android-koshian:$VERSION"
-    implementation 'com.wcaokaze.koshian:koshian-recyclerview:0.3.1'
+    api "com.wcaokaze.vue.android:vue-android-koshian:$VERSION"
+    api 'com.wcaokaze.koshian:koshian-recyclerview:0.4.1'
 
     androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
