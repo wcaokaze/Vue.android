@@ -38,12 +38,25 @@ import vue.*
  *       is StatusItem -> ViewHolderProvider(item) { reactiveItem: ReactiveField<StatusItem> ->
  *          //                                                     ^~~~~~~~~~~~~
  *
+ *          val status = getter { reactiveItem().status }
+ *          val formatter = DateTimeFormatter.ofFormat("d MMM yyyy HH:mm")
+ *          val formattedCreatedTime = getter { formatter.format(status().createdTime) }
+ *
+ *          val userComponent: UserComponent
+ *
  *          LinearLayout {
  *             view.orientation = VERTICAL
  *
+ *             userComponent = Component(UserComponent(context)) {
+ *                component.user { status().user }
+ *             }
+ *
  *             TextView {
- *                vBind.text { reactiveItem().status }
- *                //           ^~~~~~~~~~~~
+ *                vBind.text { status().content }
+ *             }
+ *
+ *             TextView {
+ *                vBind.text { formattedCreatedTime() }
  *             }
  *          }
  *       }
