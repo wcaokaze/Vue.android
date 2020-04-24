@@ -26,17 +26,17 @@ fun decrement() {
 }
 
 koshian(context) {
-   linearLayout {
-      textView {
+   LinearLayout {
+      TextView {
          vBind.text { countText() }
       }
 
-      button {
+      Button {
          view.text = "+"
          vOn.click { increment() }
       }
 
-      button {
+      Button {
          view.text = "-"
          vOn.click { decrement() }
       }
