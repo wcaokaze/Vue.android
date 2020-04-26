@@ -30,6 +30,8 @@ internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
 
    private var _value: Result<T> = Result.success(initialValue)
       set(value) {
+         if (value == field) { return }
+
          field = value
          notifyObservers(value)
       }

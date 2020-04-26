@@ -27,8 +27,14 @@ class GetterField<out T>
       : ReactiveField<T>
 {
    private val upstreamObserver = fun (_: Any?) {
+      val prevValue = currentValueCache
+
       invokeReactivatee()
-      notifyObservers(currentValueCache)
+      val newValue = currentValueCache
+
+      if (newValue != prevValue) {
+         notifyObservers(newValue)
+      }
    }
 
    private var isBoundToUpstream = false

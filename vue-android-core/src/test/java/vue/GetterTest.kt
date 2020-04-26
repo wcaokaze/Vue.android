@@ -258,6 +258,13 @@ class GetterTest {
       assertEquals(0, state.observerCount)
    }
 
+   @Test fun distinct() {
+      val state = state(0)
+      val getter = getter { state() * 0 }
+      getter.addObserver { fail() }
+      state.value = 1
+   }
+
    @Test fun shouldNotObserveUnreachableReactiveField() {
       val state1 = state(1)
       val state2 = state(2)

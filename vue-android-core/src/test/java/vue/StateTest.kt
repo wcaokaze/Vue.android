@@ -220,6 +220,12 @@ class StateTest {
       assertEquals(0, state.observerCount)
    }
 
+   @Test fun distinct() {
+      val state = state(0)
+      state.addObserver { fail() }
+      state.value = 0
+   }
+
    /**
     * To waste kotlin optimizer.
     *
