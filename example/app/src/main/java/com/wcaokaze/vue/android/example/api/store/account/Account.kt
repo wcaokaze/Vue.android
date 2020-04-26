@@ -1,4 +1,4 @@
-package com.wcaokaze.vue.android.example.store.account
+package com.wcaokaze.vue.android.example.api.store.account
 
 import java.net.URL
 
