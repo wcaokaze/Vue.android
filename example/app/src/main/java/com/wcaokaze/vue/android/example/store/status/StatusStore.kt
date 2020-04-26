@@ -1,4 +1,4 @@
-package com.wcaokaze.vue.android.example.api.status
+package com.wcaokaze.vue.android.example.store.status
 
 import vue.*
 import vue.vuex.*

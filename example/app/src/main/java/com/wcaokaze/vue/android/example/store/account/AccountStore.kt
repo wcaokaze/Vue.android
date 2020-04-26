@@ -1,4 +1,4 @@
-package com.wcaokaze.vue.android.example.api.account
+package com.wcaokaze.vue.android.example.store.account
 
 import vue.*
 import vue.vuex.*

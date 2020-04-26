@@ -1,6 +1,6 @@
-package com.wcaokaze.vue.android.example.api.status
+package com.wcaokaze.vue.android.example.store.status
 
-import com.wcaokaze.vue.android.example.api.account.*
+import com.wcaokaze.vue.android.example.store.account.*
 import java.util.*
 
 data class Status(
