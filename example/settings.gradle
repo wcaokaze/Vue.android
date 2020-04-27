@@ -16,6 +16,7 @@
 
 rootProject.name='Vue.example'
 include ':app'
+include ':mastodon'
 
 include 'vue-android-core'
 project(':vue-android-core').projectDir = file('../vue-android-core')

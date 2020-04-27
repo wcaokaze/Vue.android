@@ -1,6 +1,6 @@
-package com.wcaokaze.vue.android.example.api.store.timeline
+package com.wcaokaze.vue.android.example.mastodon.store.timeline
 
-import com.wcaokaze.vue.android.example.api.store.status.*
+import com.wcaokaze.vue.android.example.mastodon.store.status.*
 import vue.vuex.*
 
 class TimelineStore : VuexStore<TimelineState, TimelineMutation, TimelineAction, TimelineGetter>() {

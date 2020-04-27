@@ -1,8 +1,8 @@
-package com.wcaokaze.vue.android.example.api.store
+package com.wcaokaze.vue.android.example.mastodon.store
 
-import com.wcaokaze.vue.android.example.api.store.account.*
-import com.wcaokaze.vue.android.example.api.store.status.*
-import com.wcaokaze.vue.android.example.api.store.timeline.*
+import com.wcaokaze.vue.android.example.mastodon.store.account.*
+import com.wcaokaze.vue.android.example.mastodon.store.status.*
+import com.wcaokaze.vue.android.example.mastodon.store.timeline.*
 import vue.vuex.*
 
 class ApiStore : VuexStore<ApiState, ApiMutation, ApiAction, ApiGetter>() {
