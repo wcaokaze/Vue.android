@@ -24,6 +24,10 @@ android {
     compileSdkVersion 28
     buildToolsVersion "29.0.2"
 
+    packagingOptions {
+        exclude 'META-INF/kotlinx-serialization-runtime.kotlin_module'
+    }
+
     defaultConfig {
         applicationId "com.wcaokaze.vue.android.example"
         minSdkVersion 21
@@ -52,6 +56,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     implementation "com.wcaokaze.vue.android:vue-android-koshian-recyclerview:$VERSION"
+
+    implementation project(':mastodon')
 
     androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

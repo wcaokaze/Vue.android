@@ -55,13 +55,3 @@ val <I> RecyclerViewAdapterVBindProvider<I>.items: VBinder<List<I>>
    get() = recyclerViewVBindProvider.createVBinder(::items) { _, value ->
       adapter.items = value
    }
-
-fun <I> VBindProvider<RecyclerView>
-      .items(adapter: KoshianRecyclerViewAdapter<I>): VBinder<List<I>>
-{
-   substance.adapter = adapter
-
-   return createVBinder(::items) { _, value ->
-      adapter.items = value
-   }
-}

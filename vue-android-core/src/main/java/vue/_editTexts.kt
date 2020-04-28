@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 
-buildscript {
-    ext.kotlin_version = '1.3.70'
+package vue
 
-    repositories {
-        google()
-        jcenter()
-    }
+import android.text.*
+import android.widget.EditText
 
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-    }
-}
+val VOnProvider<EditText>.textChanged: VEvent1<Editable>
+   get() = VEvent1 { actionDispatcher ->
+      substance.addTextChangedListener(object: TextWatcher {
+         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url 'https://dl.bintray.com/wcaokaze/maven' }
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+         override fun afterTextChanged(s: Editable) {
+            actionDispatcher(s)
+         }
+      })
+   }
