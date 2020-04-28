@@ -14,29 +14,18 @@
  * limitations under the License.
  */
 
-buildscript {
-    ext.kotlin_version = '1.3.70'
+package com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.apps
 
-    repositories {
-        google()
-        jcenter()
-    }
+import kotlinx.serialization.*
 
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url 'https://dl.bintray.com/wcaokaze/maven' }
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+@Serializable
+internal class MastodonClient(
+   val name: String,
+   val website: String?,
+   @SerialName("redirect_uri")
+   val redirectUri: String,
+   @SerialName("client_id")
+   val clientId: String,
+   @SerialName("client_secret")
+   val clientSecret: String
+)

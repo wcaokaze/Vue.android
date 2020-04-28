@@ -14,29 +14,14 @@
  * limitations under the License.
  */
 
-buildscript {
-    ext.kotlin_version = '1.3.70'
+package com.wcaokaze.vue.android.example.mastodon.infrastructure
 
-    repositories {
-        google()
-        jcenter()
-    }
+internal class MastodonInstance(rootUrl: String) {
+   val rootUrl = if (rootUrl.endsWith('/')) {
+      rootUrl
+   } else {
+      rootUrl + '/'
+   }
 
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url 'https://dl.bintray.com/wcaokaze/maven' }
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+   fun getApiUrl(path: String): String = rootUrl + path
 }

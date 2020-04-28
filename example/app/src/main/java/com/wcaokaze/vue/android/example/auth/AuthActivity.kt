@@ -1,0 +1,110 @@
+/*
+ * Copyright 2020 wcaokaze
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.wcaokaze.vue.android.example.auth
+
+import android.app.*
+import android.content.*
+import android.net.*
+import android.os.*
+import android.widget.*
+import com.wcaokaze.vue.android.example.mastodon.auth.*
+import koshian.*
+import kotlinx.coroutines.*
+import vue.*
+import vue.koshian.*
+import java.net.*
+import kotlin.contracts.*
+
+class AuthActivity : Activity(), VComponentInterface {
+   override val componentLifecycle = ComponentLifecycle(this)
+
+   override lateinit var view: LinearLayout
+
+   private val instanceUrl = state<String?>("https://")
+   private val errorMessage = state<String?>(null)
+
+   override fun onCreate(savedInstanceState: Bundle?) {
+      super.onCreate(savedInstanceState)
+      buildContentView()
+   }
+
+   private suspend fun startAuthorization() {
+      errorMessage.value = null
+
+      try {
+         val instanceUrl = try {
+            URL(instanceUrl.value)
+         } catch (e: Exception) {
+            errorMessage.value = "Invalid URL"
+            throw CancellationException()
+         }
+
+         val client = registerClient(instanceUrl)
+         val authorizationUrl = getAuthorizationUrl(client)
+
+         val intent = Intent(Intent.ACTION_VIEW,
+               Uri.parse(authorizationUrl.toExternalForm()))
+
+         startActivity(intent)
+      } catch (e: Exception) {
+         errorMessage.value = "Something goes wrong"
+      }
+   }
+
+   private fun buildContentView() {
+      @OptIn(ExperimentalContracts::class)
+      view = koshian(this) {
+         LinearLayout {
+            view.orientation = VERTICAL
+
+            EditText {
+               vOn.textChanged { instanceUrl.value = it.toString() }
+               vBind.text(instanceUrl)
+            }
+
+            TextView {
+               vBind.text(errorMessage)
+            }
+
+            Button {
+               view.text = "GO"
+               vOn.click { startAuthorization() }
+            }
+         }
+      }
+
+      view.applyKoshian {
+         view.padding = 16.dip
+
+         EditText {
+            layout.width = MATCH_PARENT
+         }
+
+         TextView {
+            layout.gravity = END
+            view.textColor = 0xff0000.opaque
+            view.typeface = BOLD
+         }
+
+         Button {
+            layout.gravity = END
+         }
+      }
+
+      setContentView(view)
+   }
+}
