@@ -36,33 +36,36 @@ class AuthActivity : Activity(), VComponentInterface {
 
    private val instanceUrl = state<CharSequence>("https://")
    private val errorMessage = state<String?>(null)
+   private val authorizationJob = state<Job>(Job().also { it.complete() })
 
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       buildContentView()
    }
 
-   private suspend fun startAuthorization() {
-      errorMessage.value = null
+   private fun startAuthorization() {
+      authorizationJob.value = launch {
+         errorMessage.value = null
 
-      val instanceUrl = try {
-         val instanceUrlStr = instanceUrl.value.toString().takeIf { it.isNotBlank() }
-         URL(instanceUrlStr)
-      } catch (e: Exception) {
-         errorMessage.value = "Invalid URL"
-         throw CancellationException()
-      }
+         val instanceUrl = try {
+            val instanceUrlStr = instanceUrl.value.toString().takeIf { it.isNotBlank() }
+            URL(instanceUrlStr)
+         } catch (e: Exception) {
+            errorMessage.value = "Invalid URL"
+            throw CancellationException()
+         }
 
-      try {
-         val client = registerClient(instanceUrl)
-         val authorizationUrl = getAuthorizationUrl(client)
+         try {
+            val client = registerClient(instanceUrl)
+            val authorizationUrl = getAuthorizationUrl(client)
 
-         val intent = Intent(Intent.ACTION_VIEW,
-               Uri.parse(authorizationUrl.toExternalForm()))
+            val intent = Intent(Intent.ACTION_VIEW,
+                  Uri.parse(authorizationUrl.toExternalForm()))
 
-         startActivity(intent)
-      } catch (e: Exception) {
-         errorMessage.value = "Something goes wrong"
+            startActivity(intent)
+         } catch (e: Exception) {
+            errorMessage.value = "Something goes wrong"
+         }
       }
    }
 
@@ -80,9 +83,17 @@ class AuthActivity : Activity(), VComponentInterface {
                vBind.text(errorMessage)
             }
 
-            Button {
-               view.text = "GO"
-               vOn.click { startAuthorization() }
+            LinearLayout {
+               view.orientation = HORIZONTAL
+
+               ProgressBar {
+                  vBind.isVisible { authorizationJob().toReactiveField()() }
+               }
+
+               Button {
+                  view.text = "GO"
+                  vOn.click { startAuthorization() }
+               }
             }
          }
       }
@@ -100,8 +111,25 @@ class AuthActivity : Activity(), VComponentInterface {
             view.typeface = BOLD
          }
 
-         Button {
-            layout.gravity = END
+         LinearLayout {
+            layout.width = MATCH_PARENT
+
+            Space {
+               layout.width  = 0
+               layout.height = 0
+               layout.weight = 1.0f
+            }
+
+            ProgressBar {
+               layout.gravity = CENTER_VERTICAL
+               layout.width  = 24.dip
+               layout.height = 24.dip
+            }
+
+            Button {
+               layout.margins = 8.dip
+               layout.gravity = CENTER_VERTICAL
+            }
          }
       }
 
