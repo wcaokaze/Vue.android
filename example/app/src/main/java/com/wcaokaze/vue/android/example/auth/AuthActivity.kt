@@ -34,7 +34,7 @@ class AuthActivity : Activity(), VComponentInterface {
 
    override lateinit var componentView: LinearLayout
 
-   private val instanceUrl = state<String?>("https://")
+   private val instanceUrl = state<CharSequence>("https://")
    private val errorMessage = state<String?>(null)
 
    override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,14 +45,15 @@ class AuthActivity : Activity(), VComponentInterface {
    private suspend fun startAuthorization() {
       errorMessage.value = null
 
-      try {
-         val instanceUrl = try {
-            URL(instanceUrl.value)
-         } catch (e: Exception) {
-            errorMessage.value = "Invalid URL"
-            throw CancellationException()
-         }
+      val instanceUrl = try {
+         val instanceUrlStr = instanceUrl.value.toString().takeIf { it.isNotBlank() }
+         URL(instanceUrlStr)
+      } catch (e: Exception) {
+         errorMessage.value = "Invalid URL"
+         throw CancellationException()
+      }
 
+      try {
          val client = registerClient(instanceUrl)
          val authorizationUrl = getAuthorizationUrl(client)
 
@@ -72,8 +73,7 @@ class AuthActivity : Activity(), VComponentInterface {
             view.orientation = VERTICAL
 
             EditText {
-               vOn.textChanged { instanceUrl.value = it.toString() }
-               vBind.text(instanceUrl)
+               vModel.text(instanceUrl)
             }
 
             TextView {
