@@ -24,6 +24,7 @@ import kotlin.test.*
 import kotlin.test.Test
 
 import android.widget.*
+import androidx.lifecycle.*
 
 @RunWith(AndroidJUnit4::class)
 class VModelTest {
@@ -39,6 +40,58 @@ class VModelTest {
 
          assertEquals(1, state.observerCount)
       }
+   }
+
+   @Test fun bind_initialValue() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = state<CharSequence?>("Vue.android")
+         val editText = EditText(activity)
+
+         editText.vModel.text(state)
+         activity.setContentView(editText)
+
+         assertEquals("Vue.android", editText.text.toString())
+      }
+   }
+
+   @Test fun shouldNotBind_ifViewNotDisplayed() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = state<CharSequence?>(null)
+         val editText = EditText(activity)
+         editText.vModel.text(state)
+         // activity.setContentView(view)
+
+         assertEquals(0, state.observerCount)
+      }
+   }
+
+   @Test fun unbind_onViewRemoved() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = state<CharSequence?>(null)
+         val parentView = LinearLayout(activity)
+         val editText = EditText(activity)
+         parentView.addView(editText)
+         editText.vModel.text(state)
+         activity.setContentView(parentView)
+
+         assertEquals(1, state.observerCount)
+         parentView.removeView(editText)
+         assertEquals(0, state.observerCount)
+      }
+   }
+
+   @Test fun unbind_onActivityFinish() {
+      val state = state<CharSequence?>(null)
+
+      activityScenarioRule.scenario.onActivity { activity ->
+         val editText = EditText(activity)
+         editText.vModel.text(state)
+         activity.setContentView(editText)
+      }
+
+      assertEquals(1, state.observerCount)
+      activityScenarioRule.scenario.moveToState(Lifecycle.State.DESTROYED)
+      assertEquals(0, state.observerCount)
    }
 
    @Test fun stateToView() {

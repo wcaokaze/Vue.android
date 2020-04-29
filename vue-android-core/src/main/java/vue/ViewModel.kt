@@ -17,16 +17,28 @@
 package vue
 
 import android.view.*
+import androidx.annotation.*
 
 class ViewModel<V : View, in I, out O>(
       view: V,
-      viewPropertyChangeEventListenerSetter: (onChanged: (O) -> Unit) -> Unit,
+      private val viewPropertyChangeEventListenerSetter: (onChanged: (O) -> Unit) -> Unit,
       private val viewBinder: (Result<I>) -> Unit
 ) : VModel<I, O> {
+   private var isBinding = false
    private var inputField:  StateField<out I>? = null
    private var outputField: StateField<in  O>? = null
 
    private var viewProp: O? = null
+
+   private val onAttachStateChange = object : View.OnAttachStateChangeListener {
+      override fun onViewAttachedToWindow(v: View?) {
+         bind()
+      }
+
+      override fun onViewDetachedFromWindow(v: View?) {
+         unbind()
+      }
+   }
 
    private val onViewPropChanged = fun (newValue: O) {
       viewProp = newValue
@@ -38,16 +50,46 @@ class ViewModel<V : View, in I, out O>(
       viewBinder(newValue)
    }
 
-   override fun bind(input: StateField<out I>, output: StateField<in O>) {
-      inputField?.removeObserver(onStateChanged)
-
-      inputField  = input
-      outputField = output
-
-      input.addObserver(onStateChanged)
+   init {
+      view.addOnAttachStateChangeListener(onAttachStateChange)
    }
 
-   init {
+   override fun bind(input: StateField<out I>, output: StateField<in O>) {
       viewPropertyChangeEventListenerSetter(onViewPropChanged)
+
+      if (isBinding) {
+         unbind()
+         inputField  = input
+         outputField = output
+         bind()
+      } else {
+         inputField  = input
+         outputField = output
+      }
+   }
+
+   @UiThread
+   private fun bind() {
+      if (isBinding) { return }
+      isBinding = true
+
+      val input = inputField ?: return
+      input.addObserver(onStateChanged)
+
+      val currentValue: Result<I> = try {
+         Result.success(input.value)
+      } catch (e: Throwable) {
+         Result.failure(e)
+      }
+
+      viewBinder(currentValue)
+   }
+
+   @UiThread
+   private fun unbind() {
+      if (!isBinding) { return }
+      isBinding = false
+
+      inputField?.removeObserver(onStateChanged)
    }
 }
