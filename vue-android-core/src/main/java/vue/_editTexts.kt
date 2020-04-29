@@ -30,3 +30,20 @@ val VOnProvider<EditText>.textChanged: VEvent1<Editable>
          }
       })
    }
+
+val VModelProvider<EditText>.text: VModel<CharSequence?, Editable>
+   get() = createVModel(::text,
+         { onChanged ->
+            substance.addTextChangedListener(object : TextWatcher {
+               override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+               override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+               override fun afterTextChanged(s: Editable) {
+                  onChanged(s)
+               }
+            })
+         },
+         { result ->
+            substance.setText(result.getOrThrow())
+         }
+   )
