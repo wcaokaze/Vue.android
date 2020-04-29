@@ -23,6 +23,7 @@ import org.junit.runner.*
 import kotlin.test.*
 import kotlin.test.Test
 
+import android.text.*
 import android.widget.*
 import androidx.lifecycle.*
 
@@ -41,6 +42,44 @@ class VModelTest {
          assertEquals(1, state.observerCount)
       }
    }
+
+   @Test fun bind_subtypeOfInput() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = state<CharSequence>("")
+         val editText = EditText(activity)
+         editText.vModel.text(state)
+      }
+   }
+
+   @Test fun bind_supertypeOfOutput() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = state<Spannable?>(null)
+         val editText = EditText(activity)
+         editText.vModel.text(state)
+      }
+   }
+
+   // should not compile
+   /*
+   @Test fun bind_supertypeOfInput() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = state<Any?>(null)
+         val editText = EditText(activity)
+         editText.vModel.text(state)
+      }
+   }
+   */
+
+   // should not compile
+   /*
+   @Test fun bind_subtypeOfOutput() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val state = state(SpannableStringBuilder())
+         val editText = EditText(activity)
+         editText.vModel.text(state)
+      }
+   }
+   */
 
    @Test fun bind_initialValue() {
       activityScenarioRule.scenario.onActivity { activity ->
