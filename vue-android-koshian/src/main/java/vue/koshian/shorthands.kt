@@ -25,3 +25,6 @@ inline val <V : View> Koshian<V, *, *, *>.vOn: VOnProvider<V>
 
 inline val <V : View> Koshian<V, *, *, *>.vBind: VBindProvider<V>
    get() = view.vBind
+
+inline val <V : View> Koshian<V, *, *, *>.vModel: VModelProvider<V>
+   get() = view.vModel
