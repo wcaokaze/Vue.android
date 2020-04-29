@@ -28,14 +28,14 @@ import android.view.*
 import android.widget.*
 
 class VBinderTestComponent(context: Context) : VComponent() {
-   override val view: TextView
+   override val componentView: TextView
    val number = vBinder<Int>()
 
    fun getCurrentNumber() = number()
 
    init {
-      view = TextView(context)
-      view.vBind.text { number().toString() }
+      componentView = TextView(context)
+      componentView.vBind.text { number().toString() }
    }
 }
 
@@ -50,7 +50,7 @@ class ComponentVBinderTest {
       activityScenarioRule.scenario
             .onActivity { activity ->
                component = VBinderTestComponent(activity)
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
                assertEquals(null, component.getCurrentNumber())
@@ -65,7 +65,7 @@ class ComponentVBinderTest {
             .onActivity { activity ->
                component = VBinderTestComponent(activity)
                component.number(state)
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
                assertEquals(0, component.getCurrentNumber())
@@ -80,7 +80,7 @@ class ComponentVBinderTest {
             .onActivity { activity ->
                component = VBinderTestComponent(activity)
                component.number { state() + 1 }
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
                assertEquals(1, component.getCurrentNumber())
@@ -95,21 +95,21 @@ class ComponentVBinderTest {
             .onActivity { activity ->
                component = VBinderTestComponent(activity)
                component.number(state)
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
-               assertEquals("0", component.view.text)
+               assertEquals("0", component.componentView.text)
             }
    }
 
    @Test fun bindToView_vBinder() {
       class VBinderTestComponent(context: Context) : VComponent() {
-         override val view: TextView
+         override val componentView: TextView
          val text = vBinder<String>()
 
          init {
-            view = TextView(context)
-            view.vBind.text(text)
+            componentView = TextView(context)
+            componentView.vBind.text(text)
          }
       }
 
@@ -120,16 +120,16 @@ class ComponentVBinderTest {
             .onActivity { activity ->
                component = VBinderTestComponent(activity)
                component.text(state)
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
-               assertEquals("0", component.view.text)
+               assertEquals("0", component.componentView.text)
             }
             .onActivity {
                state.value = "1"
             }
             .onActivity {
-               assertEquals("1", component.view.text)
+               assertEquals("1", component.componentView.text)
             }
    }
 
@@ -141,16 +141,16 @@ class ComponentVBinderTest {
             .onActivity { activity ->
                component = VBinderTestComponent(activity)
                component.number(state)
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
-               assertEquals("0", component.view.text)
+               assertEquals("0", component.componentView.text)
             }
             .onActivity {
                state.value = 1
             }
             .onActivity {
-               assertEquals("1", component.view.text)
+               assertEquals("1", component.componentView.text)
             }
    }
 
@@ -162,22 +162,22 @@ class ComponentVBinderTest {
             .onActivity { activity ->
                component = VBinderTestComponent(activity)
                component.number { state() * 2 }
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
-               assertEquals("0", component.view.text)
+               assertEquals("0", component.componentView.text)
             }
             .onActivity {
                state.value = 1
             }
             .onActivity {
-               assertEquals("2", component.view.text)
+               assertEquals("2", component.componentView.text)
             }
    }
 
    @Test fun getFailure() {
       class GetFailureTestComponent(context: Context) : VComponent() {
-         override val view = View(context)
+         override val componentView = View(context)
          val number = vBinder<Int>()
 
          fun getCurrentNumber() = number()
@@ -190,7 +190,7 @@ class ComponentVBinderTest {
                component = GetFailureTestComponent(activity)
                component.number { throw Exception("Exception from bound reactivatee") }
 
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
                val exception = assertFails {
@@ -205,11 +205,11 @@ class ComponentVBinderTest {
 
    @Test fun boundFailureToView() {
       class BoundFailureToViewTestComponent(context: Context) : VComponent() {
-         override val view = TextView(context)
+         override val componentView = TextView(context)
          val number = vBinder<Int>()
 
          init {
-            view.vBind.text { number().toString() }
+            componentView.vBind.text { number().toString() }
          }
       }
 
@@ -218,7 +218,7 @@ class ComponentVBinderTest {
       activityScenarioRule.scenario
             .onActivity { activity ->
                component = BoundFailureToViewTestComponent(activity)
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
                val exception = assertFails {
@@ -233,11 +233,11 @@ class ComponentVBinderTest {
 
    @Test fun failureAfterBinding() {
       class FailureAfterBindingTestComponent(context: Context) : VComponent() {
-         override val view = TextView(context)
+         override val componentView = TextView(context)
          val number = vBinder<Int>()
 
          init {
-            view.vBind.text { number().toString() }
+            componentView.vBind.text { number().toString() }
          }
       }
 
@@ -253,7 +253,7 @@ class ComponentVBinderTest {
                   0
                }
 
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
                val exception = assertFails {

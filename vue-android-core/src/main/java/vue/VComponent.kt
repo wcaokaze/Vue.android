@@ -38,7 +38,7 @@ abstract class VComponent : VComponentInterface {
 }
 
 interface VComponentInterface : CoroutineScope {
-   val view: View
+   val componentView: View
 
    val componentLifecycle: ComponentLifecycle
 

@@ -28,7 +28,7 @@ import android.widget.*
 import androidx.lifecycle.*
 
 class SimpleComponent(context: Context) : VComponent() {
-   override val view: LinearLayout
+   override val componentView: LinearLayout
    val countView: TextView
    val incrementButton: Button
 
@@ -39,15 +39,15 @@ class SimpleComponent(context: Context) : VComponent() {
    }
 
    init {
-      view = LinearLayout(context)
+      componentView = LinearLayout(context)
 
       countView = TextView(context)
       countView.vBind.text { count().toString() }
-      view.addView(countView)
+      componentView.addView(countView)
 
       incrementButton = Button(context)
       incrementButton.vOn.click { increment() }
-      view.addView(incrementButton)
+      componentView.addView(incrementButton)
    }
 }
 
@@ -62,7 +62,7 @@ class SimpleComponentTest {
       activityScenarioRule.scenario
             .onActivity { activity ->
                component = SimpleComponent(activity)
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
                assertEquals(0, component.count.value)
@@ -82,7 +82,7 @@ class SimpleComponentTest {
 
       activityScenarioRule.scenario.onActivity { activity ->
          component = SimpleComponent(activity)
-         activity.setContentView(component.view)
+         activity.setContentView(component.componentView)
       }
 
       assertEquals(1, component.count.observerCount)

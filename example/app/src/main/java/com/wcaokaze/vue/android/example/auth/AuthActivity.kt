@@ -32,7 +32,7 @@ import kotlin.contracts.*
 class AuthActivity : Activity(), VComponentInterface {
    override val componentLifecycle = ComponentLifecycle(this)
 
-   override lateinit var view: LinearLayout
+   override lateinit var componentView: LinearLayout
 
    private val instanceUrl = state<String?>("https://")
    private val errorMessage = state<String?>(null)
@@ -67,7 +67,7 @@ class AuthActivity : Activity(), VComponentInterface {
 
    private fun buildContentView() {
       @OptIn(ExperimentalContracts::class)
-      view = koshian(this) {
+      componentView = koshian(this) {
          LinearLayout {
             view.orientation = VERTICAL
 
@@ -87,7 +87,7 @@ class AuthActivity : Activity(), VComponentInterface {
          }
       }
 
-      view.applyKoshian {
+      componentView.applyKoshian {
          view.padding = 16.dip
 
          EditText {
@@ -105,6 +105,6 @@ class AuthActivity : Activity(), VComponentInterface {
          }
       }
 
-      setContentView(view)
+      setContentView(componentView)
    }
 }

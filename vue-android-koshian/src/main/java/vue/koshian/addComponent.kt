@@ -44,7 +44,7 @@ inline fun <L, C : VComponent> CreatorParent<L>.VComponent(
       creatorAction: ViewCreator<C, L>.() -> Unit
 ): C {
    contract { callsInPlace(creatorAction, InvocationKind.EXACTLY_ONCE) }
-   `$$ApplierInternal`.invokeViewInKoshian(`$$koshianInternal$view`, vComponent.view)
+   `$$ApplierInternal`.invokeViewInKoshian(`$$koshianInternal$view`, vComponent.componentView)
    val koshian = ViewCreator<C, L>(vComponent)
    koshian.creatorAction()
    return vComponent
@@ -77,7 +77,7 @@ inline fun <L, C : VComponent, S : KoshianStyle>
             applierAction: ViewApplier<C, L, S>.() -> Unit
       )
 {
-   `$$ApplierInternal`.invokeViewInKoshian(`$$koshianInternal$view`, vComponent.view)
+   `$$ApplierInternal`.invokeViewInKoshian(`$$koshianInternal$view`, vComponent.componentView)
    val koshian = ViewApplier<C, L, S>(vComponent)
    koshian.applierAction()
 }
@@ -89,5 +89,5 @@ inline val <C : VComponent> Koshian<C, *, *, *>.component: C get() {
 
 inline val <L> Koshian<VComponent, L, *, *>.layout: L get() {
    @Suppress("UNCHECKED_CAST")
-   return (`$$koshianInternal$view` as VComponent).view.layoutParams as L
+   return (`$$koshianInternal$view` as VComponent).componentView.layoutParams as L
 }

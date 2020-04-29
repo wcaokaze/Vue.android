@@ -35,7 +35,7 @@ class AddComponentTest {
    val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
    class AddComponentTestComponent(context: Context) : VComponent() {
-      override val view = View(context)
+      override val componentView = View(context)
    }
 
    @Test fun addComponent() {
@@ -53,7 +53,7 @@ class AddComponentTest {
          }
 
          assertSame(componentInDsl, componentAsResult)
-         assertSame(rootView.getChildAt(0), componentAsResult.view)
+         assertSame(rootView.getChildAt(0), componentAsResult.componentView)
       }
    }
 

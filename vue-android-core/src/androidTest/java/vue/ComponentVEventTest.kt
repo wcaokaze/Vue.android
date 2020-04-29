@@ -34,12 +34,12 @@ class ComponentVEventTest {
 
    @Test fun emitManually() {
       class Component(context: Context) : VComponent() {
-         override val view: View
+         override val componentView: View
          val onClick = vEvent0()
 
          init {
-            view = View(context)
-            view.vOn.click { onClick.emit() }
+            componentView = View(context)
+            componentView.vOn.click { onClick.emit() }
          }
       }
 
@@ -50,10 +50,10 @@ class ComponentVEventTest {
             .onActivity { activity ->
                component = Component(activity)
                component.onClick { isCalled = true }
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
-               component.view.performClick()
+               component.componentView.performClick()
             }
 
       assertTrue(isCalled)
@@ -61,12 +61,12 @@ class ComponentVEventTest {
 
    @Test fun bindToAnotherVEvent() {
       class Component(context: Context) : VComponent() {
-         override val view: View
+         override val componentView: View
          val onClick = vEvent0()
 
          init {
-            view = View(context)
-            view.vOn.click(onClick)
+            componentView = View(context)
+            componentView.vOn.click(onClick)
          }
       }
 
@@ -77,10 +77,10 @@ class ComponentVEventTest {
             .onActivity { activity ->
                component = Component(activity)
                component.onClick { isCalled = true }
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
-               component.view.performClick()
+               component.componentView.performClick()
             }
 
       assertTrue(isCalled)
@@ -88,12 +88,12 @@ class ComponentVEventTest {
 
    @Test fun actionIsCalledOnMainThread() {
       class Component(context: Context) : VComponent() {
-         override val view: View
+         override val componentView: View
          val onClick = vEvent0()
 
          init {
-            view = View(context)
-            view.vOn.click(onClick)
+            componentView = View(context)
+            componentView.vOn.click(onClick)
          }
       }
 
@@ -107,21 +107,21 @@ class ComponentVEventTest {
                   assertTrue(activity.mainLooper.isCurrentThread)
                }
 
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
-               component.view.performClick()
+               component.componentView.performClick()
             }
    }
 
    @Test fun actionIsCalledOnMainThread_evenIfAnotherDispatcherIsSpecifiedInComponent() {
       class Component(context: Context) : VComponent() {
-         override val view: View
+         override val componentView: View
          val onClick = vEvent0()
 
          init {
-            view = View(context)
-            view.vOn.click(Dispatchers.Default) { onClick.emit() }
+            componentView = View(context)
+            componentView.vOn.click(Dispatchers.Default) { onClick.emit() }
          }
       }
 
@@ -135,21 +135,21 @@ class ComponentVEventTest {
                   assertTrue(activity.mainLooper.isCurrentThread)
                }
 
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
-               component.view.performClick()
+               component.componentView.performClick()
             }
    }
 
    @Test fun coroutineContext() {
       class Component(context: Context) : VComponent() {
-         override val view: View
+         override val componentView: View
          val onClick = vEvent0()
 
          init {
-            view = View(context)
-            view.vOn.click(onClick)
+            componentView = View(context)
+            componentView.vOn.click(onClick)
          }
       }
 
@@ -165,10 +165,10 @@ class ComponentVEventTest {
                   fail("The action is not cancelled")
                }
 
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
-               component.view.performClick()
+               component.componentView.performClick()
             }
             .onActivity {
                job.cancel()
@@ -179,12 +179,12 @@ class ComponentVEventTest {
 
    @Test fun actionIsCalledOnMainThread_evenIfCoroutineContextSpecified() {
       class Component(context: Context) : VComponent() {
-         override val view: View
+         override val componentView: View
          val onClick = vEvent0()
 
          init {
-            view = View(context)
-            view.vOn.click(onClick)
+            componentView = View(context)
+            componentView.vOn.click(onClick)
          }
       }
 
@@ -199,21 +199,21 @@ class ComponentVEventTest {
                   assertTrue(activity.mainLooper.isCurrentThread)
                }
 
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
-               component.view.performClick()
+               component.componentView.performClick()
             }
    }
 
    @Test fun dispatcherCanBeOverwritten() {
       class Component(context: Context) : VComponent() {
-         override val view: View
+         override val componentView: View
          val onClick = vEvent0()
 
          init {
-            view = View(context)
-            view.vOn.click(onClick)
+            componentView = View(context)
+            componentView.vOn.click(onClick)
          }
       }
 
@@ -227,10 +227,10 @@ class ComponentVEventTest {
                   assertFalse(activity.mainLooper.isCurrentThread)
                }
 
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
-               component.view.performClick()
+               component.componentView.performClick()
             }
    }
 }

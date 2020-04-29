@@ -28,7 +28,7 @@ import android.view.*
 import android.widget.*
 
 class LifecycleTestComponent(context: Context) : VComponent() {
-   override val view = View(context)
+   override val componentView = View(context)
 }
 
 @RunWith(AndroidJUnit4::class)
@@ -49,7 +49,7 @@ class ComponentLifecycleTest {
                }
             }
             .onActivity { assertFalse(attached) }
-            .onActivity { activity -> activity.setContentView(component.view) }
+            .onActivity { activity -> activity.setContentView(component.componentView) }
             .onActivity { assertTrue(attached) }
    }
 
@@ -70,11 +70,11 @@ class ComponentLifecycleTest {
                }
             }
             .onActivity { assertEquals(0, count) }
-            .onActivity { containerView.addView(component.view) }
+            .onActivity { containerView.addView(component.componentView) }
             .onActivity { assertEquals(1, count) }
-            .onActivity { containerView.removeView(component.view) }
+            .onActivity { containerView.removeView(component.componentView) }
             .onActivity { assertEquals(1, count) }
-            .onActivity { containerView.addView(component.view) }
+            .onActivity { containerView.addView(component.componentView) }
             .onActivity { assertEquals(2, count) }
    }
 
@@ -93,12 +93,12 @@ class ComponentLifecycleTest {
                component.componentLifecycle.onAttachedToActivity += listener
             }
             .onActivity { assertEquals(0, count) }
-            .onActivity { containerView.addView(component.view) }
+            .onActivity { containerView.addView(component.componentView) }
             .onActivity { assertEquals(1, count) }
-            .onActivity { containerView.removeView(component.view) }
+            .onActivity { containerView.removeView(component.componentView) }
             .onActivity { assertEquals(1, count) }
             .onActivity { component.componentLifecycle.onAttachedToActivity -= listener }
-            .onActivity { containerView.addView(component.view) }
+            .onActivity { containerView.addView(component.componentView) }
             .onActivity { assertEquals(1, count) }
    }
 
@@ -119,9 +119,9 @@ class ComponentLifecycleTest {
                }
             }
             .onActivity { assertFalse(detached) }
-            .onActivity { containerView.addView(component.view) }
+            .onActivity { containerView.addView(component.componentView) }
             .onActivity { assertFalse(detached) }
-            .onActivity { containerView.removeView(component.view) }
+            .onActivity { containerView.removeView(component.componentView) }
             .onActivity { assertTrue(detached) }
    }
 
@@ -142,13 +142,13 @@ class ComponentLifecycleTest {
                }
             }
             .onActivity { assertEquals(0, count) }
-            .onActivity { containerView.addView(component.view) }
+            .onActivity { containerView.addView(component.componentView) }
             .onActivity { assertEquals(0, count) }
-            .onActivity { containerView.removeView(component.view) }
+            .onActivity { containerView.removeView(component.componentView) }
             .onActivity { assertEquals(1, count) }
-            .onActivity { containerView.addView(component.view) }
+            .onActivity { containerView.addView(component.componentView) }
             .onActivity { assertEquals(1, count) }
-            .onActivity { containerView.removeView(component.view) }
+            .onActivity { containerView.removeView(component.componentView) }
             .onActivity { assertEquals(2, count) }
    }
 
@@ -167,14 +167,14 @@ class ComponentLifecycleTest {
                component.componentLifecycle.onDetachedFromActivity += listener
             }
             .onActivity { assertEquals(0, count) }
-            .onActivity { containerView.addView(component.view) }
+            .onActivity { containerView.addView(component.componentView) }
             .onActivity { assertEquals(0, count) }
-            .onActivity { containerView.removeView(component.view) }
+            .onActivity { containerView.removeView(component.componentView) }
             .onActivity { assertEquals(1, count) }
-            .onActivity { containerView.addView(component.view) }
+            .onActivity { containerView.addView(component.componentView) }
             .onActivity { assertEquals(1, count) }
             .onActivity { component.componentLifecycle.onDetachedFromActivity -= listener }
-            .onActivity { containerView.removeView(component.view) }
+            .onActivity { containerView.removeView(component.componentView) }
             .onActivity { assertEquals(1, count) }
    }
 }

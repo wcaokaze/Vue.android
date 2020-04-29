@@ -53,7 +53,7 @@ class ComponentLifecycle(private val component: VComponentInterface) {
 
    init {
       GlobalScope.launch(Dispatchers.Main) {
-         val view = component.view
+         val view = component.componentView
 
          if (view.isAttachedToWindow) {
             // already attached.
