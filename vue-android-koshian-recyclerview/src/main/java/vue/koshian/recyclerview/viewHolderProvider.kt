@@ -74,6 +74,7 @@ import vue.*
  * }
  * ```
  */
+@KoshianMarker
 @Suppress("FunctionName")
 inline fun <I> ViewHolderProvider(
       item: I,
