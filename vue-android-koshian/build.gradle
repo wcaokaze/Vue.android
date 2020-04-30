@@ -73,7 +73,7 @@ repositories {
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'
     api "com.wcaokaze.vue.android:vue-android-core:$VERSION"
-    api 'com.wcaokaze.koshian:koshian-core:0.4.1'
+    api 'com.wcaokaze.koshian:koshian-core:0.4.2'
 
     androidTestImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
