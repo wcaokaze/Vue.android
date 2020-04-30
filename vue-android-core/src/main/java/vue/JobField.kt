@@ -31,7 +31,7 @@ private class JobField(private val delegate: StateImpl<Boolean>, job:Job)
       : ReactiveField<Boolean> by delegate
 {
    init {
-      @UseExperimental(ExperimentalCoroutinesApi::class)
+      @OptIn(ExperimentalCoroutinesApi::class)
       if (job.isCompleted || job.isCancelled) {
          delegate.value = false
       } else {

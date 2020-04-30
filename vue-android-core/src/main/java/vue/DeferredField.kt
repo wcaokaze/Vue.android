@@ -26,7 +26,7 @@ private class DeferredField<out T>(private val delegate: StateImpl<T?>,
       : ReactiveField<T?> by delegate
 {
    init {
-      @UseExperimental(ExperimentalCoroutinesApi::class)
+      @OptIn(ExperimentalCoroutinesApi::class)
       when {
          deferred.isCompleted -> {
             delegate.value = deferred.getCompleted()
