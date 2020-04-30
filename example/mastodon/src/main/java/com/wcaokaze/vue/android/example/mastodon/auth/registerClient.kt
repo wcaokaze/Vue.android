@@ -21,7 +21,9 @@ import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.apps.*
 import java.net.*
 
-suspend fun registerClient(instanceUrl: URL): Client {
+suspend fun (@Suppress("UNUSED") Mastodon)
+      .registerClient(instanceUrl: URL): Client
+{
    val mastodonClient = MastodonInstance(instanceUrl.toExternalForm())
          .registerApp(
                clientName = "Vue.android-example",

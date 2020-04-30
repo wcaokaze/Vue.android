@@ -21,6 +21,7 @@ import android.content.*
 import android.net.*
 import android.os.*
 import android.widget.*
+import com.wcaokaze.vue.android.example.mastodon.*
 import com.wcaokaze.vue.android.example.mastodon.auth.*
 import koshian.*
 import kotlinx.coroutines.*
@@ -56,8 +57,8 @@ class AuthActivity : Activity(), VComponentInterface {
          }
 
          try {
-            val client = registerClient(instanceUrl)
-            val authorizationUrl = getAuthorizationUrl(client)
+            val client = Mastodon.registerClient(instanceUrl)
+            val authorizationUrl = Mastodon.getAuthorizationUrl(client)
 
             val intent = Intent(Intent.ACTION_VIEW,
                   Uri.parse(authorizationUrl.toExternalForm()))
