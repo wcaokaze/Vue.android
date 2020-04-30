@@ -25,14 +25,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
 
-        <activity android:name=".auth.AuthActivity">
+        <activity android:name=".auth.AuthActivity"
+                  android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
 
-        <activity android:name=".auth.AccessTokenReceiverActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
