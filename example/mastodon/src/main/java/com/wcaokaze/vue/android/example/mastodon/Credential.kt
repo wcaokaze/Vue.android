@@ -12,15 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-package com.wcaokaze.vue.android.example.mastodon.auth
+package com.wcaokaze.vue.android.example.mastodon
 
 import java.net.*
 
-data class Client(
+data class Credential(
    val instanceUrl: URL,
-   val redirectUri: String,
-   val clientId: String,
-   val clientSecret: String
+   val accessToken: String
 )

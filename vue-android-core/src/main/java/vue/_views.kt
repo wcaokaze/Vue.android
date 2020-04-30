@@ -18,12 +18,31 @@ package vue
 
 import android.view.*
 
+/**
+ * [VISIBLE][View.VISIBLE] if `true`, [INVISIBLE][View.INVISIBLE] if `false`
+ *
+ * Use [isOccupiable] for [GONE][View.GONE]
+ */
 val VBindProvider<View>.isVisible: VBinder<Boolean>
    get() = createVBinder(::isVisible) { view, value ->
       view.visibility = if (value) {
          View.VISIBLE
       } else {
          View.INVISIBLE
+      }
+   }
+
+/**
+ * [VISIBLE][View.VISIBLE] if `true`, [GONE][View.GONE] if `false`
+ *
+ * Use [isVisible] for [INVISIBLE][View.INVISIBLE]
+ */
+val VBindProvider<View>.isOccupiable: VBinder<Boolean>
+   get() = createVBinder(::isOccupiable) { view, value ->
+      view.visibility = if (value) {
+         View.VISIBLE
+      } else {
+         View.GONE
       }
    }
 

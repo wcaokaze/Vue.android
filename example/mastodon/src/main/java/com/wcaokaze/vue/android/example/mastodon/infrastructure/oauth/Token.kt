@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.wcaokaze.vue.android.example.mastodon.auth
+package com.wcaokaze.vue.android.example.mastodon.infrastructure.oauth
 
-import java.net.*
+import kotlinx.serialization.*
 
-data class Client(
-   val instanceUrl: URL,
-   val redirectUri: String,
-   val clientId: String,
-   val clientSecret: String
+@Serializable
+internal class Token(
+   @SerialName("access_token")
+   val accessToken: String
 )

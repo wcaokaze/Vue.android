@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-package com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.apps
+package com.wcaokaze.vue.android.example.mastodon.auth
 
+import com.wcaokaze.vue.android.example.mastodon.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
-import io.ktor.http.*
+import com.wcaokaze.vue.android.example.mastodon.infrastructure.oauth.*
 
-internal fun MastodonInstance.getAuthorizeUrl(
-   clientId: String,
-   responseType: String,
-   redirectUri: String,
-   scopes: List<String>
-): String {
-   val urlBuilder = URLBuilder(getApiUrl("oauth/authorize"))
-   urlBuilder.parameters.append("client_id", clientId)
-   urlBuilder.parameters.append("response_type", responseType)
-   urlBuilder.parameters.append("redirect_uri", redirectUri)
-   urlBuilder.parameters.append("scope", scopes.joinToString(separator = " "))
-   return urlBuilder.buildString()
+suspend fun (@Suppress("UNUSED") Mastodon)
+      .publishCredential(client: Client, authCode: String): Credential
+{
+   val token = MastodonInstance(client.instanceUrl.toExternalForm())
+         .getToken(
+               client.clientId,
+               client.clientSecret,
+               client.redirectUri,
+               /* grant_type = */ "authorization_code",
+               authCode
+         )
+
+   return Credential(
+         client.instanceUrl,
+         token.accessToken
+   )
 }
