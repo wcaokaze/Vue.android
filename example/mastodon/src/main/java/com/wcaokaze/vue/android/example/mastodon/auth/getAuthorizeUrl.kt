@@ -28,7 +28,7 @@ fun (@Suppress("UNUSED") Mastodon)
          .getAuthorizeUrl(
                client.clientId,
                responseType = "code",
-               redirectUri = BuildConfig.REDIRECT_URI,
+               redirectUri = client.redirectUri,
                scopes = listOf("read", "write", "follow")
          )
 

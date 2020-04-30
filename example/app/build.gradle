@@ -34,8 +34,15 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField 'String', 'REDIRECT_URI', '"https://wcaokaze.com/vue.android/example/auth"'
+
+        manifestPlaceholders = [
+                REDIRECT_URI_SCHEME: 'https',
+                REDIRECT_URI_HOST: 'wcaokaze.com',
+                REDIRECT_URI_PATH: '/vue.android/example/auth',
+        ]
     }
 
     buildTypes {

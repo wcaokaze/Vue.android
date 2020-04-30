@@ -20,6 +20,7 @@ import java.net.*
 
 data class Client(
    val instanceUrl: URL,
+   val redirectUri: String,
    val clientId: String,
    val clientSecret: String
 )

@@ -21,6 +21,7 @@ import android.content.*
 import android.net.*
 import android.os.*
 import android.widget.*
+import com.wcaokaze.vue.android.example.BuildConfig
 import com.wcaokaze.vue.android.example.mastodon.*
 import com.wcaokaze.vue.android.example.mastodon.auth.*
 import koshian.*
@@ -57,7 +58,7 @@ class AuthActivity : Activity(), VComponentInterface {
          }
 
          val authorizationUrl = try {
-            val client = Mastodon.registerClient(instanceUrl)
+            val client = Mastodon.registerClient(instanceUrl, BuildConfig.REDIRECT_URI)
             Mastodon.getAuthorizationUrl(client)
          } catch (e: Exception) {
             errorMessage.value = "Something goes wrong"

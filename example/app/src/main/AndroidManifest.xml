@@ -31,5 +31,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".auth.AccessTokenReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="${REDIRECT_URI_SCHEME}"
+                    android:host="${REDIRECT_URI_HOST}"
+                    android:path="${REDIRECT_URI_PATH}" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
