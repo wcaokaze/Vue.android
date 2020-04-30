@@ -17,17 +17,9 @@
 package com.wcaokaze.vue.android.example.mastodon.infrastructure.oauth
 
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
-import io.ktor.util.*
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
 
-@OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
 internal suspend fun MastodonInstance.getToken(
       clientId: String,
       clientSecret: String,
@@ -35,14 +27,7 @@ internal suspend fun MastodonInstance.getToken(
       grantType: String,
       code: String
 ): Token {
-   val client = HttpClient(CIO) {
-      install(JsonFeature) {
-         val jsonConfiguration = JsonConfiguration(ignoreUnknownKeys = true)
-         serializer = KotlinxSerializer(Json(jsonConfiguration))
-      }
-   }
-
-   return client.use {
+   return httpClient.use {
       it.submitForm(
          getApiUrl("oauth/token"),
          Parameters.build {

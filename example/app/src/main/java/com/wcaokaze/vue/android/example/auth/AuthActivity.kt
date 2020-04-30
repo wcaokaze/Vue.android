@@ -27,12 +27,15 @@ import com.wcaokaze.vue.android.example.mastodon.auth.*
 import com.wcaokaze.vue.android.example.preference.*
 import koshian.*
 import kotlinx.coroutines.*
+import org.kodein.di.*
+import org.kodein.di.android.*
 import vue.*
 import vue.koshian.*
 import java.net.*
 import kotlin.contracts.*
 
-class AuthActivity : Activity(), VComponentInterface {
+class AuthActivity : Activity(), VComponentInterface, KodeinAware {
+   override val kodein by closestKodein()
    override val componentLifecycle = ComponentLifecycle(this)
 
    override lateinit var componentView: FrameLayout
@@ -75,9 +78,12 @@ class AuthActivity : Activity(), VComponentInterface {
          }
 
          val authorizationUrl = try {
-            val registeredClient = Mastodon.registerClient(instanceUrl, BuildConfig.REDIRECT_URI)
+            val mastodon = Mastodon(kodein)
+
+            val registeredClient = mastodon.registerClient(instanceUrl, BuildConfig.REDIRECT_URI)
             client.value = registeredClient
-            Mastodon.getAuthorizationUrl(registeredClient)
+
+            mastodon.getAuthorizationUrl(registeredClient)
          } catch (e: Exception) {
             errorMessage.value = "Something goes wrong"
             throw CancellationException()
@@ -100,7 +106,7 @@ class AuthActivity : Activity(), VComponentInterface {
          }
 
          val credential = try {
-            Mastodon.publishCredential(client, authCode)
+            Mastodon(kodein).publishCredential(client, authCode)
          } catch (e: Exception) {
             errorMessage.value = "Something goes wrong. Please try again later."
             throw CancellationException()

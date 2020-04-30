@@ -17,14 +17,11 @@
 package com.wcaokaze.vue.android.example.mastodon.auth
 
 import com.wcaokaze.vue.android.example.mastodon.*
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.apps.*
 import java.net.*
 
-suspend fun (@Suppress("UNUSED") Mastodon)
-      .registerClient(instanceUrl: URL, redirectUri: String): Client
-{
-   val mastodonClient = MastodonInstance(instanceUrl.toExternalForm())
+suspend fun Mastodon.registerClient(instanceUrl: URL, redirectUri: String): Client {
+   val mastodonClient = getMastodonInstance(instanceUrl.toExternalForm())
          .registerApp(
                clientName = "Vue.android-example",
                redirectUris = redirectUri,
