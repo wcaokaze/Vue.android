@@ -56,17 +56,18 @@ class AuthActivity : Activity(), VComponentInterface {
             throw CancellationException()
          }
 
-         try {
+         val authorizationUrl = try {
             val client = Mastodon.registerClient(instanceUrl)
-            val authorizationUrl = Mastodon.getAuthorizationUrl(client)
-
-            val intent = Intent(Intent.ACTION_VIEW,
-                  Uri.parse(authorizationUrl.toExternalForm()))
-
-            startActivity(intent)
+            Mastodon.getAuthorizationUrl(client)
          } catch (e: Exception) {
             errorMessage.value = "Something goes wrong"
+            throw CancellationException()
          }
+
+         val intent = Intent(Intent.ACTION_VIEW,
+               Uri.parse(authorizationUrl.toExternalForm()))
+
+         startActivity(intent)
       }
    }
 
