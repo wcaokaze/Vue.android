@@ -16,6 +16,7 @@
 
 package com.wcaokaze.vue.android.example.auth
 
+import android.annotation.*
 import android.app.*
 import android.content.*
 import android.net.*
@@ -45,7 +46,7 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
 
    private val client = state<Client?>(null)
 
-   private val clientRegistrationJob  = state<Job>(Job().apply { complete() })
+   private val clientRegistrationJob = state<Job>(Job().apply { complete() })
    private val isRegisteringClient = getter { clientRegistrationJob().toReactiveField()() }
 
    private val credentialPublishingJob = state<Job>(Job().apply { complete() })
@@ -116,37 +117,45 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
       }
    }
 
+   @SuppressLint("SetTextI18n")
+   @OptIn(ExperimentalContracts::class)
    private fun buildContentView() {
-      @OptIn(ExperimentalContracts::class)
-      componentView = koshian(this) {
-         FrameLayout {
+      val instanceUrlView: EditText
+      val errorMessageView: TextView
+      val progressBar: ProgressBar
+      val startButton: Button
+
+      val tokenReceiverView: TextView
+
+      koshian(this) {
+         componentView = FrameLayout {
             LinearLayout {
                view.orientation = VERTICAL
                vBind.isVisible { !isPublishingCredential() }
 
-               EditText {
+               instanceUrlView = EditText {
                   vModel.text(instanceUrl)
                }
 
-               TextView {
+               errorMessageView = TextView {
                   vBind.text(errorMessage)
                }
 
                LinearLayout {
                   view.orientation = HORIZONTAL
 
-                  ProgressBar {
+                  progressBar = ProgressBar {
                      vBind.isVisible(isRegisteringClient)
                   }
 
-                  Button {
+                  startButton = Button {
                      view.text = "GO"
                      vOn.click { startAuthorization() }
                   }
                }
             }
 
-            TextView {
+            tokenReceiverView = TextView {
                view.text = "wait..."
                vBind.isVisible(isPublishingCredential)
             }
@@ -160,11 +169,11 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
             layout.width  = MATCH_PARENT
             layout.height = MATCH_PARENT
 
-            EditText {
+            instanceUrlView {
                layout.width = MATCH_PARENT
             }
 
-            TextView {
+            errorMessageView {
                layout.gravity = END
                view.textColor = 0xff0000.opaque
                view.typeface = BOLD
@@ -179,17 +188,22 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
                   layout.weight = 1.0f
                }
 
-               ProgressBar {
+               progressBar {
                   layout.gravity = CENTER_VERTICAL
                   layout.width  = 24.dip
                   layout.height = 24.dip
                }
 
-               Button {
+               startButton {
                   layout.margins = 8.dip
                   layout.gravity = CENTER_VERTICAL
                }
             }
+         }
+
+         tokenReceiverView {
+            layout.horizontalMargin = 8.dip
+            layout.verticalMargin   = 4.dip
          }
       }
 
