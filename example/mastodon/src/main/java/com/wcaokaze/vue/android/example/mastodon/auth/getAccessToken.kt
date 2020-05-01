@@ -17,13 +17,10 @@
 package com.wcaokaze.vue.android.example.mastodon.auth
 
 import com.wcaokaze.vue.android.example.mastodon.*
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.oauth.*
 
-suspend fun (@Suppress("UNUSED") Mastodon)
-      .publishCredential(client: Client, authCode: String): Credential
-{
-   val token = MastodonInstance(client.instanceUrl.toExternalForm())
+suspend fun Mastodon.publishCredential(client: Client, authCode: String): Credential {
+   val token = getMastodonInstance(client.instanceUrl.toExternalForm())
          .getToken(
                client.clientId,
                client.clientSecret,

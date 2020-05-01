@@ -16,6 +16,7 @@
 
 package com.wcaokaze.vue.android.example.auth
 
+import android.annotation.*
 import android.app.*
 import android.content.*
 import android.net.*
@@ -27,12 +28,15 @@ import com.wcaokaze.vue.android.example.mastodon.auth.*
 import com.wcaokaze.vue.android.example.preference.*
 import koshian.*
 import kotlinx.coroutines.*
+import org.kodein.di.*
+import org.kodein.di.android.*
 import vue.*
 import vue.koshian.*
 import java.net.*
 import kotlin.contracts.*
 
-class AuthActivity : Activity(), VComponentInterface {
+class AuthActivity : Activity(), VComponentInterface, KodeinAware {
+   override val kodein by closestKodein()
    override val componentLifecycle = ComponentLifecycle(this)
 
    override lateinit var componentView: FrameLayout
@@ -42,7 +46,7 @@ class AuthActivity : Activity(), VComponentInterface {
 
    private val client = state<Client?>(null)
 
-   private val clientRegistrationJob  = state<Job>(Job().apply { complete() })
+   private val clientRegistrationJob = state<Job>(Job().apply { complete() })
    private val isRegisteringClient = getter { clientRegistrationJob().toReactiveField()() }
 
    private val credentialPublishingJob = state<Job>(Job().apply { complete() })
@@ -75,9 +79,12 @@ class AuthActivity : Activity(), VComponentInterface {
          }
 
          val authorizationUrl = try {
-            val registeredClient = Mastodon.registerClient(instanceUrl, BuildConfig.REDIRECT_URI)
+            val mastodon = Mastodon(kodein)
+
+            val registeredClient = mastodon.registerClient(instanceUrl, BuildConfig.REDIRECT_URI)
             client.value = registeredClient
-            Mastodon.getAuthorizationUrl(registeredClient)
+
+            mastodon.getAuthorizationUrl(registeredClient)
          } catch (e: Exception) {
             errorMessage.value = "Something goes wrong"
             throw CancellationException()
@@ -100,7 +107,7 @@ class AuthActivity : Activity(), VComponentInterface {
          }
 
          val credential = try {
-            Mastodon.publishCredential(client, authCode)
+            Mastodon(kodein).publishCredential(client, authCode)
          } catch (e: Exception) {
             errorMessage.value = "Something goes wrong. Please try again later."
             throw CancellationException()
@@ -110,37 +117,45 @@ class AuthActivity : Activity(), VComponentInterface {
       }
    }
 
+   @SuppressLint("SetTextI18n")
+   @OptIn(ExperimentalContracts::class)
    private fun buildContentView() {
-      @OptIn(ExperimentalContracts::class)
-      componentView = koshian(this) {
-         FrameLayout {
+      val instanceUrlView: EditText
+      val errorMessageView: TextView
+      val progressBar: ProgressBar
+      val startButton: Button
+
+      val tokenReceiverView: TextView
+
+      koshian(this) {
+         componentView = FrameLayout {
             LinearLayout {
                view.orientation = VERTICAL
                vBind.isVisible { !isPublishingCredential() }
 
-               EditText {
+               instanceUrlView = EditText {
                   vModel.text(instanceUrl)
                }
 
-               TextView {
+               errorMessageView = TextView {
                   vBind.text(errorMessage)
                }
 
                LinearLayout {
                   view.orientation = HORIZONTAL
 
-                  ProgressBar {
+                  progressBar = ProgressBar {
                      vBind.isVisible(isRegisteringClient)
                   }
 
-                  Button {
+                  startButton = Button {
                      view.text = "GO"
                      vOn.click { startAuthorization() }
                   }
                }
             }
 
-            TextView {
+            tokenReceiverView = TextView {
                view.text = "wait..."
                vBind.isVisible(isPublishingCredential)
             }
@@ -154,11 +169,11 @@ class AuthActivity : Activity(), VComponentInterface {
             layout.width  = MATCH_PARENT
             layout.height = MATCH_PARENT
 
-            EditText {
+            instanceUrlView {
                layout.width = MATCH_PARENT
             }
 
-            TextView {
+            errorMessageView {
                layout.gravity = END
                view.textColor = 0xff0000.opaque
                view.typeface = BOLD
@@ -173,17 +188,22 @@ class AuthActivity : Activity(), VComponentInterface {
                   layout.weight = 1.0f
                }
 
-               ProgressBar {
+               progressBar {
                   layout.gravity = CENTER_VERTICAL
                   layout.width  = 24.dip
                   layout.height = 24.dip
                }
 
-               Button {
+               startButton {
                   layout.margins = 8.dip
                   layout.gravity = CENTER_VERTICAL
                }
             }
+         }
+
+         tokenReceiverView {
+            layout.horizontalMargin = 8.dip
+            layout.verticalMargin   = 4.dip
          }
       }
 

@@ -17,14 +17,11 @@
 package com.wcaokaze.vue.android.example.mastodon.auth
 
 import com.wcaokaze.vue.android.example.mastodon.*
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.oauth.getAuthorizeUrl
 import java.net.*
 
-fun (@Suppress("UNUSED") Mastodon)
-      .getAuthorizationUrl(client: Client): URL
-{
-   val urlStr = MastodonInstance(client.instanceUrl.toExternalForm())
+fun Mastodon.getAuthorizationUrl(client: Client): URL {
+   val urlStr = getMastodonInstance(client.instanceUrl.toExternalForm())
          .getAuthorizeUrl(
                client.clientId,
                responseType = "code",

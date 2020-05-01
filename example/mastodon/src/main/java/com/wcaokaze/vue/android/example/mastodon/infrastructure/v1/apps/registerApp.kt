@@ -17,31 +17,16 @@
 package com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.apps
 
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
-import io.ktor.util.*
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
 
-@OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
 internal suspend fun MastodonInstance.registerApp(
       clientName: String,
       redirectUris: String,
       scopes: List<String>,
       website: String?
 ): MastodonClient {
-   val client = HttpClient(CIO) {
-      install(JsonFeature) {
-         val jsonConfiguration = JsonConfiguration(ignoreUnknownKeys = true)
-         serializer = KotlinxSerializer(Json(jsonConfiguration))
-      }
-   }
-
-   return client.use {
+   return httpClient.use {
       it.submitForm(
          getApiUrl("api/v1/apps"),
          Parameters.build {

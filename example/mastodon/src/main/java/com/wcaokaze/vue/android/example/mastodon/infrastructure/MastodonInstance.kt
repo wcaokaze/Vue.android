@@ -16,7 +16,16 @@
 
 package com.wcaokaze.vue.android.example.mastodon.infrastructure
 
-internal class MastodonInstance(rootUrl: String) {
+import io.ktor.client.*
+import org.kodein.di.*
+import org.kodein.di.generic.*
+
+internal class MastodonInstance(
+      override val kodein: Kodein,
+      rootUrl: String
+) : KodeinAware {
+   val httpClient: HttpClient by instance()
+
    val rootUrl = if (rootUrl.endsWith('/')) {
       rootUrl
    } else {
