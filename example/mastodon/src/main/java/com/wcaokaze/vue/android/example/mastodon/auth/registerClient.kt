@@ -16,7 +16,6 @@
 
 package com.wcaokaze.vue.android.example.mastodon.auth
 
-import com.wcaokaze.vue.android.example.mastodon.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.apps.*
 import java.net.*
 

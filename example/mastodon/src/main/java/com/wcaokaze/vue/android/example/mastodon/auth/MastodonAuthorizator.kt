@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wcaokaze.vue.android.example.mastodon
+package com.wcaokaze.vue.android.example.mastodon.auth
 
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import org.kodein.di.*

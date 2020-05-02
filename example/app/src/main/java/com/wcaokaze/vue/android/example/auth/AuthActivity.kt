@@ -23,7 +23,6 @@ import android.net.*
 import android.os.*
 import android.widget.*
 import com.wcaokaze.vue.android.example.BuildConfig
-import com.wcaokaze.vue.android.example.mastodon.*
 import com.wcaokaze.vue.android.example.mastodon.auth.*
 import com.wcaokaze.vue.android.example.preference.*
 import koshian.*
