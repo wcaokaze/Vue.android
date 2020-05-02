@@ -1,4 +1,4 @@
-package com.wcaokaze.vue.android.example.mastodon.store.account
+package com.wcaokaze.vue.android.example.mastodon.account
 
 import java.net.URL
 

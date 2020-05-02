@@ -1,4 +1,4 @@
-package com.wcaokaze.vue.android.example.mastodon.store.status
+package com.wcaokaze.vue.android.example.mastodon.status
 
 import vue.*
 import vue.vuex.*

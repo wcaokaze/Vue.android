@@ -1,6 +1,6 @@
-package com.wcaokaze.vue.android.example.mastodon.store.status
+package com.wcaokaze.vue.android.example.mastodon.status
 
-import com.wcaokaze.vue.android.example.mastodon.store.account.*
+import com.wcaokaze.vue.android.example.mastodon.account.*
 import java.util.*
 
 data class Status(
