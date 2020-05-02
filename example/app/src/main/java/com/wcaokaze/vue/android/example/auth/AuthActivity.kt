@@ -40,6 +40,8 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
 
    override lateinit var componentView: FrameLayout
 
+   private val authorizator by lazy { MastodonAuthorizator(kodein) }
+
    private val instanceUrl = state<CharSequence>("https://")
    private val errorMessage = state<String?>(null)
 
@@ -78,12 +80,12 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
          }
 
          val authorizationUrl = try {
-            val mastodon = MastodonAuthorizator(kodein)
+            val registeredClient = authorizator
+               .registerClient(instanceUrl, BuildConfig.REDIRECT_URI)
 
-            val registeredClient = mastodon.registerClient(instanceUrl, BuildConfig.REDIRECT_URI)
             client.value = registeredClient
 
-            mastodon.getAuthorizationUrl(registeredClient)
+            authorizator.getAuthorizationUrl(registeredClient)
          } catch (e: Exception) {
             errorMessage.value = "Something goes wrong"
             throw CancellationException()
@@ -106,7 +108,7 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
          }
 
          val credential = try {
-            MastodonAuthorizator(kodein).publishCredential(client, authCode)
+            authorizator.publishCredential(client, authCode)
          } catch (e: Exception) {
             errorMessage.value = "Something goes wrong. Please try again later."
             throw CancellationException()
