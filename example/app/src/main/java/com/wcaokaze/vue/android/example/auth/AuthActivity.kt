@@ -79,7 +79,7 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
          }
 
          val authorizationUrl = try {
-            val mastodon = Mastodon(kodein)
+            val mastodon = MastodonAuthorizator(kodein)
 
             val registeredClient = mastodon.registerClient(instanceUrl, BuildConfig.REDIRECT_URI)
             client.value = registeredClient
@@ -107,7 +107,7 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
          }
 
          val credential = try {
-            Mastodon(kodein).publishCredential(client, authCode)
+            MastodonAuthorizator(kodein).publishCredential(client, authCode)
          } catch (e: Exception) {
             errorMessage.value = "Something goes wrong. Please try again later."
             throw CancellationException()
