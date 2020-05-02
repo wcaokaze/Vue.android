@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package com.wcaokaze.vue.android.example.mastodon.account
+package com.wcaokaze.vue.android.example.mastodon
 
-import java.net.URL
+import java.util.*
 
-data class Account(
+data class Status(
    val id: Id,
-   val name: String,
-   val iconUrl: URL,
-   val isFollowing: Boolean,
-   val isFollowed: Boolean
+   val accountId: Account.Id,
+   val content: String,
+   val createdDate: Date,
+   val reblogCount: Int,
+   val favoriteCount: Int,
+   val isReblogged: Boolean,
+   val isFavorited: Boolean
 ) {
    class Id(val id: String)
 }

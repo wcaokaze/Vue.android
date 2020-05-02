@@ -16,8 +16,6 @@
 
 package com.wcaokaze.vue.android.example.mastodon
 
-import com.wcaokaze.vue.android.example.mastodon.account.*
-import com.wcaokaze.vue.android.example.mastodon.status.*
 import vue.*
 import vue.vuex.*
 
