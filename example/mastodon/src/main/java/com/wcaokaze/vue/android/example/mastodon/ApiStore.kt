@@ -2,14 +2,12 @@ package com.wcaokaze.vue.android.example.mastodon
 
 import com.wcaokaze.vue.android.example.mastodon.account.*
 import com.wcaokaze.vue.android.example.mastodon.status.*
-import com.wcaokaze.vue.android.example.mastodon.timeline.*
 import vue.vuex.*
 
 class ApiStore : VuexStore<ApiState, ApiMutation, ApiAction, ApiGetter>() {
    object ModuleKeys {
-      val ACCOUNT  = Module.Key<AccountState,  AccountMutation,  AccountAction,  AccountGetter>()
-      val STATUS   = Module.Key<StatusState,   StatusMutation,   StatusAction,   StatusGetter>()
-      val TIMELINE = Module.Key<TimelineState, TimelineMutation, TimelineAction, TimelineGetter>()
+      val ACCOUNT = Module.Key<AccountState,  AccountMutation,  AccountAction,  AccountGetter>()
+      val STATUS  = Module.Key<StatusState,   StatusMutation,   StatusAction,   StatusGetter>()
    }
 
    override fun createState()    = ApiState()
@@ -19,8 +17,7 @@ class ApiStore : VuexStore<ApiState, ApiMutation, ApiAction, ApiGetter>() {
 
    override fun createModules() = listOf(
          Module(ModuleKeys.ACCOUNT,  AccountStore()),
-         Module(ModuleKeys.STATUS,   StatusStore()),
-         Module(ModuleKeys.TIMELINE, TimelineStore())
+         Module(ModuleKeys.STATUS,   StatusStore())
    )
 }
 
