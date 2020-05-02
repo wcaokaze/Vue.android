@@ -20,7 +20,7 @@ import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 
-internal suspend fun MastodonInstance.registerApp(
+internal suspend fun MastodonInstance.postApp(
       clientName: String,
       redirectUris: String,
       scopes: List<String>,

@@ -22,7 +22,7 @@ import java.net.*
 
 suspend fun Mastodon.registerClient(instanceUrl: URL, redirectUri: String): Client {
    val mastodonClient = getMastodonInstance(instanceUrl.toExternalForm())
-         .registerApp(
+         .postApp(
                clientName = "Vue.android-example",
                redirectUris = redirectUri,
                scopes = listOf("read", "write", "follow"),
