@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wcaokaze.vue.android.example.timeline
+package com.wcaokaze.vue.android.example.activity.timeline
 
 import android.app.*
 import android.view.*

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wcaokaze.vue.android.example.auth
+package com.wcaokaze.vue.android.example.activity.auth
 
 import android.annotation.*
 import android.app.*
