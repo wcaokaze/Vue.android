@@ -31,18 +31,18 @@ import java.util.*
 import kotlin.collections.*
 import kotlin.math.*
 
-class ApiStore(private val kodein: Kodein)
-   : VuexStore<ApiState, ApiMutation, ApiAction, ApiGetter>()
+class MastodonStore(private val kodein: Kodein)
+   : VuexStore<MastodonState, MastodonMutation, MastodonAction, MastodonGetter>()
 {
-   override fun createState()    = ApiState(kodein)
-   override fun createMutation() = ApiMutation()
-   override fun createAction()   = ApiAction()
-   override fun createGetter()   = ApiGetter()
+   override fun createState()    = MastodonState(kodein)
+   override fun createMutation() = MastodonMutation()
+   override fun createAction()   = MastodonAction()
+   override fun createGetter()   = MastodonGetter()
 }
 
 // =============================================================================
 
-class ApiState(override val kodein: Kodein) : VuexState(), KodeinAware {
+class MastodonState(override val kodein: Kodein) : VuexState(), KodeinAware {
    val timeZone: TimeZone by instance()
 
    val credential = state<Credential?>(null)
@@ -53,7 +53,7 @@ class ApiState(override val kodein: Kodein) : VuexState(), KodeinAware {
 
 // =============================================================================
 
-class ApiMutation : VuexMutation<ApiState>() {
+class MastodonMutation : VuexMutation<MastodonState>() {
    fun setCredential(credential: Credential) {
       state.credential.value = credential
       state.accounts.value = emptyMap()
@@ -73,7 +73,7 @@ class ApiMutation : VuexMutation<ApiState>() {
 
 // =============================================================================
 
-class ApiAction : VuexAction<ApiState, ApiMutation, ApiGetter>() {
+class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGetter>() {
    suspend fun fetchHomeTimeline(
       maxId: Status.Id? = null,
       sinceId: Status.Id? = null
@@ -188,7 +188,7 @@ class ApiAction : VuexAction<ApiState, ApiMutation, ApiGetter>() {
 
 // =============================================================================
 
-class ApiGetter : VuexGetter<ApiState>() {
+class MastodonGetter : VuexGetter<MastodonState>() {
    fun getAccount(id: Account.Id): ReactiveField<Account?>
          = getter { state.accounts()[id] }
 

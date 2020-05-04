@@ -42,7 +42,7 @@ class HomeTimelineTest {
    @Test fun failsIfNoCredential() {
       runBlocking {
          val kodein = mockJsonKodein { "[]" }
-         val store = ApiStore(kodein)
+         val store = MastodonStore(kodein)
 
          assertFails {
             store.action.fetchHomeTimeline()
@@ -56,7 +56,7 @@ class HomeTimelineTest {
             throw IOException("Exception caused by network")
          }
 
-         val store = ApiStore(kodein)
+         val store = MastodonStore(kodein)
 
          val exception = assertFailsWith<IOException> {
             store.mutation.setCredential(
@@ -98,7 +98,7 @@ class HomeTimelineTest {
             """
          }
 
-         val store = ApiStore(kodein)
+         val store = MastodonStore(kodein)
 
          store.mutation.setCredential(
             Credential(URL("https://example.com"), "0123456789abcdef"))
@@ -163,7 +163,7 @@ class HomeTimelineTest {
             """
          }
 
-         val store = ApiStore(kodein)
+         val store = MastodonStore(kodein)
 
          store.mutation.setCredential(
             Credential(URL("https://example.com"), "0123456789abcdef"))
