@@ -17,14 +17,26 @@
 package com.wcaokaze.vue.android.example.activity.timeline
 
 import android.app.*
+import android.os.*
 import android.view.*
+import koshian.*
 import org.kodein.di.*
 import org.kodein.di.android.*
 import vue.*
+import kotlin.contracts.*
 
 class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
    override val kodein by closestKodein()
    override val componentLifecycle = ComponentLifecycle(this)
 
    override lateinit var componentView: View
+
+   override fun onCreate(savedInstanceState: Bundle?) {
+      super.onCreate(savedInstanceState)
+
+      @OptIn(ExperimentalContracts::class)
+      koshian(this) {
+         componentView = View {}
+      }
+   }
 }

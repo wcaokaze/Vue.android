@@ -23,6 +23,7 @@ import android.net.*
 import android.os.*
 import android.widget.*
 import com.wcaokaze.vue.android.example.BuildConfig
+import com.wcaokaze.vue.android.example.activity.timeline.*
 import com.wcaokaze.vue.android.example.mastodon.auth.*
 import com.wcaokaze.vue.android.example.preference.*
 import koshian.*
@@ -56,6 +57,10 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       buildContentView()
+
+      if (isCredentialAlreadySaved()) {
+         startTimelineActivity()
+      }
    }
 
    override fun onNewIntent(intent: Intent?) {
@@ -65,6 +70,16 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
       if (!data.toString().contains(BuildConfig.REDIRECT_URI)) { return }
       val authCode = data.getQueryParameter("code") ?: return
       publishCredential(authCode)
+   }
+
+   private fun isCredentialAlreadySaved()
+         = CredentialPreference(this).credential != null
+
+   private fun startTimelineActivity() {
+      startActivity(
+         Intent(this, TimelineActivity::class.java))
+
+      finish()
    }
 
    private fun startAuthorization() {
@@ -115,6 +130,8 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
          }
 
          CredentialPreference(this@AuthActivity).credential = credential
+
+         startTimelineActivity()
       }
    }
 
