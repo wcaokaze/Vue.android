@@ -22,7 +22,6 @@ import kotlinx.serialization.*
 @Serializable
 internal data class Status(
    val id: String,
-   val uri: String,
    val account: Account,
    val reblog: Status? = null,
    val content: String,

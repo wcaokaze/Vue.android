@@ -18,15 +18,27 @@ package com.wcaokaze.vue.android.example.mastodon
 
 import java.util.*
 
-data class Status(
-   val id: Id,
-   val accountId: Account.Id,
-   val content: String,
-   val createdDate: Date,
-   val reblogCount: Int,
-   val favoriteCount: Int,
-   val isReblogged: Boolean,
-   val isFavorited: Boolean
-) {
-   class Id(val id: String)
+sealed class Status {
+   data class Id(val id: String)
+
+   abstract val id: Id
+
+   data class Toot(
+      override val id: Id,
+      val tooterAccountId: Account.Id,
+      val spoilerText: String?,
+      val content: String,
+      val tootedDate: Date,
+      val boostCount: Long,
+      val favoriteCount: Long,
+      val isBoosted: Boolean,
+      val isFavorited: Boolean
+   ) : Status()
+
+   data class Boost(
+      override val id: Id,
+      val boosterAccountId: Account.Id,
+      val toot: Toot,
+      val boostedDate: Date
+   ) : Status()
 }

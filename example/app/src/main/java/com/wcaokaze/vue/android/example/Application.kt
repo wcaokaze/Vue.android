@@ -20,22 +20,35 @@ package com.wcaokaze.vue.android.example
 import android.app.Application
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.features.*
+import io.ktor.client.features.compression.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import org.kodein.di.*
 import org.kodein.di.generic.*
+import java.util.*
 
 class Application : Application(), KodeinAware {
    override val kodein = Kodein.lazy {
+      bind<TimeZone>() with provider { TimeZone.getDefault() }
+
       bind<HttpClient>() with provider {
          @OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
          HttpClient(CIO) {
             install(JsonFeature) {
                val jsonConfiguration = JsonConfiguration(ignoreUnknownKeys = true)
                serializer = KotlinxSerializer(Json(jsonConfiguration))
+            }
+
+            ContentEncoding()
+
+            defaultRequest {
+               accept(ContentType.Application.Json)
             }
          }
       }

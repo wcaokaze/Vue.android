@@ -21,9 +21,14 @@ import java.net.URL
 data class Account(
    val id: Id,
    val name: String,
-   val iconUrl: URL,
-   val isFollowing: Boolean,
-   val isFollowed: Boolean
+   val acct: String,
+   val isLocked: Boolean,
+   val iconUrl: URL?,
+   val followerCount: Long,
+   val followeeCount: Long,
+   val statusCount: Long,
+   val biography: String?,
+   val fields: List<Pair<String, String>>
 ) {
-   class Id(val id: String)
+   data class Id(val id: String)
 }
