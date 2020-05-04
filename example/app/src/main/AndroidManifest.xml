@@ -44,5 +44,7 @@
                     android:path="${REDIRECT_URI_PATH}" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".timeline.TimelineActivity"/>
     </application>
 </manifest>
