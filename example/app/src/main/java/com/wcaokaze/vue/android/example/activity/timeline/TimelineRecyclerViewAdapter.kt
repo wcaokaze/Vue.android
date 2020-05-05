@@ -16,6 +16,9 @@
 
 package com.wcaokaze.vue.android.example.activity.timeline
 
+import android.os.*
+import android.text.*
+import android.widget.*
 import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.R
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
@@ -25,6 +28,8 @@ import koshian.recyclerview.*
 import vue.*
 import vue.koshian.*
 import vue.koshian.recyclerview.*
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.contracts.*
 
 sealed class TimelineRecyclerViewItem : DiffUtilItem
@@ -69,10 +74,104 @@ class TimelineRecyclerViewAdapter(private val state: State,
             }
          }
 
-         TextView {
-            layout.width = MATCH_PARENT
-            vBind.text { toot()?.content }
+         val tooter = getter {
+            val id = toot()?.tooterAccountId ?: return@getter null
+            getter.modules[MASTODON].getAccount(id)()
          }
+
+         val tootContent = getter {
+            val rawContent = toot()?.content ?: return@getter null
+
+            if (Build.VERSION.SDK_INT >= 24) {
+               Html.fromHtml(rawContent, Html.FROM_HTML_MODE_COMPACT)
+            } else {
+               @Suppress("DEPRECATION")
+               Html.fromHtml(rawContent)
+            }
+         }
+
+         val tootedDateStr = getter {
+            val createdDate = toot()?.tootedDate ?: return@getter null
+            SimpleDateFormat("HH:mm MMM d yyyy", Locale.US).format(createdDate)
+         }
+
+         val usernameView: TextView
+         val acctView: TextView
+
+         val contentView: TextView
+
+         val createdDateView: TextView
+
+         val itemView = LinearLayout {
+            view.orientation = VERTICAL
+
+            LinearLayout {
+               view.orientation = HORIZONTAL
+
+               usernameView = TextView {
+                  vBind.text { tooter()?.name }
+               }
+
+               acctView = TextView {
+                  vBind.text {
+                     val acct = tooter()?.acct
+                     if (acct != null) { "@$acct" } else { null }
+                  }
+               }
+            }
+
+            contentView = TextView {
+               vBind.text(tootContent)
+            }
+
+            createdDateView = TextView {
+               vBind.text(tootedDateStr)
+            }
+         }
+
+         itemView.applyKoshian {
+            layout.width = MATCH_PARENT
+            view.padding = 8.dip
+
+            LinearLayout {
+               layout.width = MATCH_PARENT
+
+               usernameView {
+                  layout.gravity = CENTER_VERTICAL
+                  layout.horizontalMargin = 2.dip
+                  layout.verticalMargin   = 4.dip
+                  view.textColor = 0x2196f3.opaque
+                  view.typeface = BOLD
+                  view.maxLines = 1
+                  view.textSizeSp = 14
+               }
+
+               acctView {
+                  layout.gravity = CENTER_VERTICAL
+                  layout.horizontalMargin = 2.dip
+                  layout.verticalMargin   = 4.dip
+                  view.textColor = 0x000000 opacity 0.54
+                  view.maxLines = 1
+                  view.textSizeSp = 13
+               }
+            }
+
+            contentView {
+               layout.width = MATCH_PARENT
+               layout.margins = 8.dip
+               view.textColor = 0x000000.opaque
+               view.textSizeSp = 13
+               view.setLineSpacing(2.dip.toFloat(), 1.0f)
+            }
+
+            createdDateView {
+               layout.gravity = END
+               view.textColor = 0x000000 opacity 0.54
+               view.textSizeSp = 11
+            }
+         }
+
+         itemView
       }
 
       is LoadingIndicatorItem -> VueHolderProvider(item) {

@@ -104,7 +104,11 @@ class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGette
    ): Account {
       val account = Account(
          Account.Id(iAccount.id),
-         iAccount.displayName ?: iAccount.username,
+         if (iAccount.displayName.isNullOrEmpty()) {
+            iAccount.username
+         } else {
+            iAccount.displayName
+         },
          iAccount.acct ?: iAccount.username,
          iAccount.locked ?: false,
          try {

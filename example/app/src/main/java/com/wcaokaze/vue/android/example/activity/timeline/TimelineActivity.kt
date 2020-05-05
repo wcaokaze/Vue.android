@@ -54,8 +54,10 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
       koshian(this) {
          componentView = RecyclerView {
             val adapter = TimelineRecyclerViewAdapter(state, getter)
+            val layoutManager = LinearLayoutManager(context)
             vBind(adapter).items.invoke(recyclerViewItems)
-            view.layoutManager = LinearLayoutManager(context)
+            view.layoutManager = layoutManager
+            view.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
          }
       }
 
