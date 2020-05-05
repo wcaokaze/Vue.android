@@ -30,7 +30,7 @@ class RecyclerViewAdapterVBindProvider<I>(
 /**
  * `vBind` for [KoshianRecyclerViewAdapter].
  *
- * The adapter is set to this RecyclerView.
+ * This invocation sets the adapter to this RecyclerView.
  */
 fun <I> RecyclerView.vBind(
       adapter: KoshianRecyclerViewAdapter<I>
@@ -42,7 +42,7 @@ fun <I> RecyclerView.vBind(
 /**
  * `vBind` for [KoshianRecyclerViewAdapter].
  *
- * The adapter is set to this RecyclerView.
+ * This invocation sets the adapter to this RecyclerView.
  */
 fun <I> Koshian<RecyclerView, *, *, *>.vBind(
    adapter: KoshianRecyclerViewAdapter<I>

@@ -19,10 +19,16 @@ package com.wcaokaze.vue.android.example.activity.timeline
 import android.app.*
 import android.os.*
 import android.view.*
+import androidx.recyclerview.widget.*
+import com.wcaokaze.vue.android.example.*
+import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import koshian.*
+import koshian.recyclerview.*
+import kotlinx.coroutines.*
 import org.kodein.di.*
 import org.kodein.di.android.*
 import vue.*
+import vue.koshian.recyclerview.*
 import kotlin.contracts.*
 
 class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
@@ -31,12 +37,28 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
 
    override lateinit var componentView: View
 
+   private val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
+
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
+      buildContentView()
 
+      launch {
+         val statusIds = action.modules[MASTODON].fetchHomeTimeline()
+         recyclerViewItems.value = statusIds.map { StatusItem(it) }
+      }
+   }
+
+   private fun buildContentView() {
       @OptIn(ExperimentalContracts::class)
       koshian(this) {
-         componentView = View {}
+         componentView = RecyclerView {
+            val adapter = TimelineRecyclerViewAdapter(state, getter)
+            vBind(adapter).items.invoke(recyclerViewItems)
+            view.layoutManager = LinearLayoutManager(context)
+         }
       }
+
+      setContentView(componentView)
    }
 }

@@ -76,7 +76,7 @@ import vue.*
  */
 @KoshianMarker
 @Suppress("FunctionName")
-inline fun <I> ViewHolderProvider(
+inline fun <I> VueHolderProvider(
       item: I,
       crossinline itemViewCreatorAction:
             Koshian<ViewManager, Nothing, RecyclerView.LayoutParams, KoshianMode.Creator>.(
@@ -101,7 +101,7 @@ inline fun <I> ViewHolderProvider(
          try {
             val koshian = Koshian<Nothing, Nothing, RecyclerView.LayoutParams, KoshianMode.Creator>(KoshianRecyclerViewRoot.INSTANCE)
             val itemView = koshian.itemViewCreatorAction(reactiveItem)
-            return VueViewHolder(itemView, reactiveItem)
+            return VueHolder(itemView, reactiveItem)
          } finally {
             `$$KoshianInternal`.context = oldContext
             `$$KoshianInternal`.parentViewConstructor = oldParentConstructor
@@ -112,7 +112,7 @@ inline fun <I> ViewHolderProvider(
    }
 }
 
-class VueViewHolder<I>(
+class VueHolder<I>(
       override val itemView: View,
       private val reactiveItem: StateField<I>
 ) : KoshianViewHolder<I>() {

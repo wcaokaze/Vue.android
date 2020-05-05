@@ -22,8 +22,11 @@ import android.content.*
 import android.net.*
 import android.os.*
 import android.widget.*
+import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.BuildConfig
+import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.activity.timeline.*
+import com.wcaokaze.vue.android.example.mastodon.*
 import com.wcaokaze.vue.android.example.mastodon.auth.*
 import com.wcaokaze.vue.android.example.preference.*
 import koshian.*
@@ -58,8 +61,10 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
       super.onCreate(savedInstanceState)
       buildContentView()
 
-      if (isCredentialAlreadySaved()) {
-         startTimelineActivity()
+      val credential = CredentialPreference(this).credential
+
+      if (credential != null) {
+         startTimelineActivity(credential)
       }
    }
 
@@ -72,10 +77,9 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
       publishCredential(authCode)
    }
 
-   private fun isCredentialAlreadySaved()
-         = CredentialPreference(this).credential != null
+   private fun startTimelineActivity(credential: Credential) {
+      mutation.modules[MASTODON].setCredential(credential)
 
-   private fun startTimelineActivity() {
       startActivity(
          Intent(this, TimelineActivity::class.java))
 
@@ -131,7 +135,7 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
 
          CredentialPreference(this@AuthActivity).credential = credential
 
-         startTimelineActivity()
+         startTimelineActivity(credential)
       }
    }
 

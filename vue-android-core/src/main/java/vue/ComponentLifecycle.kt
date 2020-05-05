@@ -48,6 +48,7 @@ class ComponentLifecycle(private val component: VComponentInterface) {
    val onAttachedToActivity   = ListenerSet()
    val onDetachedFromActivity = ListenerSet()
 
+   @Transient
    var coroutineContext: CoroutineContext = SupervisorJob(job) + Dispatchers.Main
       private set
 
@@ -57,13 +58,10 @@ class ComponentLifecycle(private val component: VComponentInterface) {
 
          if (view.isAttachedToWindow) {
             // already attached.
-            // addOnAttachStateChangeListener is too late,
-            // and onViewAttachedToWindow will not be called.
+            // It is too late to addOnAttachStateChangeListener,
+            // onViewAttachedToWindow will not be called.
+            // We have to emit onAttachToActivity manually.
             onAttachedToActivity.emit()
-         } else {
-            // not yet attached.
-            // cancel the current coroutine scope
-            releaseScope()
          }
 
          view.addOnAttachStateChangeListener(
@@ -82,6 +80,7 @@ class ComponentLifecycle(private val component: VComponentInterface) {
       }
    }
 
+   @UiThread
    private fun readyScope() {
       if (job.isActive) { return }
 
@@ -89,6 +88,7 @@ class ComponentLifecycle(private val component: VComponentInterface) {
       coroutineContext = SupervisorJob(job) + Dispatchers.Main
    }
 
+   @UiThread
    private fun releaseScope() {
       job.cancel()
    }

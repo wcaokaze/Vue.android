@@ -37,18 +37,6 @@ class ComponentCoroutineScopeTest {
    @get:Rule
    val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
-   @Test fun inactiveUntilMounted() {
-      lateinit var component: CoroutineScopeTestComponent
-
-      activityScenarioRule.scenario
-            .onActivity { activity ->
-               component = CoroutineScopeTestComponent(activity)
-            }
-            .onActivity {
-               assertFalse(component.isActive)
-            }
-   }
-
    @Test fun activeWhileMounted() {
       lateinit var component: CoroutineScopeTestComponent
 
