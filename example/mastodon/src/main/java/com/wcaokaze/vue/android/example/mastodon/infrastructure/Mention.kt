@@ -12,22 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-package com.wcaokaze.vue.android.example.mastodon.auth
+package com.wcaokaze.vue.android.example.mastodon.infrastructure
 
-import com.wcaokaze.vue.android.example.mastodon.*
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.oauth.getAuthorizeUrl
-import java.net.*
+import kotlinx.serialization.*
 
-fun Mastodon.getAuthorizationUrl(client: Client): URL {
-   val urlStr = getMastodonInstance(client.instanceUrl.toExternalForm())
-         .getAuthorizeUrl(
-               client.clientId,
-               responseType = "code",
-               redirectUri = client.redirectUri,
-               scopes = listOf("read", "write", "follow")
-         )
-
-   return URL(urlStr)
-}
+@Serializable
+internal data class Mention(
+   val url: String,
+   val username: String,
+   val acct: String? = null,
+   val id: String? = null
+)

@@ -302,4 +302,6 @@ internal class ReactivateeScopeImpl(private val getterField: GetterField<*>)
 
       return field.value
    }
+
+   override fun toString() = getterField.toString()
 }

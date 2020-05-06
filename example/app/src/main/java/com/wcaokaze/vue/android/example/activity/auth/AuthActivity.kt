@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wcaokaze.vue.android.example.auth
+package com.wcaokaze.vue.android.example.activity.auth
 
 import android.annotation.*
 import android.app.*
@@ -22,7 +22,10 @@ import android.content.*
 import android.net.*
 import android.os.*
 import android.widget.*
+import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.BuildConfig
+import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
+import com.wcaokaze.vue.android.example.activity.timeline.*
 import com.wcaokaze.vue.android.example.mastodon.*
 import com.wcaokaze.vue.android.example.mastodon.auth.*
 import com.wcaokaze.vue.android.example.preference.*
@@ -41,6 +44,8 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
 
    override lateinit var componentView: FrameLayout
 
+   private val authorizator by lazy { MastodonAuthorizator(kodein) }
+
    private val instanceUrl = state<CharSequence>("https://")
    private val errorMessage = state<String?>(null)
 
@@ -55,6 +60,12 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       buildContentView()
+
+      val credential = CredentialPreference(this).credential
+
+      if (credential != null) {
+         startTimelineActivity(credential)
+      }
    }
 
    override fun onNewIntent(intent: Intent?) {
@@ -64,6 +75,15 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
       if (!data.toString().contains(BuildConfig.REDIRECT_URI)) { return }
       val authCode = data.getQueryParameter("code") ?: return
       publishCredential(authCode)
+   }
+
+   private fun startTimelineActivity(credential: Credential) {
+      mutation.modules[MASTODON].setCredential(credential)
+
+      startActivity(
+         Intent(this, TimelineActivity::class.java))
+
+      finish()
    }
 
    private fun startAuthorization() {
@@ -79,12 +99,12 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
          }
 
          val authorizationUrl = try {
-            val mastodon = Mastodon(kodein)
+            val registeredClient = authorizator
+               .registerClient(instanceUrl, BuildConfig.REDIRECT_URI)
 
-            val registeredClient = mastodon.registerClient(instanceUrl, BuildConfig.REDIRECT_URI)
             client.value = registeredClient
 
-            mastodon.getAuthorizationUrl(registeredClient)
+            authorizator.getAuthorizationUrl(registeredClient)
          } catch (e: Exception) {
             errorMessage.value = "Something goes wrong"
             throw CancellationException()
@@ -107,13 +127,15 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
          }
 
          val credential = try {
-            Mastodon(kodein).publishCredential(client, authCode)
+            authorizator.publishCredential(client, authCode)
          } catch (e: Exception) {
             errorMessage.value = "Something goes wrong. Please try again later."
             throw CancellationException()
          }
 
          CredentialPreference(this@AuthActivity).credential = credential
+
+         startTimelineActivity(credential)
       }
    }
 

@@ -12,32 +12,30 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-package com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.apps
+package com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines
 
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
-import io.ktor.client.request.forms.*
-import io.ktor.http.*
+import io.ktor.client.request.*
 
-internal suspend fun MastodonInstance.postApp(
-      clientName: String,
-      redirectUris: String,
-      scopes: List<String>,
-      website: String?
-): MastodonClient {
+internal suspend fun MastodonInstance.getHomeTimeline(
+      accessToken: String,
+      local: Boolean? = null,
+      onlyMedia: Boolean? = null,
+      maxId: String? = null,
+      sinceId: String? = null,
+      limit: Int? = null
+): List<Status> {
    return httpClient.use {
-      it.submitForm(
-         getApiUrl("api/v1/apps"),
-         Parameters.build {
-            append("client_name", clientName)
-            append("redirect_uris", redirectUris)
-            append("scopes", scopes.joinToString(separator = " "))
-
-            if (website != null) {
-               append("website", website)
-            }
-         }
-      )
+      it.get(getApiUrl("api/v1/timelines/home")) {
+         header("Authorization", "Bearer $accessToken")
+         parameter("local", local)
+         parameter("only_media", onlyMedia)
+         parameter("max_id", maxId)
+         parameter("since_id", sinceId)
+         parameter("limit", limit)
+      }
    }
 }
