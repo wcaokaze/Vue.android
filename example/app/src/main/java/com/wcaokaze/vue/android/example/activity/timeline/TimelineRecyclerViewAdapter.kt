@@ -79,6 +79,11 @@ class TimelineRecyclerViewAdapter(private val state: State,
             getter.modules[MASTODON].getAccount(id)()
          }
 
+         val tooterIcon = getter {
+            val id = toot()?.tooterAccountId ?: return@getter null
+            getter.modules[MASTODON].getAccountIcon(id)()
+         }
+
          val tootContent = getter {
             val rawContent = toot()?.content ?: return@getter null
 
@@ -95,6 +100,7 @@ class TimelineRecyclerViewAdapter(private val state: State,
             SimpleDateFormat("HH:mm MMM d yyyy", Locale.US).format(createdDate)
          }
 
+         val iconView: ImageView
          val usernameView: TextView
          val acctView: TextView
 
@@ -103,29 +109,37 @@ class TimelineRecyclerViewAdapter(private val state: State,
          val createdDateView: TextView
 
          val itemView = LinearLayout {
-            view.orientation = VERTICAL
+            view.orientation = HORIZONTAL
+
+            iconView = ImageView {
+               vBind.imageBitmap(tooterIcon)
+            }
 
             LinearLayout {
-               view.orientation = HORIZONTAL
+               view.orientation = VERTICAL
 
-               usernameView = TextView {
-                  vBind.text { tooter()?.name }
-               }
+               LinearLayout {
+                  view.orientation = HORIZONTAL
 
-               acctView = TextView {
-                  vBind.text {
-                     val acct = tooter()?.acct
-                     if (acct != null) { "@$acct" } else { null }
+                  usernameView = TextView {
+                     vBind.text { tooter()?.name }
+                  }
+
+                  acctView = TextView {
+                     vBind.text {
+                        val acct = tooter()?.acct
+                        if (acct != null) { "@$acct" } else { null }
+                     }
                   }
                }
-            }
 
-            contentView = TextView {
-               vBind.text(tootContent)
-            }
+               contentView = TextView {
+                  vBind.text(tootContent)
+               }
 
-            createdDateView = TextView {
-               vBind.text(tootedDateStr)
+               createdDateView = TextView {
+                  vBind.text(tootedDateStr)
+               }
             }
          }
 
@@ -133,41 +147,52 @@ class TimelineRecyclerViewAdapter(private val state: State,
             layout.width = MATCH_PARENT
             view.padding = 8.dip
 
+            iconView {
+               layout.width  = 40.dip
+               layout.height = 40.dip
+               layout.margins = 4.dip
+            }
+
             LinearLayout {
                layout.width = MATCH_PARENT
+               layout.margins = 4.dip
 
-               usernameView {
-                  layout.gravity = CENTER_VERTICAL
-                  layout.horizontalMargin = 2.dip
-                  layout.verticalMargin   = 4.dip
-                  view.textColor = 0x2196f3.opaque
-                  view.typeface = BOLD
-                  view.maxLines = 1
-                  view.textSizeSp = 14
+               LinearLayout {
+                  layout.width = MATCH_PARENT
+
+                  usernameView {
+                     layout.gravity = CENTER_VERTICAL
+                     layout.horizontalMargin = 2.dip
+                     layout.verticalMargin   = 4.dip
+                     view.textColor = 0x2196f3.opaque
+                     view.typeface = BOLD
+                     view.maxLines = 1
+                     view.textSizeSp = 14
+                  }
+
+                  acctView {
+                     layout.gravity = CENTER_VERTICAL
+                     layout.horizontalMargin = 2.dip
+                     layout.verticalMargin   = 4.dip
+                     view.textColor = 0x000000 opacity 0.54
+                     view.maxLines = 1
+                     view.textSizeSp = 13
+                  }
                }
 
-               acctView {
-                  layout.gravity = CENTER_VERTICAL
-                  layout.horizontalMargin = 2.dip
-                  layout.verticalMargin   = 4.dip
-                  view.textColor = 0x000000 opacity 0.54
-                  view.maxLines = 1
+               contentView {
+                  layout.width = MATCH_PARENT
+                  layout.margins = 8.dip
+                  view.textColor = 0x000000.opaque
                   view.textSizeSp = 13
+                  view.setLineSpacing(2.dip.toFloat(), 1.0f)
                }
-            }
 
-            contentView {
-               layout.width = MATCH_PARENT
-               layout.margins = 8.dip
-               view.textColor = 0x000000.opaque
-               view.textSizeSp = 13
-               view.setLineSpacing(2.dip.toFloat(), 1.0f)
-            }
-
-            createdDateView {
-               layout.gravity = END
-               view.textColor = 0x000000 opacity 0.54
-               view.textSizeSp = 11
+               createdDateView {
+                  layout.gravity = END
+                  view.textColor = 0x000000 opacity 0.54
+                  view.textSizeSp = 11
+               }
             }
          }
 

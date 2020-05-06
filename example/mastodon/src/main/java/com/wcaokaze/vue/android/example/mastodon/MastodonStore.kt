@@ -16,10 +16,14 @@
 
 package com.wcaokaze.vue.android.example.mastodon
 
+import android.graphics.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.Account as IAccount
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.Status as IStatus
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines.*
+import io.ktor.client.*
+import io.ktor.client.request.*
+import kotlinx.coroutines.*
 import org.kodein.di.*
 import org.kodein.di.generic.*
 import vue.*
@@ -43,12 +47,15 @@ class MastodonStore(private val kodein: Kodein)
 // =============================================================================
 
 class MastodonState(override val kodein: Kodein) : VuexState(), KodeinAware {
+   val httpClient: HttpClient by instance()
    val timeZone: TimeZone by instance()
 
    val credential = state<Credential?>(null)
 
    val accounts = state<Map<Account.Id, Account>>(emptyMap())
-   val statuses = state<Map<Status .Id, Status>> (emptyMap())
+   val accountIcons = state<Map<Account.Id, Bitmap?>>(emptyMap())
+
+   val statuses = state<Map<Status .Id, Status>>(emptyMap())
 }
 
 // =============================================================================
@@ -63,6 +70,11 @@ class MastodonMutation : VuexMutation<MastodonState>() {
    fun addAccounts(accounts: Iterable<Account>) {
       state.accounts.value =
          state.accounts.value + accounts.asSequence().map { it.id to it }
+   }
+
+   fun addAccountIcon(accountId: Account.Id, accountIcon: Bitmap?) {
+      state.accountIcons.value =
+         state.accountIcons.value + (accountId to accountIcon)
    }
 
    fun addStatuses(statuses: Iterable<Status>) {
@@ -95,7 +107,34 @@ class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGette
       mutation.addAccounts(accountMemo.values)
       mutation.addStatuses(statusMemo .values)
 
+      for ((_, account) in accountMemo) {
+         fetchAccountIcon(account)
+      }
+
       return statusIds
+   }
+
+   fun fetchAccountIcon(account: Account) {
+      GlobalScope.launch(Dispatchers.Main) {
+         if (account.iconUrl == null) {
+            mutation.addAccountIcon(account.id, null)
+            throw CancellationException()
+         }
+
+         val bitmapByteArray: ByteArray = try {
+            state.httpClient.get(account.iconUrl)
+         } catch (e: CancellationException) {
+            throw e
+         } catch (e: Exception) {
+            mutation.addAccountIcon(account.id, null)
+            throw CancellationException()
+         }
+
+         val bitmap = BitmapFactory
+            .decodeByteArray(bitmapByteArray, 0, bitmapByteArray.size)
+
+         mutation.addAccountIcon(account.id, bitmap)
+      }
    }
 
    private fun convertAccount(
@@ -195,6 +234,9 @@ class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGette
 class MastodonGetter : VuexGetter<MastodonState>() {
    fun getAccount(id: Account.Id): ReactiveField<Account?>
          = getter { state.accounts()[id] }
+
+   fun getAccountIcon(id: Account.Id): ReactiveField<Bitmap?>
+         = getter { state.accountIcons()[id] }
 
    fun getStatus(id: Status.Id): ReactiveField<Status?>
          = getter { state.statuses()[id] }

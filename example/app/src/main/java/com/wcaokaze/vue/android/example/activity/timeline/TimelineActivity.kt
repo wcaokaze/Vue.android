@@ -44,7 +44,14 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
       buildContentView()
 
       launch {
-         val statusIds = action.modules[MASTODON].fetchHomeTimeline()
+         val statusIds = try {
+            action.modules[MASTODON].fetchHomeTimeline()
+         } catch (e: CancellationException) {
+            throw e
+         } catch (e: Exception) {
+            throw CancellationException()
+         }
+
          recyclerViewItems.value = statusIds.map { StatusItem(it) }
       }
    }
