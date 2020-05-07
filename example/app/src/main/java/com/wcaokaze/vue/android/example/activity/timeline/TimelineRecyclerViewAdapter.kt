@@ -85,14 +85,26 @@ class TimelineRecyclerViewAdapter(private val state: State,
          }
 
          val tootContent = getter {
-            val rawContent = toot()?.content ?: return@getter null
+            @Suppress("NAME_SHADOWING")
+            val toot = toot() ?: return@getter null
 
-            if (Build.VERSION.SDK_INT >= 24) {
-               Html.fromHtml(rawContent, Html.FROM_HTML_MODE_COMPACT)
+            val content = if (Build.VERSION.SDK_INT >= 24) {
+               Html.fromHtml(toot.content, Html.FROM_HTML_MODE_COMPACT)
             } else {
                @Suppress("DEPRECATION")
-               Html.fromHtml(rawContent)
+               Html.fromHtml(toot.content)
             }
+
+            val builder = SpannableStringBuilder()
+
+            if (!toot.spoilerText.isNullOrEmpty()) {
+               builder
+                  .append(toot.spoilerText)
+                  .append("\n\n")
+            }
+
+            builder.append(content)
+            builder
          }
 
          val tootedDateStr = getter {
