@@ -286,4 +286,24 @@ class GetterTest {
       assertEquals(0, state1.observerCount)
       assertEquals(1, state2.observerCount)
    }
+
+   @Test fun removeObserver_whileNotifyingObservers() {
+      val state = state(0)
+      val getter = getter { state() }
+
+      val observer = object : (Result<Int>) -> Unit {
+         override fun invoke(p1: Result<Int>) {
+            getter.removeObserver(this)
+         }
+      }
+
+      getter.addObserver(observer)
+
+      var i = -1
+      getter.addObserver { i = it.getOrThrow() }
+
+      state.value = 1
+
+      assertEquals(1, i)
+   }
 }

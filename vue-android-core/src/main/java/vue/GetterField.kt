@@ -48,10 +48,9 @@ class GetterField<out T>
 
    private val dependeeFields = HashSet<Any>()
 
-   private var downstreams: Array<((Result<T>) -> Unit)?> = arrayOfNulls(2)
+   private var downstreams: Array<((Result<T>) -> Unit)> = emptyArray()
 
-   override var observerCount = 0
-      private set
+   override val observerCount get() = downstreams.size
 
    /**
     * returns the cache of the current value if [isBoundToUpstream] == true.
@@ -79,11 +78,7 @@ class GetterField<out T>
 
       val shouldBind = observerCount == 0
 
-      if (observerCount >= downstreams.size) {
-         downstreams = downstreams.copyOf(newSize = observerCount * 2)
-      }
-
-      downstreams[observerCount++] = observer
+      downstreams += observer
 
       if (shouldBind) {
          bindToDependees()
@@ -91,15 +86,14 @@ class GetterField<out T>
    }
 
    override fun removeObserver(observer: (Result<T>) -> Unit) {
-      val observers = downstreams
+      val a = downstreams
 
-      when (observerCount) {
+      when (a.size) {
          0 -> return
 
          1 -> {
-            if (observers[0] === observer) {
-               observers[0] = null
-               observerCount = 0
+            if (a[0] === observer) {
+               downstreams = emptyArray()
                unbindFromDependees()
             }
 
@@ -110,14 +104,19 @@ class GetterField<out T>
             var i = 0
 
             while (true) {
-               if (i >= observerCount) { return }
-               if (observers[i] === observer) { break }
+               if (i >= a.size) { return }
+               if (a[i] === observer) { break }
                i++
             }
 
-            System.arraycopy(observers, i + 1, observers, i, observerCount - i - 1)
-            observers[observerCount - 1] = null
-            observerCount--
+            val newL = a.size - 1
+            val newA = arrayOfNulls<(Result<T>) -> Unit>(newL)
+
+            System.arraycopy(a,     0, newA, 0, i)
+            System.arraycopy(a, i + 1, newA, i, newL - i)
+
+            @Suppress("UNCHECKED_CAST")
+            downstreams = newA as Array<(Result<T>) -> Unit>
          }
       }
    }
