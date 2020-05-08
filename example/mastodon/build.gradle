@@ -1,0 +1,79 @@
+/*
+ * Copyright 2020 wcaokaze
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+def VERSION = '0.1.0'
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = '1.8'
+        freeCompilerArgs = ["-Xuse-experimental=kotlin.Experimental"]
+    }
+}
+
+repositories {
+    google()
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "com.wcaokaze.vue.android:vue-android-koshian-recyclerview:$VERSION"
+
+    api 'io.ktor:ktor-client-cio:1.3.2'
+    api 'io.ktor:ktor-client-serialization-jvm:1.3.2'
+    api 'io.ktor:ktor-client-encoding-jvm:1.3.2'
+
+    api 'org.kodein.di:kodein-di-generic-jvm:6.5.5'
+    api 'org.kodein.di:kodein-di-framework-android-core:6.5.5'
+
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testImplementation 'io.ktor:ktor-client-mock-jvm:1.3.2'
+}
+
+configurations.all {
+    resolutionStrategy.dependencySubstitution {
+        substitute module("com.wcaokaze.vue.android:vue-android-core:$VERSION") with project(':vue-android-core')
+        substitute module("com.wcaokaze.vue.android:vue-android-koshian:$VERSION") with project(':vue-android-koshian')
+        substitute module("com.wcaokaze.vue.android:vue-android-koshian-recyclerview:$VERSION") with project(':vue-android-koshian-recyclerview')
+    }
+}

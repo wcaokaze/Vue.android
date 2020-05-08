@@ -34,7 +34,7 @@ class WatcherTest {
 
    @Test fun watcher() {
       class WatcherTestComponent(context: Context) : VComponent() {
-         override val view = View(context)
+         override val componentView = View(context)
 
          val state = state(0)
          var isCalled = false
@@ -51,7 +51,7 @@ class WatcherTest {
       activityScenarioRule.scenario
             .onActivity { activity ->
                component = WatcherTestComponent(activity)
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity { assertFalse(component.isCalled) }
             .onActivity { component.state.value = 1 }
@@ -62,7 +62,7 @@ class WatcherTest {
       val state = state(0)
 
       class WatcherTestComponent(context: Context) : VComponent() {
-         override val view = View(context)
+         override val componentView = View(context)
 
          init {
             watcher(state) {}
@@ -76,11 +76,11 @@ class WatcherTest {
             .onActivity { activity ->
                containerView = FrameLayout(activity)
                component = WatcherTestComponent(activity)
-               containerView.addView(component.view)
+               containerView.addView(component.componentView)
                activity.setContentView(containerView)
             }
             .onActivity { assertEquals(1, state.observerCount) }
-            .onActivity { containerView.removeView(component.view) }
+            .onActivity { containerView.removeView(component.componentView) }
             .onActivity { assertEquals(0, state.observerCount) }
    }
 
@@ -88,7 +88,7 @@ class WatcherTest {
       val state = state(0)
 
       class WatcherTestComponent(context: Context) : VComponent() {
-         override val view = View(context)
+         override val componentView = View(context)
 
          init {
             watcher(state) {}
@@ -102,13 +102,13 @@ class WatcherTest {
             .onActivity { activity ->
                containerView = FrameLayout(activity)
                component = WatcherTestComponent(activity)
-               containerView.addView(component.view)
+               containerView.addView(component.componentView)
                activity.setContentView(containerView)
             }
             .onActivity { assertEquals(1, state.observerCount) }
-            .onActivity { containerView.removeView(component.view) }
+            .onActivity { containerView.removeView(component.componentView) }
             .onActivity { assertEquals(0, state.observerCount) }
-            .onActivity { containerView.addView(component.view) }
+            .onActivity { containerView.addView(component.componentView) }
             .onActivity { assertEquals(1, state.observerCount) }
    }
 }

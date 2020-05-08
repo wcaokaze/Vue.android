@@ -19,10 +19,9 @@ package vue
 import androidx.annotation.*
 
 internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
-   private var observers: Array<((Result<T>) -> Unit)?> = arrayOfNulls(2)
+   private var observers: Array<((Result<T>) -> Unit)> = emptyArray()
 
-   override var observerCount = 0
-      private set
+   override val observerCount get() = observers.size
 
    @Suppress("OverridingDeprecatedMember")
    override val `$vueInternal$value`: T
@@ -30,6 +29,8 @@ internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
 
    private var _value: Result<T> = Result.success(initialValue)
       set(value) {
+         if (value == field) { return }
+
          field = value
          notifyObservers(value)
       }
@@ -48,23 +49,18 @@ internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
    override fun addObserver(observer: (Result<T>) -> Unit) {
       if (containsObserver(observer)) { return }
 
-      if (observerCount >= observers.size) {
-         observers = observers.copyOf(newSize = observerCount * 2)
-      }
-
-      observers[observerCount++] = observer
+      observers += observer
    }
 
    override fun removeObserver(observer: (Result<T>) -> Unit) {
-      val observers = observers
+      val a = observers
 
-      when (observerCount) {
+      when (a.size) {
          0 -> return
 
          1 -> {
-            if (observers[0] === observer) {
-               observers[0] = null
-               observerCount = 0
+            if (a[0] === observer) {
+               observers = emptyArray()
             }
 
             return
@@ -74,14 +70,19 @@ internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
             var i = 0
 
             while (true) {
-               if (i >= observerCount) { return }
-               if (observers[i] === observer) { break }
+               if (i >= a.size) { return }
+               if (a[i] === observer) { break }
                i++
             }
 
-            System.arraycopy(observers, i + 1, observers, i, observerCount - i - 1)
-            observers[observerCount - 1] = null
-            observerCount--
+            val newL = a.size - 1
+            val newA = arrayOfNulls<(Result<T>) -> Unit>(newL)
+
+            System.arraycopy(a,     0, newA, 0, i)
+            System.arraycopy(a, i + 1, newA, i, newL - i)
+
+            @Suppress("UNCHECKED_CAST")
+            observers = newA as Array<(Result<T>) -> Unit>
          }
       }
    }

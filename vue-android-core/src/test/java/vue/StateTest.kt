@@ -220,6 +220,31 @@ class StateTest {
       assertEquals(0, state.observerCount)
    }
 
+   @Test fun distinct() {
+      val state = state(0)
+      state.addObserver { fail() }
+      state.value = 0
+   }
+
+   @Test fun removeObserver_whileNotifyingObservers() {
+      val state = state(0)
+
+      val observer = object : (Result<Int>) -> Unit {
+         override fun invoke(p1: Result<Int>) {
+            state.removeObserver(this)
+         }
+      }
+
+      state.addObserver(observer)
+
+      var i = -1
+      state.addObserver { i = it.getOrThrow() }
+
+      state.value = 1
+
+      assertEquals(1, i)
+   }
+
    /**
     * To waste kotlin optimizer.
     *

@@ -16,4 +16,5 @@
 
 <resources>
     <item type="id" name="view_tag_v_bind_provider"/>
+    <item type="id" name="view_tag_v_model_provider"/>
 </resources>

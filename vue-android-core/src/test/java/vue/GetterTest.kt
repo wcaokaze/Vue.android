@@ -258,6 +258,13 @@ class GetterTest {
       assertEquals(0, state.observerCount)
    }
 
+   @Test fun distinct() {
+      val state = state(0)
+      val getter = getter { state() * 0 }
+      getter.addObserver { fail() }
+      state.value = 1
+   }
+
    @Test fun shouldNotObserveUnreachableReactiveField() {
       val state1 = state(1)
       val state2 = state(2)
@@ -278,5 +285,25 @@ class GetterTest {
       conditionState.value = false
       assertEquals(0, state1.observerCount)
       assertEquals(1, state2.observerCount)
+   }
+
+   @Test fun removeObserver_whileNotifyingObservers() {
+      val state = state(0)
+      val getter = getter { state() }
+
+      val observer = object : (Result<Int>) -> Unit {
+         override fun invoke(p1: Result<Int>) {
+            getter.removeObserver(this)
+         }
+      }
+
+      getter.addObserver(observer)
+
+      var i = -1
+      getter.addObserver { i = it.getOrThrow() }
+
+      state.value = 1
+
+      assertEquals(1, i)
    }
 }

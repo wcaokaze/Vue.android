@@ -29,7 +29,7 @@ import android.widget.*
 import kotlinx.coroutines.*
 
 class CoroutineScopeTestComponent(context: Context) : VComponent() {
-   override val view = View(context)
+   override val componentView = View(context)
 }
 
 @RunWith(AndroidJUnit4::class)
@@ -37,25 +37,13 @@ class ComponentCoroutineScopeTest {
    @get:Rule
    val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
-   @Test fun inactiveUntilMounted() {
-      lateinit var component: CoroutineScopeTestComponent
-
-      activityScenarioRule.scenario
-            .onActivity { activity ->
-               component = CoroutineScopeTestComponent(activity)
-            }
-            .onActivity {
-               assertFalse(component.isActive)
-            }
-   }
-
    @Test fun activeWhileMounted() {
       lateinit var component: CoroutineScopeTestComponent
 
       activityScenarioRule.scenario
             .onActivity { activity ->
                component = CoroutineScopeTestComponent(activity)
-               activity.setContentView(component.view)
+               activity.setContentView(component.componentView)
             }
             .onActivity {
                assertTrue(component.isActive)
@@ -70,20 +58,20 @@ class ComponentCoroutineScopeTest {
             .onActivity { activity ->
                containerView = FrameLayout(activity)
                component = CoroutineScopeTestComponent(activity)
-               containerView.addView(component.view)
+               containerView.addView(component.componentView)
                activity.setContentView(containerView)
             }
             .onActivity { assertTrue(component.isActive) }
-            .onActivity { containerView.removeView(component.view) }
+            .onActivity { containerView.removeView(component.componentView) }
             .onActivity { assertFalse(component.isActive) }
    }
 
    @Test fun coroutineIsCancelled_VOnInComponent_whenComponentIsUnmounted() {
       class VOnScopeTestComponent(context: Context) : VComponent() {
-         override val view = View(context)
+         override val componentView = View(context)
 
          init {
-            view.vOn.click {
+            componentView.vOn.click {
                delay(50L)
                throw AssertionError("coroutine has not be cancelled")
             }
@@ -97,10 +85,10 @@ class ComponentCoroutineScopeTest {
             .onActivity { activity ->
                containerView = FrameLayout(activity)
                component = VOnScopeTestComponent(activity)
-               containerView.addView(component.view)
+               containerView.addView(component.componentView)
                activity.setContentView(containerView)
             }
-            .onActivity { component.view.performClick() }
-            .onActivity { containerView.removeView(component.view) }
+            .onActivity { component.componentView.performClick() }
+            .onActivity { containerView.removeView(component.componentView) }
    }
 }
