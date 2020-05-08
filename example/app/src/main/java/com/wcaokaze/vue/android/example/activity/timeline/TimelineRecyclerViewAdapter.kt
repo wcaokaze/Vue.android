@@ -84,6 +84,18 @@ class TimelineRecyclerViewAdapter(private val state: State,
             getter.modules[MASTODON].getAccountIcon(id)()
          }
 
+         val boost = getter { status() as? Status.Boost }
+
+         val booster = getter {
+            val id = boost()?.boosterAccountId ?: return@getter null
+            getter.modules[MASTODON].getAccount(id)()
+         }
+
+         val boosterIcon = getter {
+            val id = boost()?.boosterAccountId ?: return@getter null
+            getter.modules[MASTODON].getAccountIcon(id)()
+         }
+
          val tootContent = getter {
             @Suppress("NAME_SHADOWING")
             val toot = toot() ?: return@getter null
@@ -120,6 +132,9 @@ class TimelineRecyclerViewAdapter(private val state: State,
 
          val createdDateView: TextView
 
+         val boosterIconView: ImageView
+         val boosterNameView: TextView
+
          val itemView = LinearLayout {
             view.orientation = HORIZONTAL
 
@@ -151,6 +166,26 @@ class TimelineRecyclerViewAdapter(private val state: State,
 
                createdDateView = TextView {
                   vBind.text(tootedDateStr)
+               }
+
+               LinearLayout {
+                  view.orientation = HORIZONTAL
+                  vBind.isOccupiable { boost() != null }
+
+                  ImageView {
+                     view.image = drawable(R.drawable.timeline_ic_boosted)
+                  }
+
+                  boosterIconView = ImageView {
+                     vBind.imageBitmap(boosterIcon)
+                  }
+
+                  boosterNameView = TextView {
+                     vBind.text {
+                        val b = booster()
+                        if (b != null) { "${b.name} - @${b.acct}" } else { null }
+                     }
+                  }
                }
             }
          }
@@ -204,6 +239,31 @@ class TimelineRecyclerViewAdapter(private val state: State,
                   layout.gravity = END
                   view.textColor = 0x000000 opacity 0.54
                   view.textSizeSp = 11
+               }
+
+               LinearLayout {
+                  ImageView {
+                     layout.gravity = CENTER_VERTICAL
+                     layout.horizontalMargin = 8.dip
+                  }
+
+                  boosterIconView {
+                     layout.width  = 24.dip
+                     layout.height = 24.dip
+                     layout.gravity = CENTER_VERTICAL
+                     layout.horizontalMargin = 4.dip
+                  }
+
+                  boosterNameView {
+                     layout.width  = MATCH_PARENT
+                     layout.height = WRAP_CONTENT
+                     layout.horizontalMargin = 4.dip
+                     layout.gravity = CENTER_VERTICAL
+                     view.textColor = 0x000000 opacity 0.54
+                     view.textSizeSp = 12
+                     view.maxLines = 1
+                     view.ellipsize = TRUNCATE_AT_END
+                  }
                }
             }
          }
