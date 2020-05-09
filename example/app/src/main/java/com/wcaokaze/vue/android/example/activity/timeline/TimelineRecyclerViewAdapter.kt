@@ -16,6 +16,7 @@
 
 package com.wcaokaze.vue.android.example.activity.timeline
 
+import android.graphics.*
 import android.os.*
 import android.text.*
 import android.widget.*
@@ -61,12 +62,12 @@ class TimelineRecyclerViewAdapter(private val state: State,
       position: Int, item: TimelineRecyclerViewItem): ViewHolderProvider<*>
    = when (item) {
       is StatusItem -> VueHolderProvider(item) { reactiveItem ->
-         val status = getter {
+         val status: V<Status?> = getter {
             val id = reactiveItem().statusId
             getter.modules[MASTODON].getStatus(id)()
          }
 
-         val toot = getter {
+         val toot: V<Status.Toot?> = getter {
             when (val s = status()) {
                null            -> null
                is Status.Toot  -> s
@@ -74,29 +75,29 @@ class TimelineRecyclerViewAdapter(private val state: State,
             }
          }
 
-         val tooter = getter {
+         val tooter: V<Account?> = getter {
             val id = toot()?.tooterAccountId ?: return@getter null
             getter.modules[MASTODON].getAccount(id)()
          }
 
-         val tooterIcon = getter {
+         val tooterIcon: V<Bitmap?> = getter {
             val id = toot()?.tooterAccountId ?: return@getter null
             getter.modules[MASTODON].getAccountIcon(id)()
          }
 
-         val boost = getter { status() as? Status.Boost }
+         val boost: V<Status.Boost?> = getter { status() as? Status.Boost }
 
-         val booster = getter {
+         val booster: V<Account?> = getter {
             val id = boost()?.boosterAccountId ?: return@getter null
             getter.modules[MASTODON].getAccount(id)()
          }
 
-         val boosterIcon = getter {
+         val boosterIcon: V<Bitmap?> = getter {
             val id = boost()?.boosterAccountId ?: return@getter null
             getter.modules[MASTODON].getAccountIcon(id)()
          }
 
-         val tootContent = getter {
+         val tootContent: V<Spannable?> = getter {
             @Suppress("NAME_SHADOWING")
             val toot = toot() ?: return@getter null
 
@@ -119,7 +120,7 @@ class TimelineRecyclerViewAdapter(private val state: State,
             builder
          }
 
-         val tootedDateStr = getter {
+         val tootedDateStr: V<String?> = getter {
             val createdDate = toot()?.tootedDate ?: return@getter null
             SimpleDateFormat("HH:mm MMM d yyyy", Locale.US).format(createdDate)
          }
