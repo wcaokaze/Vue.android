@@ -23,7 +23,7 @@ import org.junit.runners.*
 import vue.*
 
 @RunWith(JUnit4::class)
-class MapTest {
+class ReactiveFieldMapTest {
    @Test fun getManually() {
       val state = state(0)
       val mapped = state.map { it * 2 }

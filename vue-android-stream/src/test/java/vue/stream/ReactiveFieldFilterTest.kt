@@ -23,7 +23,7 @@ import org.junit.runners.*
 import vue.*
 
 @RunWith(JUnit4::class)
-class FilterTest {
+class ReactiveFieldFilterTest {
    @Test fun getManually() {
       val state = state(0)
       val filtered = state.filter(0) { it % 2 == 0 }
