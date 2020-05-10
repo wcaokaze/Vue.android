@@ -51,3 +51,11 @@ inline fun <T> ReactiveField<T>
       }
    }
 }
+
+inline fun <reified T, I> ReactiveField<*>
+      .filterIsInstance(initialValue: I): ReactiveField<T>
+      where I : T
+{
+   @Suppress("UNCHECKED_CAST")
+   return filter(initialValue) { it is T } as ReactiveField<T>
+}
