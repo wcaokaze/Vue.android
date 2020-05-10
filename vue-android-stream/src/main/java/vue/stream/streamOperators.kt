@@ -21,3 +21,33 @@ import vue.*
 inline fun <T, R> ReactiveField<T>.map(crossinline mapper: (T) -> R): ReactiveField<R> {
    return getter { mapper(this@map()) }
 }
+
+/**
+ * @param initialValue
+ *   The value while no values are available.
+ *   For example:
+ *   ```kotlin
+ *   val state = state(1)
+ *   val filtered = state.filter(0) { it <= 0 }
+ *   state.value = 2
+ *   state.value = 3
+ *
+ *   assertEquals(0, filtered.value)
+ *   ```
+ */
+inline fun <T> ReactiveField<T>
+      .filter(initialValue: T, crossinline filter: (T) -> Boolean): ReactiveField<T>
+{
+   var prevValue = initialValue
+
+   return getter {
+      val newValue = this@filter()
+
+      if (filter(newValue)) {
+         prevValue = newValue
+         newValue
+      } else {
+         prevValue
+      }
+   }
+}
