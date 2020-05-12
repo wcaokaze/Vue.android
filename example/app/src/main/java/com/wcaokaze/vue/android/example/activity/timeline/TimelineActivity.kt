@@ -57,18 +57,24 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
    }
 
    private fun buildContentView() {
+      val recyclerViewAdapter: TimelineRecyclerViewAdapter
+
       @OptIn(ExperimentalContracts::class)
       koshian(this) {
          componentView = FrameLayout {
-            Component(TimelineRecyclerViewAdapter(context, state, getter)) {
-               layout.width  = MATCH_PARENT
-               layout.height = MATCH_PARENT
-
-               val layoutManager = LinearLayoutManager(context)
+            recyclerViewAdapter = Component(TimelineRecyclerViewAdapter(context, state, getter)) {
                component.itemsBinder(recyclerViewItems)
-               view.layoutManager = layoutManager
-               view.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
             }
+         }
+      }
+
+      componentView.applyKoshian {
+         Component(recyclerViewAdapter) {
+            layout.width  = MATCH_PARENT
+            layout.height = MATCH_PARENT
+            val layoutManager = LinearLayoutManager(view.context)
+            view.layoutManager = layoutManager
+            view.addItemDecoration(DividerItemDecoration(view.context, layoutManager.orientation))
          }
       }
 
