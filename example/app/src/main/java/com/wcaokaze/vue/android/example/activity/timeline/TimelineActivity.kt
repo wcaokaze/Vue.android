@@ -18,24 +18,24 @@ package com.wcaokaze.vue.android.example.activity.timeline
 
 import android.app.*
 import android.os.*
-import android.view.*
+import android.widget.*
 import androidx.recyclerview.widget.*
 import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import koshian.*
-import koshian.recyclerview.*
 import kotlinx.coroutines.*
 import org.kodein.di.*
 import org.kodein.di.android.*
 import vue.*
 import vue.koshian.recyclerview.*
+import vue.koshian.*
 import kotlin.contracts.*
 
 class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
    override val kodein by closestKodein()
    override val componentLifecycle = ComponentLifecycle(this)
 
-   override lateinit var componentView: View
+   override lateinit var componentView: FrameLayout
 
    private val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
 
@@ -59,12 +59,16 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
    private fun buildContentView() {
       @OptIn(ExperimentalContracts::class)
       koshian(this) {
-         componentView = RecyclerView {
-            val adapter = TimelineRecyclerViewAdapter(state, getter)
-            val layoutManager = LinearLayoutManager(context)
-            vBind(adapter).items.invoke(recyclerViewItems)
-            view.layoutManager = layoutManager
-            view.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
+         componentView = FrameLayout {
+            Component(TimelineRecyclerViewAdapter(context, state, getter)) {
+               layout.width  = MATCH_PARENT
+               layout.height = MATCH_PARENT
+
+               val layoutManager = LinearLayoutManager(context)
+               component.itemsBinder(recyclerViewItems)
+               view.layoutManager = layoutManager
+               view.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
+            }
          }
       }
 

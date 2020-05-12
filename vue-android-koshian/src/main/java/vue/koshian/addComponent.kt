@@ -16,7 +16,6 @@
 
 package vue.koshian
 
-import android.view.*
 import koshian.*
 import vue.*
 import kotlin.contracts.*
@@ -26,7 +25,7 @@ import kotlin.contracts.*
  */
 @ExperimentalContracts
 @Suppress("FunctionName")
-inline fun <L, C : VComponent> Koshian<ViewManager, *, L, KoshianMode.Creator>.Component(
+inline fun <L, C : VComponentInterface> CreatorParent<L>.Component(
       vComponent: C,
       creatorAction: ViewCreator<C, L>.() -> Unit
 ): C {
@@ -39,7 +38,7 @@ inline fun <L, C : VComponent> Koshian<ViewManager, *, L, KoshianMode.Creator>.C
  */
 @ExperimentalContracts
 @Suppress("FunctionName")
-inline fun <L, C : VComponent> CreatorParent<L>.VComponent(
+inline fun <L, C : VComponentInterface> CreatorParent<L>.VComponent(
       vComponent: C,
       creatorAction: ViewCreator<C, L>.() -> Unit
 ): C {
@@ -56,7 +55,7 @@ inline fun <L, C : VComponent> CreatorParent<L>.VComponent(
  * Otherwise, inserts the specified Component to the current position.
  */
 @Suppress("FunctionName")
-inline fun <L, C : VComponent, S : KoshianStyle>
+inline fun <L, C : VComponentInterface, S : KoshianStyle>
       ApplierParent<L, S>.Component(
             vComponent: C,
             applierAction: ViewApplier<C, L, S>.() -> Unit
@@ -71,7 +70,7 @@ inline fun <L, C : VComponent, S : KoshianStyle>
  * Otherwise, inserts the specified Component to the current position.
  */
 @Suppress("FunctionName")
-inline fun <L, C : VComponent, S : KoshianStyle>
+inline fun <L, C : VComponentInterface, S : KoshianStyle>
       ApplierParent<L, S>.VComponent(
             vComponent: C,
             applierAction: ViewApplier<C, L, S>.() -> Unit
@@ -82,12 +81,12 @@ inline fun <L, C : VComponent, S : KoshianStyle>
    koshian.applierAction()
 }
 
-inline val <C : VComponent> Koshian<C, *, *, *>.component: C get() {
+inline val <C : VComponentInterface> Koshian<C, *, *, *>.component: C get() {
    @Suppress("UNCHECKED_CAST")
    return `$$koshianInternal$view` as C
 }
 
-inline val <L> Koshian<VComponent, L, *, *>.layout: L get() {
+inline val <L> Koshian<VComponentInterface, L, *, *>.layout: L get() {
    @Suppress("UNCHECKED_CAST")
-   return (`$$koshianInternal$view` as VComponent).componentView.layoutParams as L
+   return (`$$koshianInternal$view` as VComponentInterface).componentView.layoutParams as L
 }
