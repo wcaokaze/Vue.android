@@ -16,6 +16,7 @@
 
 package com.wcaokaze.vue.android.example.activity.timeline
 
+import android.content.*
 import android.graphics.*
 import android.os.*
 import android.text.*
@@ -53,9 +54,10 @@ object MissingStatusItem : TimelineRecyclerViewItem() {
    override fun isItemsTheSameWith(item: Any) = item is MissingStatusItem
 }
 
-class TimelineRecyclerViewAdapter(private val state: State,
+class TimelineRecyclerViewAdapter(context: Context,
+                                  private val state: State,
                                   private val getter: Getter)
-   : KoshianRecyclerViewAdapter<TimelineRecyclerViewItem>()
+   : RecyclerViewAdapterComponent<TimelineRecyclerViewItem>(context)
 {
    @OptIn(ExperimentalContracts::class)
    override fun selectViewHolderProvider(
