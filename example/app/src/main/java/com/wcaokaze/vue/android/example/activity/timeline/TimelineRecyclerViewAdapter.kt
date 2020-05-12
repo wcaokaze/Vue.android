@@ -61,7 +61,7 @@ class TimelineRecyclerViewAdapter(private val state: State,
    override fun selectViewHolderProvider(
       position: Int, item: TimelineRecyclerViewItem): ViewHolderProvider<*>
    = when (item) {
-      is StatusItem -> VueHolderProvider(item) { reactiveItem ->
+      is StatusItem -> VueHolderProvider(item) {
          val status: V<Status?> = getter {
             val id = reactiveItem().statusId
             getter.modules[MASTODON].getStatus(id)()
@@ -136,55 +136,57 @@ class TimelineRecyclerViewAdapter(private val state: State,
          val boosterIconView: ImageView
          val boosterNameView: TextView
 
-         val itemView = LinearLayout {
-            view.orientation = HORIZONTAL
-
-            iconView = ImageView {
-               vBind.imageBitmap(tooterIcon)
-            }
-
+         val itemView = koshian(context) {
             LinearLayout {
-               view.orientation = VERTICAL
+               view.orientation = HORIZONTAL
+
+               iconView = ImageView {
+                  vBind.imageBitmap(tooterIcon)
+               }
 
                LinearLayout {
-                  view.orientation = HORIZONTAL
+                  view.orientation = VERTICAL
 
-                  usernameView = TextView {
-                     vBind.text { tooter()?.name }
-                  }
+                  LinearLayout {
+                     view.orientation = HORIZONTAL
 
-                  acctView = TextView {
-                     vBind.text {
-                        val acct = tooter()?.acct
-                        if (acct != null) { "@$acct" } else { null }
+                     usernameView = TextView {
+                        vBind.text { tooter()?.name }
+                     }
+
+                     acctView = TextView {
+                        vBind.text {
+                           val acct = tooter()?.acct
+                           if (acct != null) { "@$acct" } else { null }
+                        }
                      }
                   }
-               }
 
-               contentView = TextView {
-                  vBind.text(tootContent)
-               }
-
-               createdDateView = TextView {
-                  vBind.text(tootedDateStr)
-               }
-
-               LinearLayout {
-                  view.orientation = HORIZONTAL
-                  vBind.isOccupiable { boost() != null }
-
-                  ImageView {
-                     view.image = drawable(R.drawable.timeline_ic_boosted)
+                  contentView = TextView {
+                     vBind.text(tootContent)
                   }
 
-                  boosterIconView = ImageView {
-                     vBind.imageBitmap(boosterIcon)
+                  createdDateView = TextView {
+                     vBind.text(tootedDateStr)
                   }
 
-                  boosterNameView = TextView {
-                     vBind.text {
-                        val b = booster()
-                        if (b != null) { "${b.name} - @${b.acct}" } else { null }
+                  LinearLayout {
+                     view.orientation = HORIZONTAL
+                     vBind.isOccupiable { boost() != null }
+
+                     ImageView {
+                        view.image = drawable(R.drawable.timeline_ic_boosted)
+                     }
+
+                     boosterIconView = ImageView {
+                        vBind.imageBitmap(boosterIcon)
+                     }
+
+                     boosterNameView = TextView {
+                        vBind.text {
+                           val b = booster()
+                           if (b != null) { "${b.name} - @${b.acct}" } else { null }
+                        }
                      }
                   }
                }
@@ -273,26 +275,30 @@ class TimelineRecyclerViewAdapter(private val state: State,
       }
 
       is LoadingIndicatorItem -> VueHolderProvider(item) {
-         FrameLayout {
-            layout.width = MATCH_PARENT
+         koshian(context) {
+            FrameLayout {
+               layout.width = MATCH_PARENT
 
-            ProgressBar {
-               layout.width  = 32.dip
-               layout.height = 32.dip
-               layout.gravity = CENTER_HORIZONTAL
-               layout.margins = 8.dip
+               ProgressBar {
+                  layout.width  = 32.dip
+                  layout.height = 32.dip
+                  layout.gravity = CENTER_HORIZONTAL
+                  layout.margins = 8.dip
+               }
             }
          }
       }
 
       is MissingStatusItem -> VueHolderProvider(item) {
-         FrameLayout {
-            layout.width = MATCH_PARENT
+         koshian(context) {
+            FrameLayout {
+               layout.width = MATCH_PARENT
 
-            ImageView {
-               layout.gravity = CENTER_HORIZONTAL
-               layout.margins = 8.dip
-               view.image = drawable(R.drawable.timeline_missing_item)
+               ImageView {
+                  layout.gravity = CENTER_HORIZONTAL
+                  layout.margins = 8.dip
+                  view.image = drawable(R.drawable.timeline_missing_item)
+               }
             }
          }
       }

@@ -18,8 +18,6 @@ package vue.koshian.recyclerview
 
 import android.content.*
 import android.view.*
-import androidx.recyclerview.widget.*
-import koshian.*
 import koshian.recyclerview.*
 import vue.*
 
@@ -35,38 +33,40 @@ import vue.*
  *    override fun selectViewHolderProvider
  *          (position: Int, item: TimelineItem): ViewHolderProvider<*>
  *    = when (item) {
- *       is StatusItem -> ViewHolderProvider(item) { reactiveItem: ReactiveField<StatusItem> ->
- *          //                                                     ^~~~~~~~~~~~~
- *
+ *       is StatusItem -> ViewHolderProvider(item) {
  *          val status = getter { reactiveItem().status }
  *          val formatter = DateTimeFormatter.ofFormat("d MMM yyyy HH:mm")
  *          val formattedCreatedTime = getter { formatter.format(status().createdTime) }
  *
  *          val userComponent: UserComponent
  *
- *          LinearLayout {
- *             view.orientation = VERTICAL
+ *          koshian(context) {
+ *             LinearLayout {
+ *                view.orientation = VERTICAL
  *
- *             userComponent = Component(UserComponent(context)) {
- *                component.user { status().user }
- *             }
+ *                userComponent = Component(UserComponent(context)) {
+ *                   component.user { status().user }
+ *                }
  *
- *             TextView {
- *                vBind.text { status().content }
- *             }
+ *                TextView {
+ *                   vBind.text { status().content }
+ *                }
  *
- *             TextView {
- *                vBind.text { formattedCreatedTime() }
+ *                TextView {
+ *                   vBind.text { formattedCreatedTime() }
+ *                }
  *             }
  *          }
  *       }
  *
  *       is LoadingIndicatorItem -> ViewHolderProvider(item) {
- *          FrameLayout {
- *             layout.height = 48.dip
+ *          koshian(context) {
+ *             FrameLayout {
+ *                layout.height = 48.dip
  *
- *             ProgressBar {
- *                layout.gravity = CENTER
+ *                ProgressBar {
+ *                   layout.gravity = CENTER
+ *                }
  *             }
  *          }
  *       }
@@ -74,49 +74,27 @@ import vue.*
  * }
  * ```
  */
-@KoshianMarker
 @Suppress("FunctionName")
 inline fun <I> VueHolderProvider(
       item: I,
-      crossinline itemViewCreatorAction:
-            Koshian<ViewManager, Nothing, RecyclerView.LayoutParams, KoshianMode.Creator>.(
-                  reactiveItem: ReactiveField<I>
-            ) -> View
+      crossinline itemViewCreatorAction: VueHolder<I>.() -> View
 ): ViewHolderProvider<I> {
    return object : ViewHolderProvider<I> {
       override fun provide(context: Context): KoshianViewHolder<I> {
          val reactiveItem = state(item)
 
-         val oldContext = `$$KoshianInternal`.context
-         val oldParentConstructor = `$$KoshianInternal`.parentViewConstructor
-         val oldApplyingIndex = `$$ApplierInternal`.applyingIndex
-         val oldStyle = `$$StyleInternal`.style
-         `$$KoshianInternal`.context = context
-         `$$KoshianInternal`.parentViewConstructor = KoshianRecyclerViewRoot.CONSTRUCTOR
-         `$$ApplierInternal`.applyingIndex = -1
-         `$$StyleInternal`.style = null
-
-         `$$KoshianInternal`.init(context)
-
-         try {
-            val koshian = Koshian<Nothing, Nothing, RecyclerView.LayoutParams, KoshianMode.Creator>(KoshianRecyclerViewRoot.INSTANCE)
-            val itemView = koshian.itemViewCreatorAction(reactiveItem)
-            return VueHolder(itemView, reactiveItem)
-         } finally {
-            `$$KoshianInternal`.context = oldContext
-            `$$KoshianInternal`.parentViewConstructor = oldParentConstructor
-            `$$ApplierInternal`.applyingIndex = oldApplyingIndex
-            `$$StyleInternal`.style = oldStyle
+         return object : VueHolder<I>(context, reactiveItem) {
+            override val itemView: View = itemViewCreatorAction(this)
          }
       }
    }
 }
 
-class VueHolder<I>(
-      override val itemView: View,
-      private val reactiveItem: StateField<I>
+abstract class VueHolder<I>(
+   val context: Context,
+   val reactiveItem: StateField<I>
 ) : KoshianViewHolder<I>() {
-   override fun bind(item: I) {
+   final override fun bind(item: I) {
       reactiveItem.value = item
    }
 }
