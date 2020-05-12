@@ -17,11 +17,14 @@
 package com.wcaokaze.vue.android.example.activity.timeline
 
 import android.app.*
+import android.content.*
 import android.os.*
 import android.widget.*
 import androidx.recyclerview.widget.*
 import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
+import com.wcaokaze.vue.android.example.activity.status.*
+import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
 import kotlinx.coroutines.*
 import org.kodein.di.*
@@ -29,6 +32,7 @@ import org.kodein.di.android.*
 import vue.*
 import vue.koshian.recyclerview.*
 import vue.koshian.*
+import vue.stream.*
 import kotlin.contracts.*
 
 class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
@@ -56,6 +60,13 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
       }
    }
 
+   private fun startStatusActivity(statusId: Status.Id) {
+      val intent = Intent(this, StatusActivity::class.java)
+         .putExtra(StatusActivity.INTENT_KEY_STATUS_ID, statusId)
+
+      startActivity(intent)
+   }
+
    private fun buildContentView() {
       val recyclerViewAdapter: TimelineRecyclerViewAdapter
 
@@ -64,6 +75,11 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
          componentView = FrameLayout {
             recyclerViewAdapter = Component(TimelineRecyclerViewAdapter(context, state, getter)) {
                component.itemsBinder(recyclerViewItems)
+
+               component.onItemClick
+                  .map { _, item -> item }
+                  .filterIsInstance<StatusItem>()
+                  .invoke { startStatusActivity(it.statusId) }
             }
          }
       }

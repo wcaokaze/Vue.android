@@ -16,7 +16,8 @@
 
 package com.wcaokaze.vue.android.example.mastodon
 
-import java.net.URL
+import java.io.*
+import java.net.*
 
 data class Account(
    val id: Id,
@@ -30,5 +31,5 @@ data class Account(
    val biography: String?,
    val fields: List<Pair<String, String>>
 ) {
-   data class Id(val id: String)
+   data class Id(val id: String) : Serializable
 }

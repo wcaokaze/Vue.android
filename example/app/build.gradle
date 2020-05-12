@@ -64,6 +64,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     implementation "com.wcaokaze.vue.android:vue-android-koshian-recyclerview:$VERSION"
+    implementation "com.wcaokaze.vue.android:vue-android-stream:$VERSION"
 
     implementation project(':mastodon')
 
@@ -77,5 +78,6 @@ configurations.all {
         substitute module("com.wcaokaze.vue.android:vue-android-core:$VERSION") with project(':vue-android-core')
         substitute module("com.wcaokaze.vue.android:vue-android-koshian:$VERSION") with project(':vue-android-koshian')
         substitute module("com.wcaokaze.vue.android:vue-android-koshian-recyclerview:$VERSION") with project(':vue-android-koshian-recyclerview')
+        substitute module("com.wcaokaze.vue.android:vue-android-stream:$VERSION") with project(':vue-android-stream')
     }
 }
