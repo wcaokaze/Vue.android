@@ -57,7 +57,7 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindValue_state() {
+   @Test fun bindValue_fromOutside_state() {
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -72,7 +72,7 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindValue_reactivatee() {
+   @Test fun bindValue_fromOutside_reactivatee() {
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -87,7 +87,17 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindToView() {
+   @Test fun bind_inComponent_reactivatee() {
+      class VBinderTestComponent(context: Context) : VComponent() {
+         override val componentView: TextView
+         val number = vBinder<Int>()
+
+         init {
+            componentView = TextView(context)
+            componentView.vBind.text { number().toString() }
+         }
+      }
+
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -102,7 +112,7 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindToView_vBinder() {
+   @Test fun bind_inComponent_vBinder() {
       class VBinderTestComponent(context: Context) : VComponent() {
          override val componentView: TextView
          val text = vBinder<String>()
