@@ -20,7 +20,7 @@ import android.app.*
 import android.os.*
 import android.widget.*
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
-import com.wcaokaze.vue.android.example.*
+import com.wcaokaze.vue.android.example.Application
 import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
 import org.kodein.di.*
@@ -39,6 +39,8 @@ class StatusActivity : Activity(), VComponentInterface, KodeinAware {
 
    override lateinit var componentView: LinearLayout
 
+   private val application by lazy { getApplication() as Application }
+
    @OptIn(ExperimentalContracts::class)
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
@@ -46,9 +48,12 @@ class StatusActivity : Activity(), VComponentInterface, KodeinAware {
       val id = intent.getSerializableExtra(INTENT_KEY_STATUS_ID) as? Status.Id
       require(id != null) { "Status ID is not specified." }
 
+      val state = application.state
+      val getter = application.getter
+
       koshian(this) {
          componentView = LinearLayout {
-            Component(StatusComponent(kodein, context)) {
+            Component(StatusComponent(context, state, getter)) {
                layout.width  = MATCH_PARENT
                layout.height = MATCH_PARENT
                component.status { getter.modules[MASTODON].getStatus(id)() }

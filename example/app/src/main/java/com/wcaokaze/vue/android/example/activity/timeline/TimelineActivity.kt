@@ -21,7 +21,7 @@ import android.content.*
 import android.os.*
 import android.widget.*
 import androidx.recyclerview.widget.*
-import com.wcaokaze.vue.android.example.*
+import com.wcaokaze.vue.android.example.Application
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.activity.status.*
 import com.wcaokaze.vue.android.example.mastodon.*
@@ -41,6 +41,8 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
 
    override lateinit var componentView: FrameLayout
 
+   private val application by lazy { getApplication() as Application }
+
    private val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
 
    override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +51,7 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
 
       launch {
          val statusIds = try {
-            action.modules[MASTODON].fetchHomeTimeline()
+            application.action.modules[MASTODON].fetchHomeTimeline()
          } catch (e: CancellationException) {
             throw e
          } catch (e: Exception) {
@@ -69,6 +71,9 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
 
    private fun buildContentView() {
       val recyclerViewAdapter: TimelineRecyclerViewAdapter
+
+      val state = application.state
+      val getter = application.getter
 
       @OptIn(ExperimentalContracts::class)
       koshian(this) {

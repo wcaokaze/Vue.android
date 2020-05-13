@@ -53,4 +53,10 @@ class Application : Application(), KodeinAware {
          }
       }
    }
+
+   val store    by lazy { Store(kodein) }
+   val state    by lazy { store.state }
+   val mutation by lazy { store.mutation }
+   val action   by lazy { store.action }
+   val getter   by lazy { store.getter }
 }

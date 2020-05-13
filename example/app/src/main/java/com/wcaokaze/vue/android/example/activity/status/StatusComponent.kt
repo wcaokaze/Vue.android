@@ -25,17 +25,13 @@ import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
-import org.kodein.di.*
 import vue.*
 import vue.koshian.*
 import java.text.*
 import java.util.*
 import kotlin.contracts.*
 
-class StatusComponent
-   (override val kodein: Kodein, context: Context)
-   : VComponent(), KodeinAware
-{
+class StatusComponent(context: Context, state: State, getter: Getter) : VComponent() {
    override val componentView: LinearLayout
 
    private val iconView: ImageView
