@@ -34,12 +34,9 @@ import kotlin.contracts.*
 class StatusComponent(context: Context, state: State, getter: Getter) : VComponent() {
    override val componentView: LinearLayout
 
-   private val iconView: ImageView
-   private val tooterNameView: TextView
-   private val tooterAcctView: TextView
+   private val accountComponent: AccountComponent
 
    private val contentView: TextView
-
    private val createdDateView: TextView
 
    val status = vBinder<Status?>()
@@ -55,11 +52,6 @@ class StatusComponent(context: Context, state: State, getter: Getter) : VCompone
    private val tooter: V<Account?> = getter {
       val toot = toot() ?: return@getter null
       getter.modules[MASTODON].getAccount(toot.tooterAccountId)()
-   }
-
-   private val tooterIcon: V<Bitmap?> = getter {
-      val toot = toot() ?: return@getter null
-      getter.modules[MASTODON].getAccountIcon(toot.tooterAccountId)()
    }
 
    private val tootContent: V<Spannable?> = getter {
@@ -96,27 +88,8 @@ class StatusComponent(context: Context, state: State, getter: Getter) : VCompone
          componentView = LinearLayout {
             view.orientation = VERTICAL
 
-            LinearLayout {
-               view.orientation = HORIZONTAL
-
-               iconView = ImageView {
-                  vBind.imageBitmap(tooterIcon)
-               }
-
-               LinearLayout {
-                  view.orientation = VERTICAL
-
-                  tooterNameView = TextView {
-                     vBind.text { tooter()?.name }
-                  }
-
-                  tooterAcctView = TextView {
-                     vBind.text {
-                        val acct = tooter()?.acct
-                        if (acct != null) { "@$acct" } else { null }
-                     }
-                  }
-               }
+            accountComponent = Component(AccountComponent(context, state, getter)) {
+               component.account(tooter)
             }
 
             contentView = TextView {
@@ -132,38 +105,8 @@ class StatusComponent(context: Context, state: State, getter: Getter) : VCompone
       componentView.applyKoshian {
          view.padding = 8.dip
 
-         LinearLayout {
-            iconView {
-               layout.width  = 48.dip
-               layout.height = 48.dip
-               layout.margins = 8.dip
-            }
-
-            LinearLayout {
-               layout.width = MATCH_PARENT
-               layout.gravity = CENTER_VERTICAL
-
-               tooterNameView {
-                  layout.width = MATCH_PARENT
-                  layout.gravity = CENTER_VERTICAL
-                  layout.horizontalMargin = 2.dip
-                  layout.verticalMargin   = 2.dip
-                  view.textColor = 0x2196f3.opaque
-                  view.typeface = BOLD
-                  view.maxLines = 1
-                  view.textSizeSp = 15
-               }
-
-               tooterAcctView {
-                  layout.width = MATCH_PARENT
-                  layout.gravity = CENTER_VERTICAL
-                  layout.horizontalMargin = 2.dip
-                  layout.verticalMargin   = 2.dip
-                  view.textColor = 0x000000 opacity 0.54
-                  view.maxLines = 1
-                  view.textSizeSp = 14
-               }
-            }
+         Component(accountComponent) {
+            layout.width = MATCH_PARENT
          }
 
          contentView {
