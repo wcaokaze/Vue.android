@@ -210,6 +210,8 @@ interface VComponentInterface : CoroutineScope {
       invoke(reactiveField)
    }
 
+   fun <T> getter(reactivatee: ComponentReactivatee<T>) = GetterField(reactivatee)
+
    /**
     * The current value of this ComponentVBinder
     */

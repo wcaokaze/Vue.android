@@ -185,6 +185,39 @@ class ComponentVBinderTest {
             }
    }
 
+   @Test fun reactivation_viaGetter() {
+      class VBinderTestComponent(context: Context) : VComponent() {
+         override val componentView: TextView
+
+         val number = vBinder<Int>()
+         private val getter = getter { number().toString() }
+
+         init {
+            componentView = TextView(context)
+            componentView.vBind.text(getter)
+         }
+      }
+
+      lateinit var component: VBinderTestComponent
+      val state = state(0)
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               component = VBinderTestComponent(activity)
+               component.number(state)
+               activity.setContentView(component.componentView)
+            }
+            .onActivity {
+               assertEquals("0", component.componentView.text)
+            }
+            .onActivity {
+               state.value = 1
+            }
+            .onActivity {
+               assertEquals("1", component.componentView.text)
+            }
+   }
+
    @Test fun getFailure() {
       class GetFailureTestComponent(context: Context) : VComponent() {
          override val componentView = View(context)
