@@ -57,7 +57,7 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindValue_state() {
+   @Test fun bindValue_fromOutside_state() {
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -72,7 +72,7 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindValue_reactivatee() {
+   @Test fun bindValue_fromOutside_reactivatee() {
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -87,7 +87,17 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindToView() {
+   @Test fun bind_inComponent_reactivatee() {
+      class VBinderTestComponent(context: Context) : VComponent() {
+         override val componentView: TextView
+         val number = vBinder<Int>()
+
+         init {
+            componentView = TextView(context)
+            componentView.vBind.text { number().toString() }
+         }
+      }
+
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -102,7 +112,7 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindToView_vBinder() {
+   @Test fun bind_inComponent_vBinder() {
       class VBinderTestComponent(context: Context) : VComponent() {
          override val componentView: TextView
          val text = vBinder<String>()
@@ -172,6 +182,39 @@ class ComponentVBinderTest {
             }
             .onActivity {
                assertEquals("2", component.componentView.text)
+            }
+   }
+
+   @Test fun reactivation_viaGetter() {
+      class VBinderTestComponent(context: Context) : VComponent() {
+         override val componentView: TextView
+
+         val number = vBinder<Int>()
+         private val getter = getter { number().toString() }
+
+         init {
+            componentView = TextView(context)
+            componentView.vBind.text(getter)
+         }
+      }
+
+      lateinit var component: VBinderTestComponent
+      val state = state(0)
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               component = VBinderTestComponent(activity)
+               component.number(state)
+               activity.setContentView(component.componentView)
+            }
+            .onActivity {
+               assertEquals("0", component.componentView.text)
+            }
+            .onActivity {
+               state.value = 1
+            }
+            .onActivity {
+               assertEquals("1", component.componentView.text)
             }
    }
 

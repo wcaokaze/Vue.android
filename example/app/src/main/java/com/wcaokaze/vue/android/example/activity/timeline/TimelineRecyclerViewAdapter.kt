@@ -59,6 +59,8 @@ class TimelineRecyclerViewAdapter(context: Context,
                                   private val getter: Getter)
    : RecyclerViewAdapterComponent<TimelineRecyclerViewItem>(context)
 {
+   val onItemClick = vEvent2<Int, TimelineRecyclerViewItem>()
+
    @OptIn(ExperimentalContracts::class)
    override fun selectViewHolderProvider(
       position: Int, item: TimelineRecyclerViewItem): ViewHolderProvider<*>
@@ -141,6 +143,7 @@ class TimelineRecyclerViewAdapter(context: Context,
          val itemView = koshian(context) {
             LinearLayout {
                view.orientation = HORIZONTAL
+               vOn.click { onItemClick.emit(adapterPosition, reactiveItem()) }
 
                iconView = ImageView {
                   vBind.imageBitmap(tooterIcon)
