@@ -29,49 +29,55 @@ import koshian.*
 import vue.*
 import kotlin.contracts.*
 
+val CreatorParent<*>.AddComponentTestComponent: VComponentApplicable<AddComponentTest.AddComponentTestComponent> get() {
+   val component = AddComponentTest.AddComponentTestComponent(context)
+   return VComponentApplicable(component)
+}
+
 @RunWith(AndroidJUnit4::class)
 class AddComponentTest {
    @get:Rule
    val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
-   class AddComponentTestComponent(context: Context) : VComponent() {
+   class AddComponentTestComponent(context: Context) : VComponent<Nothing>() {
       override val componentView = View(context)
+      override val store: Nothing get() = throw UnsupportedOperationException()
    }
 
    @Test fun addComponent() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val componentAsResult: AddComponentTestComponent
-         val componentInDsl: AddComponentTestComponent
+         val componentApplicable: VComponentApplicable<AddComponentTestComponent>
+         lateinit var componentInDsl: AddComponentTestComponent
 
          @OptIn(ExperimentalContracts::class)
          val rootView = koshian(activity) {
             FrameLayout {
-               componentAsResult = Component(AddComponentTestComponent(activity)) {
+               componentApplicable = AddComponentTestComponent {
                   componentInDsl = component
                }
             }
          }
 
-         assertSame(componentInDsl, componentAsResult)
-         assertSame(rootView.getChildAt(0), componentAsResult.componentView)
+         assertSame(componentInDsl, componentApplicable.component)
+         assertSame(rootView.getChildAt(0), componentApplicable.view)
       }
    }
 
    @Test fun applyComponent() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val component1: AddComponentTestComponent
+         val componentApplicable: VComponentApplicable<AddComponentTestComponent>
 
          @OptIn(ExperimentalContracts::class)
          val rootView = koshian(activity) {
             FrameLayout {
-               component1 = Component(AddComponentTestComponent(activity)) {
+               componentApplicable = AddComponentTestComponent {
                }
             }
          }
 
          rootView.applyKoshian {
-            Component(component1) {
-               assertSame(component1, component)
+            componentApplicable {
+               assertSame(componentApplicable.component, component)
             }
          }
       }
