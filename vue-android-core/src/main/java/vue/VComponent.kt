@@ -36,7 +36,12 @@ typealias ComponentReactivatee<T> = VComponentInterface.ComponentReactivateeScop
 /**
  * @param S
  *   [VuexStore] which this Component uses.
- *   Specify [Nothing] if this Component does not require any [VuexStore].
+ *
+ *   Basically this should be received on the constructor.
+ *   ```kotlin
+ *   class ComponentImpl(override val store: Store) : VComponent<Store>()
+ *   ```
+ *   Or specify [Nothing] if this Component does not require any [VuexStore].
  *   ```kotlin
  *   class ComponentImpl : VComponent<Nothing>() {
  *      override val store: Nothing get() = throw UnsupportedOperationException()
@@ -51,7 +56,12 @@ abstract class VComponent<S : VuexStore<*, *, *, *>> : VComponentInterface<S> {
 /**
  * @param S
  *   [VuexStore] which this Component uses.
- *   Specify [Nothing] if this Component does not require any [VuexStore].
+ *
+ *   Basically this should be received on the constructor.
+ *   ```kotlin
+ *   class ComponentImpl(override val store: Store) : VComponentInterface<Store>
+ *   ```
+ *   Or specify [Nothing] if this Component does not require any [VuexStore].
  *   ```kotlin
  *   class ComponentImpl : VComponentInterface<Nothing> {
  *      override val store: Nothing get() = throw UnsupportedOperationException()
