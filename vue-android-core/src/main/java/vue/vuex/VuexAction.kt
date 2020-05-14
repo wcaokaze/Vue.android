@@ -47,13 +47,13 @@ abstract class VuexAction<S, M, G>
 
    class ModuleMap(private val storeModules: VuexStore<*, *, *, *>.ModuleMap) {
       operator fun <MS, MM, MA, MG>
-            get(key: VuexStore.Module.Key<MS, MM, MA, MG>): MA
+            get(key: VuexStore.Module.Key<*, MS, MM, MA, MG>): MA
             where MS : VuexState,
                   MM : VuexMutation<MS>,
                   MA : VuexAction<MS, MM, MG>,
                   MG : VuexGetter<MS>
       {
-         return storeModules[key].action
+         return storeModules.getGeneric(key).action
       }
 
       internal val rootModule get() = storeModules.rootModule
