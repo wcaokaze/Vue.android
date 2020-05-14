@@ -27,7 +27,9 @@ import android.content.*
 import android.widget.*
 import androidx.lifecycle.*
 
-class SimpleComponent(context: Context) : VComponent() {
+class SimpleComponent(context: Context) : VComponent<Nothing>() {
+   override val store: Nothing get() = throw UnsupportedOperationException()
+
    override val componentView: LinearLayout
    val countView: TextView
    val incrementButton: Button

@@ -27,8 +27,9 @@ import android.content.*
 import android.view.*
 import android.widget.*
 
-class LifecycleTestComponent(context: Context) : VComponent() {
+class LifecycleTestComponent(context: Context) : VComponent<Nothing>() {
    override val componentView = View(context)
+   override val store: Nothing get() = throw UnsupportedOperationException()
 }
 
 @RunWith(AndroidJUnit4::class)

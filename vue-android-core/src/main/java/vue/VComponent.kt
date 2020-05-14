@@ -19,6 +19,7 @@ package vue
 import android.view.*
 import androidx.annotation.*
 import kotlinx.coroutines.*
+import vue.vuex.*
 import kotlin.coroutines.*
 
 /**
@@ -32,15 +33,36 @@ import kotlin.coroutines.*
  */
 typealias ComponentReactivatee<T> = VComponentInterface.ComponentReactivateeScope.() -> T
 
-abstract class VComponent : VComponentInterface {
+/**
+ * @param S
+ *   [VuexStore] which this Component uses.
+ *   Specify [Nothing] if this Component does not require any [VuexStore].
+ *   ```kotlin
+ *   class ComponentImpl : VComponent<Nothing>() {
+ *      override val store: Nothing get() = throw UnsupportedOperationException()
+ *   }
+ *   ```
+ */
+abstract class VComponent<S : VuexStore<*, *, *, *>> : VComponentInterface<S> {
    @Suppress("LeakingThis")
    override val componentLifecycle = ComponentLifecycle(this)
 }
 
-interface VComponentInterface : CoroutineScope {
+/**
+ * @param S
+ *   [VuexStore] which this Component uses.
+ *   Specify [Nothing] if this Component does not require any [VuexStore].
+ *   ```kotlin
+ *   class ComponentImpl : VComponentInterface<Nothing> {
+ *      override val store: Nothing get() = throw UnsupportedOperationException()
+ *   }
+ *   ```
+ */
+interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
    val componentView: View
 
    val componentLifecycle: ComponentLifecycle
+   val store: S
 
    override val coroutineContext: CoroutineContext
       get() = componentLifecycle.coroutineContext
