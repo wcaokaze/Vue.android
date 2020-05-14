@@ -29,30 +29,30 @@ import koshian.*
 import vue.*
 import kotlin.contracts.*
 
-val CreatorParent<*>.AddComponentTestComponent: VComponentApplicable<AddComponentTest.AddComponentTestComponent> get() {
-   val component = AddComponentTest.AddComponentTestComponent(context)
+val CreatorParent<*>.TestComponent: VComponentApplicable<VComponentApplicableTest.TestComponent> get() {
+   val component = VComponentApplicableTest.TestComponent(context)
    return VComponentApplicable(component)
 }
 
 @RunWith(AndroidJUnit4::class)
-class AddComponentTest {
+class VComponentApplicableTest {
    @get:Rule
    val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
-   class AddComponentTestComponent(context: Context) : VComponent<Nothing>() {
+   class TestComponent(context: Context) : VComponent<Nothing>() {
       override val componentView = View(context)
       override val store: Nothing get() = throw UnsupportedOperationException()
    }
 
    @Test fun addComponent() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val componentApplicable: VComponentApplicable<AddComponentTestComponent>
-         lateinit var componentInDsl: AddComponentTestComponent
+         val componentApplicable: VComponentApplicable<TestComponent>
+         lateinit var componentInDsl: TestComponent
 
          @OptIn(ExperimentalContracts::class)
          val rootView = koshian(activity) {
             FrameLayout {
-               componentApplicable = AddComponentTestComponent {
+               componentApplicable = TestComponent {
                   componentInDsl = component
                }
             }
@@ -65,12 +65,12 @@ class AddComponentTest {
 
    @Test fun applyComponent() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val componentApplicable: VComponentApplicable<AddComponentTestComponent>
+         val componentApplicable: VComponentApplicable<TestComponent>
 
          @OptIn(ExperimentalContracts::class)
          val rootView = koshian(activity) {
             FrameLayout {
-               componentApplicable = AddComponentTestComponent {
+               componentApplicable = TestComponent {
                }
             }
          }
