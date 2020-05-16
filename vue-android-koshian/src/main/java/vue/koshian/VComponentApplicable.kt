@@ -21,41 +21,7 @@ import koshian.*
 import vue.*
 
 /**
- * 1. Declare an extension val.
- *
- *     ```kotlin
- *     val CreatorParent<*>.FooComponent: VComponentApplicable<FooComponent>
- *        get() = VComponentApplicable(FooComponent(context))
- *     ```
- *
- * 1. We can create the component in Koshian DSL.
- *
- *     ```kotlin
- *     koshian(context) {
- *        FrameLayout {
- *           FooComponent {
- *           }
- *        }
- *     }
- *     ```
- *
- * Note that `FooComponent` can not match in applier. We have to receive Applicable,
- * and have to use it to match.
- * ```kotlin
- * val componentApplicable: VComponentApplicable<FooComponent>
- *
- * val layout = koshian(context) {
- *    FrameLayout {
- *       componentApplicable = FooComponent {
- *       }
- *    }
- * }
- *
- * layout.applyKoshian {
- *    componentApplicable {
- *    }
- * }
- * ```
+ * @see Component
  */
 class VComponentApplicable<C : VComponentInterface<*>>
       (val component: C) : KoshianApplicable
