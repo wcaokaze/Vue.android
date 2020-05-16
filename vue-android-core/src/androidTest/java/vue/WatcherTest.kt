@@ -33,8 +33,9 @@ class WatcherTest {
    val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
    @Test fun watcher() {
-      class WatcherTestComponent(context: Context) : VComponent() {
+      class WatcherTestComponent(context: Context) : VComponent<Nothing>() {
          override val componentView = View(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
 
          val state = state(0)
          var isCalled = false
@@ -61,8 +62,9 @@ class WatcherTest {
    @Test fun removeObserver_whenComponentIsUnmounted() {
       val state = state(0)
 
-      class WatcherTestComponent(context: Context) : VComponent() {
+      class WatcherTestComponent(context: Context) : VComponent<Nothing>() {
          override val componentView = View(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
 
          init {
             watcher(state) {}
@@ -87,8 +89,9 @@ class WatcherTest {
    @Test fun reAddObserver_whenComponentIsMounted() {
       val state = state(0)
 
-      class WatcherTestComponent(context: Context) : VComponent() {
+      class WatcherTestComponent(context: Context) : VComponent<Nothing>() {
          override val componentView = View(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
 
          init {
             watcher(state) {}

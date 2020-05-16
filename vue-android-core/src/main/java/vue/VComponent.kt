@@ -19,6 +19,7 @@ package vue
 import android.view.*
 import androidx.annotation.*
 import kotlinx.coroutines.*
+import vue.vuex.*
 import kotlin.coroutines.*
 
 /**
@@ -32,15 +33,66 @@ import kotlin.coroutines.*
  */
 typealias ComponentReactivatee<T> = VComponentInterface.ComponentReactivateeScope.() -> T
 
-abstract class VComponent : VComponentInterface {
+/**
+ * @param S
+ *   [VuexStore] which this Component uses.
+ *
+ *   Basically this should be received on the constructor.
+ *   ```kotlin
+ *   class ComponentImpl(override val store: Store) : VComponent<Store>()
+ *   ```
+ *   Or specify [Nothing] if this Component does not require any [VuexStore].
+ *   ```kotlin
+ *   class ComponentImpl : VComponent<Nothing>() {
+ *      override val store: Nothing get() = throw UnsupportedOperationException()
+ *   }
+ *   ```
+ */
+abstract class VComponent<S : VuexStore<*, *, *, *>> : VComponentInterface<S> {
    @Suppress("LeakingThis")
    override val componentLifecycle = ComponentLifecycle(this)
 }
 
-interface VComponentInterface : CoroutineScope {
+val <Store, S> VComponentInterface<Store>.state: S
+      where Store : VuexStore<S, *, *, *>,
+            S : VuexState
+   get() = store.state
+
+val <Store, M> VComponentInterface<Store>.mutation: M
+      where Store : VuexStore<*, M, *, *>,
+            M : VuexMutation<*>
+   get() = store.mutation
+
+val <Store, A> VComponentInterface<Store>.action: A
+      where Store : VuexStore<*, *, A, *>,
+            A : VuexAction<*, *, *>
+   get() = store.action
+
+val <Store, G> VComponentInterface<Store>.getter: G
+      where Store : VuexStore<*, *, *, G>,
+            G : VuexGetter<*>
+   get() = store.getter
+
+/**
+ * @param S
+ *   [VuexStore] which this Component uses.
+ *
+ *   Basically this should be received on the constructor.
+ *   ```kotlin
+ *   class ComponentImpl(override val store: Store) : VComponentInterface<Store>
+ *   ```
+ *   Or specify [Nothing] if this Component does not require any [VuexStore].
+ *   ```kotlin
+ *   class ComponentImpl : VComponentInterface<Nothing> {
+ *      override val store: Nothing get() = throw UnsupportedOperationException()
+ *   }
+ *   ```
+ */
+interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
    val componentView: View
 
    val componentLifecycle: ComponentLifecycle
+   val store: S
 
    override val coroutineContext: CoroutineContext
       get() = componentLifecycle.coroutineContext
@@ -209,6 +261,8 @@ interface VComponentInterface : CoroutineScope {
       val reactiveField = GetterField(reactivatee)
       invoke(reactiveField)
    }
+
+   fun <T> getter(reactivatee: ComponentReactivatee<T>) = GetterField(reactivatee)
 
    /**
     * The current value of this ComponentVBinder

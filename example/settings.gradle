@@ -26,3 +26,6 @@ project(':vue-android-koshian').projectDir = file('../vue-android-koshian')
 
 include 'vue-android-koshian-recyclerview'
 project(':vue-android-koshian-recyclerview').projectDir = file('../vue-android-koshian-recyclerview')
+
+include 'vue-android-stream'
+project(':vue-android-stream').projectDir = file('../vue-android-stream')

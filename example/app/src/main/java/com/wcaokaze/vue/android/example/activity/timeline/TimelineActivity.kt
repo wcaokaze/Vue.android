@@ -17,25 +17,34 @@
 package com.wcaokaze.vue.android.example.activity.timeline
 
 import android.app.*
+import android.content.*
 import android.os.*
-import android.view.*
+import android.widget.*
 import androidx.recyclerview.widget.*
+import com.wcaokaze.vue.android.example.Application
 import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
+import com.wcaokaze.vue.android.example.activity.status.*
+import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
-import koshian.recyclerview.*
 import kotlinx.coroutines.*
 import org.kodein.di.*
 import org.kodein.di.android.*
 import vue.*
 import vue.koshian.recyclerview.*
+import vue.koshian.*
+import vue.stream.*
 import kotlin.contracts.*
 
-class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
+class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
    override val kodein by closestKodein()
    override val componentLifecycle = ComponentLifecycle(this)
 
-   override lateinit var componentView: View
+   override lateinit var componentView: FrameLayout
+
+   override val store: Store get() = application.store
+
+   private val application by lazy { getApplication() as Application }
 
    private val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
 
@@ -45,7 +54,7 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
 
       launch {
          val statusIds = try {
-            action.modules[MASTODON].fetchHomeTimeline()
+            application.action.modules[MASTODON].fetchHomeTimeline()
          } catch (e: CancellationException) {
             throw e
          } catch (e: Exception) {
@@ -56,15 +65,37 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
       }
    }
 
+   private fun startStatusActivity(statusId: Status.Id) {
+      val intent = Intent(this, StatusActivity::class.java)
+         .putExtra(StatusActivity.INTENT_KEY_STATUS_ID, statusId)
+
+      startActivity(intent)
+   }
+
    private fun buildContentView() {
+      val recyclerViewAdapterApplicable: VComponentApplicable<TimelineRecyclerViewAdapter>
+
       @OptIn(ExperimentalContracts::class)
       koshian(this) {
-         componentView = RecyclerView {
-            val adapter = TimelineRecyclerViewAdapter(state, getter)
-            val layoutManager = LinearLayoutManager(context)
-            vBind(adapter).items.invoke(recyclerViewItems)
+         componentView = FrameLayout {
+            recyclerViewAdapterApplicable = Component[TimelineRecyclerViewAdapter, MASTODON] {
+               component.itemsBinder(recyclerViewItems)
+
+               component.onItemClick
+                  .map { _, item -> item }
+                  .filterIsInstance<StatusItem>()
+                  .invoke { startStatusActivity(it.statusId) }
+            }
+         }
+      }
+
+      componentView.applyKoshian {
+         recyclerViewAdapterApplicable {
+            layout.width  = MATCH_PARENT
+            layout.height = MATCH_PARENT
+            val layoutManager = LinearLayoutManager(view.context)
             view.layoutManager = layoutManager
-            view.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
+            view.addItemDecoration(DividerItemDecoration(view.context, layoutManager.orientation))
          }
       }
 

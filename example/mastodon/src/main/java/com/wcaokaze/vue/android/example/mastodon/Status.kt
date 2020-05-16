@@ -16,10 +16,11 @@
 
 package com.wcaokaze.vue.android.example.mastodon
 
+import java.io.*
 import java.util.*
 
 sealed class Status {
-   data class Id(val id: String)
+   data class Id(val id: String) : Serializable
 
    abstract val id: Id
 

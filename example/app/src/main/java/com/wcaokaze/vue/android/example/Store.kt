@@ -20,25 +20,9 @@ import com.wcaokaze.vue.android.example.mastodon.*
 import org.kodein.di.*
 import vue.vuex.*
 
-private var store: Store? = null
-
-private fun getStore(kodein: Kodein): Store {
-   var s = store
-   if (s != null) { return s }
-
-   s = Store(kodein)
-   store = s
-   return s
-}
-
-val KodeinAware.state:    State    get() = getStore(kodein).state
-val KodeinAware.mutation: Mutation get() = getStore(kodein).mutation
-val KodeinAware.action:   Action   get() = getStore(kodein).action
-val KodeinAware.getter:   Getter   get() = getStore(kodein).getter
-
 class Store(private val kodein: Kodein) : VuexStore<State, Mutation, Action, Getter>() {
    object ModuleKeys {
-      val MASTODON = Module.Key<MastodonState, MastodonMutation, MastodonAction, MastodonGetter>()
+      val MASTODON = Module.Key<MastodonStore, MastodonState, MastodonMutation, MastodonAction, MastodonGetter>()
    }
 
    override fun createState()    = State()

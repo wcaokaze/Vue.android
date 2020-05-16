@@ -16,10 +16,11 @@
 
 package com.wcaokaze.vue.android.example.activity.timeline
 
+import android.content.*
+import android.graphics.*
 import android.os.*
 import android.text.*
 import android.widget.*
-import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.R
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.mastodon.*
@@ -52,21 +53,28 @@ object MissingStatusItem : TimelineRecyclerViewItem() {
    override fun isItemsTheSameWith(item: Any) = item is MissingStatusItem
 }
 
-class TimelineRecyclerViewAdapter(private val state: State,
-                                  private val getter: Getter)
-   : KoshianRecyclerViewAdapter<TimelineRecyclerViewItem>()
+class TimelineRecyclerViewAdapter(context: Context,
+                                  override val store: MastodonStore)
+   : RecyclerViewAdapterComponent<TimelineRecyclerViewItem, MastodonStore>(context)
 {
+   companion object : KoshianComponentConstructor<TimelineRecyclerViewAdapter, MastodonStore> {
+      override fun instantiate(context: Context, store: MastodonStore)
+            = TimelineRecyclerViewAdapter(context, store)
+   }
+
+   val onItemClick = vEvent2<Int, TimelineRecyclerViewItem>()
+
    @OptIn(ExperimentalContracts::class)
    override fun selectViewHolderProvider(
       position: Int, item: TimelineRecyclerViewItem): ViewHolderProvider<*>
    = when (item) {
-      is StatusItem -> VueHolderProvider(item) { reactiveItem ->
-         val status = getter {
+      is StatusItem -> VueHolderProvider(item) {
+         val status: V<Status?> = getter {
             val id = reactiveItem().statusId
             getter.modules[MASTODON].getStatus(id)()
          }
 
-         val toot = getter {
+         val toot: V<Status.Toot?> = getter {
             when (val s = status()) {
                null            -> null
                is Status.Toot  -> s
@@ -74,29 +82,29 @@ class TimelineRecyclerViewAdapter(private val state: State,
             }
          }
 
-         val tooter = getter {
+         val tooter: V<Account?> = getter {
             val id = toot()?.tooterAccountId ?: return@getter null
             getter.modules[MASTODON].getAccount(id)()
          }
 
-         val tooterIcon = getter {
+         val tooterIcon: V<Bitmap?> = getter {
             val id = toot()?.tooterAccountId ?: return@getter null
             getter.modules[MASTODON].getAccountIcon(id)()
          }
 
-         val boost = getter { status() as? Status.Boost }
+         val boost: V<Status.Boost?> = getter { status() as? Status.Boost }
 
-         val booster = getter {
+         val booster: V<Account?> = getter {
             val id = boost()?.boosterAccountId ?: return@getter null
             getter.modules[MASTODON].getAccount(id)()
          }
 
-         val boosterIcon = getter {
+         val boosterIcon: V<Bitmap?> = getter {
             val id = boost()?.boosterAccountId ?: return@getter null
             getter.modules[MASTODON].getAccountIcon(id)()
          }
 
-         val tootContent = getter {
+         val tootContent: V<Spannable?> = getter {
             @Suppress("NAME_SHADOWING")
             val toot = toot() ?: return@getter null
 
@@ -119,7 +127,7 @@ class TimelineRecyclerViewAdapter(private val state: State,
             builder
          }
 
-         val tootedDateStr = getter {
+         val tootedDateStr: V<String?> = getter {
             val createdDate = toot()?.tootedDate ?: return@getter null
             SimpleDateFormat("HH:mm MMM d yyyy", Locale.US).format(createdDate)
          }
@@ -135,55 +143,58 @@ class TimelineRecyclerViewAdapter(private val state: State,
          val boosterIconView: ImageView
          val boosterNameView: TextView
 
-         val itemView = LinearLayout {
-            view.orientation = HORIZONTAL
-
-            iconView = ImageView {
-               vBind.imageBitmap(tooterIcon)
-            }
-
+         val itemView = koshian(context) {
             LinearLayout {
-               view.orientation = VERTICAL
+               view.orientation = HORIZONTAL
+               vOn.click { onItemClick.emit(adapterPosition, reactiveItem()) }
+
+               iconView = ImageView {
+                  vBind.imageBitmap(tooterIcon)
+               }
 
                LinearLayout {
-                  view.orientation = HORIZONTAL
+                  view.orientation = VERTICAL
 
-                  usernameView = TextView {
-                     vBind.text { tooter()?.name }
-                  }
+                  LinearLayout {
+                     view.orientation = HORIZONTAL
 
-                  acctView = TextView {
-                     vBind.text {
-                        val acct = tooter()?.acct
-                        if (acct != null) { "@$acct" } else { null }
+                     usernameView = TextView {
+                        vBind.text { tooter()?.name }
+                     }
+
+                     acctView = TextView {
+                        vBind.text {
+                           val acct = tooter()?.acct
+                           if (acct != null) { "@$acct" } else { null }
+                        }
                      }
                   }
-               }
 
-               contentView = TextView {
-                  vBind.text(tootContent)
-               }
-
-               createdDateView = TextView {
-                  vBind.text(tootedDateStr)
-               }
-
-               LinearLayout {
-                  view.orientation = HORIZONTAL
-                  vBind.isOccupiable { boost() != null }
-
-                  ImageView {
-                     view.image = drawable(R.drawable.timeline_ic_boosted)
+                  contentView = TextView {
+                     vBind.text(tootContent)
                   }
 
-                  boosterIconView = ImageView {
-                     vBind.imageBitmap(boosterIcon)
+                  createdDateView = TextView {
+                     vBind.text(tootedDateStr)
                   }
 
-                  boosterNameView = TextView {
-                     vBind.text {
-                        val b = booster()
-                        if (b != null) { "${b.name} - @${b.acct}" } else { null }
+                  LinearLayout {
+                     view.orientation = HORIZONTAL
+                     vBind.isOccupiable { boost() != null }
+
+                     ImageView {
+                        view.image = drawable(R.drawable.timeline_ic_boosted)
+                     }
+
+                     boosterIconView = ImageView {
+                        vBind.imageBitmap(boosterIcon)
+                     }
+
+                     boosterNameView = TextView {
+                        vBind.text {
+                           val b = booster()
+                           if (b != null) { "${b.name} - @${b.acct}" } else { null }
+                        }
                      }
                   }
                }
@@ -272,26 +283,30 @@ class TimelineRecyclerViewAdapter(private val state: State,
       }
 
       is LoadingIndicatorItem -> VueHolderProvider(item) {
-         FrameLayout {
-            layout.width = MATCH_PARENT
+         koshian(context) {
+            FrameLayout {
+               layout.width = MATCH_PARENT
 
-            ProgressBar {
-               layout.width  = 32.dip
-               layout.height = 32.dip
-               layout.gravity = CENTER_HORIZONTAL
-               layout.margins = 8.dip
+               ProgressBar {
+                  layout.width  = 32.dip
+                  layout.height = 32.dip
+                  layout.gravity = CENTER_HORIZONTAL
+                  layout.margins = 8.dip
+               }
             }
          }
       }
 
       is MissingStatusItem -> VueHolderProvider(item) {
-         FrameLayout {
-            layout.width = MATCH_PARENT
+         koshian(context) {
+            FrameLayout {
+               layout.width = MATCH_PARENT
 
-            ImageView {
-               layout.gravity = CENTER_HORIZONTAL
-               layout.margins = 8.dip
-               view.image = drawable(R.drawable.timeline_missing_item)
+               ImageView {
+                  layout.gravity = CENTER_HORIZONTAL
+                  layout.margins = 8.dip
+                  view.image = drawable(R.drawable.timeline_missing_item)
+               }
             }
          }
       }

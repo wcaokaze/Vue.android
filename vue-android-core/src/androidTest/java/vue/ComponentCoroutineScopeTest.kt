@@ -28,8 +28,9 @@ import android.view.*
 import android.widget.*
 import kotlinx.coroutines.*
 
-class CoroutineScopeTestComponent(context: Context) : VComponent() {
+class CoroutineScopeTestComponent(context: Context) : VComponent<Nothing>() {
    override val componentView = View(context)
+   override val store: Nothing get() = throw UnsupportedOperationException()
 }
 
 @RunWith(AndroidJUnit4::class)
@@ -67,8 +68,9 @@ class ComponentCoroutineScopeTest {
    }
 
    @Test fun coroutineIsCancelled_VOnInComponent_whenComponentIsUnmounted() {
-      class VOnScopeTestComponent(context: Context) : VComponent() {
+      class VOnScopeTestComponent(context: Context) : VComponent<Nothing>() {
          override val componentView = View(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
 
          init {
             componentView.vOn.click {

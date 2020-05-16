@@ -27,8 +27,10 @@ import android.content.*
 import android.view.*
 import android.widget.*
 
-class VBinderTestComponent(context: Context) : VComponent() {
+class VBinderTestComponent(context: Context) : VComponent<Nothing>() {
    override val componentView: TextView
+   override val store: Nothing get() = throw UnsupportedOperationException()
+
    val number = vBinder<Int>()
 
    fun getCurrentNumber() = number()
@@ -57,7 +59,7 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindValue_state() {
+   @Test fun bindValue_fromOutside_state() {
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -72,7 +74,7 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindValue_reactivatee() {
+   @Test fun bindValue_fromOutside_reactivatee() {
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -87,7 +89,19 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindToView() {
+   @Test fun bind_inComponent_reactivatee() {
+      class VBinderTestComponent(context: Context) : VComponent<Nothing>() {
+         override val componentView: TextView
+         override val store: Nothing get() = throw UnsupportedOperationException()
+
+         val number = vBinder<Int>()
+
+         init {
+            componentView = TextView(context)
+            componentView.vBind.text { number().toString() }
+         }
+      }
+
       lateinit var component: VBinderTestComponent
       val state = state(0)
 
@@ -102,9 +116,11 @@ class ComponentVBinderTest {
             }
    }
 
-   @Test fun bindToView_vBinder() {
-      class VBinderTestComponent(context: Context) : VComponent() {
+   @Test fun bind_inComponent_vBinder() {
+      class VBinderTestComponent(context: Context) : VComponent<Nothing>() {
          override val componentView: TextView
+         override val store: Nothing get() = throw UnsupportedOperationException()
+
          val text = vBinder<String>()
 
          init {
@@ -175,9 +191,45 @@ class ComponentVBinderTest {
             }
    }
 
+   @Test fun reactivation_viaGetter() {
+      class VBinderTestComponent(context: Context) : VComponent<Nothing>() {
+         override val componentView: TextView
+         override val store: Nothing get() = throw UnsupportedOperationException()
+
+         val number = vBinder<Int>()
+         private val getter = getter { number().toString() }
+
+         init {
+            componentView = TextView(context)
+            componentView.vBind.text(getter)
+         }
+      }
+
+      lateinit var component: VBinderTestComponent
+      val state = state(0)
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               component = VBinderTestComponent(activity)
+               component.number(state)
+               activity.setContentView(component.componentView)
+            }
+            .onActivity {
+               assertEquals("0", component.componentView.text)
+            }
+            .onActivity {
+               state.value = 1
+            }
+            .onActivity {
+               assertEquals("1", component.componentView.text)
+            }
+   }
+
    @Test fun getFailure() {
-      class GetFailureTestComponent(context: Context) : VComponent() {
+      class GetFailureTestComponent(context: Context) : VComponent<Nothing>() {
          override val componentView = View(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
+
          val number = vBinder<Int>()
 
          fun getCurrentNumber() = number()
@@ -204,8 +256,10 @@ class ComponentVBinderTest {
    }
 
    @Test fun boundFailureToView() {
-      class BoundFailureToViewTestComponent(context: Context) : VComponent() {
+      class BoundFailureToViewTestComponent(context: Context) : VComponent<Nothing>() {
          override val componentView = TextView(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
+
          val number = vBinder<Int>()
 
          init {
@@ -232,8 +286,10 @@ class ComponentVBinderTest {
    }
 
    @Test fun failureAfterBinding() {
-      class FailureAfterBindingTestComponent(context: Context) : VComponent() {
+      class FailureAfterBindingTestComponent(context: Context) : VComponent<Nothing>() {
          override val componentView = TextView(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
+
          val number = vBinder<Int>()
 
          init {

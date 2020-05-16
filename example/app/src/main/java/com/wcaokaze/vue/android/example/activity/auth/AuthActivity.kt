@@ -23,6 +23,7 @@ import android.net.*
 import android.os.*
 import android.widget.*
 import com.wcaokaze.vue.android.example.*
+import com.wcaokaze.vue.android.example.Application
 import com.wcaokaze.vue.android.example.BuildConfig
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.activity.timeline.*
@@ -38,11 +39,15 @@ import vue.koshian.*
 import java.net.*
 import kotlin.contracts.*
 
-class AuthActivity : Activity(), VComponentInterface, KodeinAware {
+class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
    override val kodein by closestKodein()
    override val componentLifecycle = ComponentLifecycle(this)
 
    override lateinit var componentView: FrameLayout
+
+   override val store: Store get() = application.store
+
+   private val application by lazy { getApplication() as Application }
 
    private val authorizator by lazy { MastodonAuthorizator(kodein) }
 
@@ -78,7 +83,7 @@ class AuthActivity : Activity(), VComponentInterface, KodeinAware {
    }
 
    private fun startTimelineActivity(credential: Credential) {
-      mutation.modules[MASTODON].setCredential(credential)
+      application.mutation.modules[MASTODON].setCredential(credential)
 
       startActivity(
          Intent(this, TimelineActivity::class.java))
