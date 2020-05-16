@@ -22,6 +22,7 @@ import android.os.*
 import android.widget.*
 import androidx.recyclerview.widget.*
 import com.wcaokaze.vue.android.example.Application
+import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.activity.status.*
 import com.wcaokaze.vue.android.example.mastodon.*
@@ -35,11 +36,13 @@ import vue.koshian.*
 import vue.stream.*
 import kotlin.contracts.*
 
-class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
+class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
    override val kodein by closestKodein()
    override val componentLifecycle = ComponentLifecycle(this)
 
    override lateinit var componentView: FrameLayout
+
+   override val store: Store get() = application.store
 
    private val application by lazy { getApplication() as Application }
 
@@ -70,15 +73,12 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
    }
 
    private fun buildContentView() {
-      val recyclerViewAdapter: TimelineRecyclerViewAdapter
-
-      val state = application.state
-      val getter = application.getter
+      val recyclerViewAdapterApplicable: VComponentApplicable<TimelineRecyclerViewAdapter>
 
       @OptIn(ExperimentalContracts::class)
       koshian(this) {
          componentView = FrameLayout {
-            recyclerViewAdapter = Component(TimelineRecyclerViewAdapter(context, state, getter)) {
+            recyclerViewAdapterApplicable = Component[TimelineRecyclerViewAdapter, MASTODON] {
                component.itemsBinder(recyclerViewItems)
 
                component.onItemClick
@@ -90,7 +90,7 @@ class TimelineActivity : Activity(), VComponentInterface, KodeinAware {
       }
 
       componentView.applyKoshian {
-         Component(recyclerViewAdapter) {
+         recyclerViewAdapterApplicable {
             layout.width  = MATCH_PARENT
             layout.height = MATCH_PARENT
             val layoutManager = LinearLayoutManager(view.context)

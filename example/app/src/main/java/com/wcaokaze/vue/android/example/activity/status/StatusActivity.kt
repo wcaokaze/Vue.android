@@ -19,6 +19,7 @@ package com.wcaokaze.vue.android.example.activity.status
 import android.app.*
 import android.os.*
 import android.widget.*
+import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.Application
 import com.wcaokaze.vue.android.example.mastodon.*
@@ -29,7 +30,7 @@ import vue.*
 import vue.koshian.*
 import kotlin.contracts.*
 
-class StatusActivity : Activity(), VComponentInterface, KodeinAware {
+class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
    companion object {
       const val INTENT_KEY_STATUS_ID = "GGZbOLON4U8o9Qp8"
    }
@@ -38,6 +39,8 @@ class StatusActivity : Activity(), VComponentInterface, KodeinAware {
    override val componentLifecycle = ComponentLifecycle(this)
 
    override lateinit var componentView: LinearLayout
+
+   override val store: Store get() = application.store
 
    private val application by lazy { getApplication() as Application }
 
@@ -48,12 +51,9 @@ class StatusActivity : Activity(), VComponentInterface, KodeinAware {
       val id = intent.getSerializableExtra(INTENT_KEY_STATUS_ID) as? Status.Id
       require(id != null) { "Status ID is not specified." }
 
-      val state = application.state
-      val getter = application.getter
-
       koshian(this) {
          componentView = LinearLayout {
-            Component(StatusComponent(context, state, getter)) {
+            Component[StatusComponent, MASTODON] {
                layout.width  = MATCH_PARENT
                layout.height = MATCH_PARENT
                component.status { getter.modules[MASTODON].getStatus(id)() }

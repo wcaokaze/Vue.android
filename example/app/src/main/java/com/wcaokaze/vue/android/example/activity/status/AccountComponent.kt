@@ -19,15 +19,20 @@ package com.wcaokaze.vue.android.example.activity.status
 import android.content.*
 import android.graphics.*
 import android.widget.*
-import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
-import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
 import vue.*
 import vue.koshian.*
 import kotlin.contracts.*
 
-class AccountComponent(context: Context, state: State, getter: Getter) : VComponent() {
+class AccountComponent(context: Context, override val store: MastodonStore)
+   : VComponent<MastodonStore>()
+{
+   companion object : KoshianComponentConstructor<AccountComponent, MastodonStore> {
+      override fun instantiate(context: Context, store: MastodonStore)
+            = AccountComponent(context, store)
+   }
+
    override val componentView: LinearLayout
 
    private val iconView: ImageView
@@ -38,7 +43,7 @@ class AccountComponent(context: Context, state: State, getter: Getter) : VCompon
 
    private val icon: V<Bitmap?> = getter {
       val account = account() ?: return@getter null
-      getter.modules[MASTODON].getAccountIcon(account.id)()
+      getter.getAccountIcon(account.id)()
    }
 
    init {

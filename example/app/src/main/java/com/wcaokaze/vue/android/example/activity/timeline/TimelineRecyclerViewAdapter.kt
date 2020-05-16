@@ -21,7 +21,6 @@ import android.graphics.*
 import android.os.*
 import android.text.*
 import android.widget.*
-import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.R
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.mastodon.*
@@ -55,10 +54,14 @@ object MissingStatusItem : TimelineRecyclerViewItem() {
 }
 
 class TimelineRecyclerViewAdapter(context: Context,
-                                  private val state: State,
-                                  private val getter: Getter)
-   : RecyclerViewAdapterComponent<TimelineRecyclerViewItem>(context)
+                                  override val store: MastodonStore)
+   : RecyclerViewAdapterComponent<TimelineRecyclerViewItem, MastodonStore>(context)
 {
+   companion object : KoshianComponentConstructor<TimelineRecyclerViewAdapter, MastodonStore> {
+      override fun instantiate(context: Context, store: MastodonStore)
+            = TimelineRecyclerViewAdapter(context, store)
+   }
+
    val onItemClick = vEvent2<Int, TimelineRecyclerViewItem>()
 
    @OptIn(ExperimentalContracts::class)

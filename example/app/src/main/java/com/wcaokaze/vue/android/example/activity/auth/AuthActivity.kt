@@ -22,6 +22,7 @@ import android.content.*
 import android.net.*
 import android.os.*
 import android.widget.*
+import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.Application
 import com.wcaokaze.vue.android.example.BuildConfig
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
@@ -38,11 +39,13 @@ import vue.koshian.*
 import java.net.*
 import kotlin.contracts.*
 
-class AuthActivity : Activity(), VComponentInterface, KodeinAware {
+class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
    override val kodein by closestKodein()
    override val componentLifecycle = ComponentLifecycle(this)
 
    override lateinit var componentView: FrameLayout
+
+   override val store: Store get() = application.store
 
    private val application by lazy { getApplication() as Application }
 

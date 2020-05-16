@@ -22,7 +22,7 @@ import vue.vuex.*
 
 class Store(private val kodein: Kodein) : VuexStore<State, Mutation, Action, Getter>() {
    object ModuleKeys {
-      val MASTODON = Module.Key<MastodonState, MastodonMutation, MastodonAction, MastodonGetter>()
+      val MASTODON = Module.Key<MastodonStore, MastodonState, MastodonMutation, MastodonAction, MastodonGetter>()
    }
 
    override fun createState()    = State()

@@ -17,12 +17,10 @@
 package com.wcaokaze.vue.android.example.activity.status
 
 import android.content.*
-import android.graphics.*
 import android.os.*
 import android.text.*
 import android.widget.*
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
-import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
 import vue.*
@@ -31,10 +29,15 @@ import java.text.*
 import java.util.*
 import kotlin.contracts.*
 
-class StatusComponent(context: Context, state: State, getter: Getter) : VComponent() {
-   override val componentView: LinearLayout
+class StatusComponent(context: Context, override val store: MastodonStore)
+   : VComponent<MastodonStore>()
+{
+   companion object : KoshianComponentConstructor<StatusComponent, MastodonStore> {
+      override fun instantiate(context: Context, store: MastodonStore)
+            = StatusComponent(context, store)
+   }
 
-   private val accountComponent: AccountComponent
+   override val componentView: LinearLayout
 
    private val contentView: TextView
    private val createdDateView: TextView
@@ -83,12 +86,14 @@ class StatusComponent(context: Context, state: State, getter: Getter) : VCompone
    }
 
    init {
+      val accountComponent: VComponentApplicable<AccountComponent>
+
       @OptIn(ExperimentalContracts::class)
       koshian(context) {
          componentView = LinearLayout {
             view.orientation = VERTICAL
 
-            accountComponent = Component(AccountComponent(context, state, getter)) {
+            accountComponent = Component[AccountComponent] {
                component.account(tooter)
             }
 
@@ -105,7 +110,7 @@ class StatusComponent(context: Context, state: State, getter: Getter) : VCompone
       componentView.applyKoshian {
          view.padding = 8.dip
 
-         Component(accountComponent) {
+         accountComponent {
             layout.width = MATCH_PARENT
          }
 
