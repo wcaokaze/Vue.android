@@ -29,13 +29,20 @@ abstract class VuexState {
    /**
     * [state][vue.state] that can be written only from [VuexMutation]
     */
-   fun <T> state(initialValue: T) = StateField(StateImpl(initialValue))
+   fun <T> state(initialValue: T): StateField<T>
+         = StateFieldImpl(StateImpl(initialValue))
 
-   class StateField<T>
-         internal constructor(private val delegate: StateImpl<T>)
-         : ReactiveField<T> by delegate
+   abstract class StateField<T>
+         internal constructor() : ReactiveField<T>
    {
-      internal var value: T
+      internal abstract var value: T
+   }
+
+   private class StateFieldImpl<T>
+         internal constructor(private val delegate: StateImpl<T>)
+         : StateField<T>(), ReactiveField<T> by delegate
+   {
+      override var value: T
          get() = delegate.value
          @UiThread set(value) {
             delegate.value = value
