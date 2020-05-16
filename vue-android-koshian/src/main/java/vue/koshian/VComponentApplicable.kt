@@ -23,7 +23,7 @@ import vue.*
 /**
  * @see Component
  */
-class VComponentApplicable<C : VComponentInterface<*>>
+class VComponentApplicable<out C : VComponentInterface<*>>
       (val component: C) : KoshianApplicable
 {
    override val view: View

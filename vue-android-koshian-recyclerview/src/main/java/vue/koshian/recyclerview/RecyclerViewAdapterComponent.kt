@@ -22,9 +22,11 @@ import koshian.*
 import koshian.recyclerview.*
 import vue.*
 import vue.koshian.*
+import vue.vuex.*
 
-abstract class RecyclerViewAdapterComponent<I>(context: Context)
-   : KoshianRecyclerViewAdapter<I>(), VComponentInterface
+abstract class RecyclerViewAdapterComponent<I, S>(context: Context)
+      : KoshianRecyclerViewAdapter<I>(), VComponentInterface<S>
+      where S : VuexStore<*, *, *, *>
 {
    @Suppress("LeakingThis")
    final override val componentLifecycle = ComponentLifecycle(this)
@@ -46,5 +48,5 @@ abstract class RecyclerViewAdapterComponent<I>(context: Context)
    }
 }
 
-inline val Koshian<RecyclerViewAdapterComponent<*>, *, *, *>.view: RecyclerView
+inline val Koshian<VComponentApplicable<RecyclerViewAdapterComponent<*, *>>, *, *, *>.view: RecyclerView
    get() = component.componentView
