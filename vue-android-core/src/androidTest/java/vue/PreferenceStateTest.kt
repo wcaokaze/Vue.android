@@ -32,7 +32,8 @@ class PreferenceStateTest {
 
    @Test fun reactivation() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val state = PreferenceState(activity, 0)
+         val file = PreferenceState.PreferenceFile("reactivation")
+         val state = PreferenceState(activity, file, "state", 0)
 
          var i = -1
          state.addObserver { i = it.getOrThrow() }

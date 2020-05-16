@@ -19,6 +19,21 @@ package vue.vuex
 import android.content.*
 import androidx.annotation.*
 import vue.*
+import kotlin.reflect.*
+
+class PreferenceStateDelegate<T>
+      internal constructor(
+            private val context: Context,
+            private val file: PreferenceState.PreferenceFile,
+            private val key: String?,
+            private val default: T
+      )
+{
+   operator fun getValue(thisRef: Any?, property: KProperty<*>): PreferenceState<T> {
+      val key = key ?: property.name
+      return PreferenceState(context, file, key, default)
+   }
+}
 
 /**
  * @param context Context. This State should not live longer than Context.
@@ -31,10 +46,16 @@ import vue.*
  *   ```
  */
 class PreferenceState<T>
-      private constructor(context: Context, private val delegate: StateImpl<T>)
+      private constructor(context: Context,
+                          private val file: PreferenceFile,
+                          private val key: String,
+                          private val delegate: StateImpl<T>)
       : VuexState.StateField<T>(), ReactiveField<T> by delegate
 {
-   constructor(context: Context, default: T) : this(context, StateImpl(default))
+   class PreferenceFile(name: String, mode: Int = Context.MODE_PRIVATE)
+
+   constructor(context: Context, file: PreferenceFile, key: String, default: T)
+         : this(context, file, key, StateImpl(default))
 
    override var value: T
       get() = delegate.value
