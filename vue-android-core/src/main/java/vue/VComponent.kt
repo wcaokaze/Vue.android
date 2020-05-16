@@ -53,6 +53,26 @@ abstract class VComponent<S : VuexStore<*, *, *, *>> : VComponentInterface<S> {
    override val componentLifecycle = ComponentLifecycle(this)
 }
 
+val <Store, S> VComponentInterface<Store>.state: S
+      where Store : VuexStore<S, *, *, *>,
+            S : VuexState
+   get() = store.state
+
+val <Store, M> VComponentInterface<Store>.mutation: M
+      where Store : VuexStore<*, M, *, *>,
+            M : VuexMutation<*>
+   get() = store.mutation
+
+val <Store, A> VComponentInterface<Store>.action: A
+      where Store : VuexStore<*, *, A, *>,
+            A : VuexAction<*, *, *>
+   get() = store.action
+
+val <Store, G> VComponentInterface<Store>.getter: G
+      where Store : VuexStore<*, *, *, G>,
+            G : VuexGetter<*>
+   get() = store.getter
+
 /**
  * @param S
  *   [VuexStore] which this Component uses.
