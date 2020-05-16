@@ -74,13 +74,13 @@ abstract class VuexStore<S, M, A, G>
       get() = modules.rootModule
 
    class Module
-         private constructor(val key: Key<*, *, *, *>,
+         private constructor(val key: Key<*, *, *, *, *>,
                              val store: VuexStore<*, *, *, *>)
    {
       companion object {
          // class `Module` should not have any type parameter,
          // however it should be checked that the types of Key match the types of VuexStore.
-         operator fun <S, M, A, G> invoke(key: Key<S, M, A, G>,
+         operator fun <S, M, A, G> invoke(key: Key<*, S, M, A, G>,
                                           store: VuexStore<S, M, A, G>): Module
                where S : VuexState,
                      M : VuexMutation<S>,
@@ -91,8 +91,9 @@ abstract class VuexStore<S, M, A, G>
          }
       }
 
-      class Key<S, M, A, G>
-            where S : VuexState,
+      class Key<Store, S, M, A, G>
+            where Store : VuexStore<S, M, A, G>,
+                  S : VuexState,
                   M : VuexMutation<S>,
                   A : VuexAction<S, M, G>,
                   G : VuexGetter<S>
@@ -100,18 +101,14 @@ abstract class VuexStore<S, M, A, G>
 
    inner class ModuleMap(
          internal var rootModule: VuexStore<*, *, *, *>,
-         private val moduleMap: Map<Module.Key<*, *, *, *>, VuexStore<*, *, *, *>>
+         private val moduleMap: Map<Module.Key<*, *, *, *, *>, VuexStore<*, *, *, *>>
    ) {
       init {
          setRootModule(rootModule)
       }
 
-      operator fun <MS, MM, MA, MG>
-            get(key: Module.Key<MS, MM, MA, MG>): VuexStore<MS, MM, MA, MG>
-            where MS : VuexState,
-                  MM : VuexMutation<MS>,
-                  MA : VuexAction<MS, MM, MG>,
-                  MG : VuexGetter<MS>
+      operator fun <Store : VuexStore<*, *, *, *>>
+            get(key: Module.Key<Store, *, *, *, *>): Store
       {
          val module = moduleMap[key] ?: run {
             val storeName = this@VuexStore::class.toString()
@@ -119,7 +116,18 @@ abstract class VuexStore<S, M, A, G>
          }
 
          @Suppress("UNCHECKED_CAST")
-         return module as VuexStore<MS, MM, MA, MG>
+         return module as Store
+      }
+
+      internal fun <S, M, A, G>
+            getGeneric(key: Module.Key<*, S, M, A, G>): VuexStore<S, M, A, G>
+            where S : VuexState,
+                  M : VuexMutation<S>,
+                  A : VuexAction<S, M, G>,
+                  G : VuexGetter<S>
+      {
+         @Suppress("UNCHECKED_CAST")
+         return this[key] as VuexStore<S, M, A, G>
       }
 
       private fun setRootModule(newRootModule: VuexStore<*, *, *, *>) {

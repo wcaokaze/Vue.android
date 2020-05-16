@@ -24,7 +24,7 @@ import kotlin.test.*
 class ModuleTest {
    class SuperStore : VuexStore<SuperState, SuperMutation, SuperAction, SuperGetter>() {
       object ModuleKeys {
-         val SUB_MODULE = Module.Key<SubState, SubMutation, SubAction, SubGetter>()
+         val SUB_MODULE = Module.Key<SubStore, SubState, SubMutation, SubAction, SubGetter>()
       }
 
       override fun createState()    = SuperState()
@@ -44,7 +44,7 @@ class ModuleTest {
 
    class SubStore : VuexStore<SubState, SubMutation, SubAction, SubGetter>() {
       object ModuleKeys {
-         val GRAND_SUBMODULE = Module.Key<GrandSubState, GrandSubMutation, GrandSubAction, GrandSubGetter>()
+         val GRAND_SUBMODULE = Module.Key<GrandSubStore, GrandSubState, GrandSubMutation, GrandSubAction, GrandSubGetter>()
       }
 
       override fun createState()    = SubState()
