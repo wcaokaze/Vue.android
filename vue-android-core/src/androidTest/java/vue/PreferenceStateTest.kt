@@ -16,6 +16,7 @@
 
 package vue
 
+import android.content.*
 import androidx.test.ext.junit.rules.*
 import androidx.test.ext.junit.runners.*
 import org.junit.*
@@ -30,10 +31,26 @@ class PreferenceStateTest {
    @get:Rule
    val activityScenarioRule = activityScenarioRule<EmptyTestActivity>()
 
+   @Test fun loadPreference() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val fileName = "loadPreference"
+         val file = PreferenceState.PreferenceFile(fileName)
+
+         activity.getSharedPreferences(fileName, Context.MODE_PRIVATE)
+               .edit()
+               .putInt("state", 42)
+               .commit()
+
+         val state by intPreferenceState(activity, file, default = 0)
+
+         assertEquals(42, state.value)
+      }
+   }
+
    @Test fun reactivation() {
       activityScenarioRule.scenario.onActivity { activity ->
          val file = PreferenceState.PreferenceFile("reactivation")
-         val state = PreferenceState(activity, file, "state", 0)
+         val state by intPreferenceState(activity, file, default = 0)
 
          var i = -1
          state.addObserver { i = it.getOrThrow() }
