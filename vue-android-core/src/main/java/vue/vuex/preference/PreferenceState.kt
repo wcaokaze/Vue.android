@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package vue.vuex
+package vue.vuex.preference
 
 import android.content.*
 import androidx.annotation.*
 import vue.*
+import vue.vuex.*
 import kotlin.reflect.*
 
 class PreferenceStateDelegate<T>(

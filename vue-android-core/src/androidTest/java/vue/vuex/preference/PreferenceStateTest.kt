@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package vue
+package vue.vuex.preference
 
 import android.content.*
 import androidx.test.ext.junit.rules.*
 import androidx.test.ext.junit.runners.*
 import org.junit.*
 import org.junit.runner.*
+import vue.*
 import kotlin.test.*
 import kotlin.test.Test
-
-import vue.vuex.*
 
 @RunWith(AndroidJUnit4::class)
 class PreferenceStateTest {
