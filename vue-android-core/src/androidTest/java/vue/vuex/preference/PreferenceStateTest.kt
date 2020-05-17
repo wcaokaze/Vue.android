@@ -99,7 +99,6 @@ class PreferenceStateTest {
             .edit()
             .remove(key)
             .commit()
-
    }
 }
 
