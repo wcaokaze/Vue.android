@@ -22,6 +22,25 @@ import vue.*
 import vue.vuex.*
 
 /**
+ * [StateField][VuexState.StateField] to automatically save/load from [SharedPreferences]
+ * ```kotlin
+ * class AppearancePreferenceState(private val context: Context) : VuexState() {
+ *    private val file = PreferenceFile("credential")
+ *
+ *    val mainTextSize by intPreferenceState(context, file, default = 14)
+ *    val iconSize by intPreferenceState(context, file, default = 48)
+ *
+ *    val primaryTextColor by intPreferenceState(context, file, default = 0xff2196f3.toInt())
+ *    //                   ^^
+ *    // Note that we must use `by` here. not `=`
+ * }
+ * ```
+ *
+ * Of course this is [ReactiveField]. We can bind them to Views.
+ * ```kotlin
+ * textView.vBind.textColor(state.primaryTextColor)
+ * ```
+ *
  * @param context Context. This State should not live longer than Context.
  *   The easiest way to ensure it is using Application as Context,
  *   and let Application have the VuexStore.

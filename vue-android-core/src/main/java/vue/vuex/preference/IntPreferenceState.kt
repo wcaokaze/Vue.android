@@ -18,6 +18,10 @@ package vue.vuex.preference
 
 import android.content.*
 
+/**
+ * [PreferenceState] for Int.
+ * @see PreferenceState
+ */
 fun intPreferenceState(
       context: Context,
       file: PreferenceFile,
@@ -25,6 +29,10 @@ fun intPreferenceState(
       default: Int
 ) = PreferenceStateDelegate(IntPreferenceLoader, context, file, key, default)
 
+/**
+ * [PreferenceState] for Int.
+ * @see PreferenceState
+ */
 fun intPreferenceState(
       context: Context,
       file: PreferenceFile,
