@@ -33,7 +33,7 @@ class PreferenceStateTest {
    @Test fun loadPreference() {
       activityScenarioRule.scenario.onActivity { activity ->
          val fileName = "loadPreference"
-         val file = PreferenceState.PreferenceFile(fileName)
+         val file = PreferenceFile(fileName)
 
          activity.getSharedPreferences(fileName, Context.MODE_PRIVATE)
                .edit()
@@ -52,7 +52,7 @@ class PreferenceStateTest {
 
          removeSharedPreference(activity, fileName, "state")
 
-         val file = PreferenceState.PreferenceFile(fileName)
+         val file = PreferenceFile(fileName)
          val state by intPreferenceState(activity, file, default = 42)
 
          assertEquals(42, state.value)
@@ -65,7 +65,7 @@ class PreferenceStateTest {
 
          removeSharedPreference(activity, fileName, "state")
 
-         val file = PreferenceState.PreferenceFile(fileName)
+         val file = PreferenceFile(fileName)
          val state by intPreferenceState(activity, file, default = 0)
 
          state.value = 42
@@ -83,7 +83,7 @@ class PreferenceStateTest {
 
          removeSharedPreference(activity, fileName, "state")
 
-         val file = PreferenceState.PreferenceFile(fileName)
+         val file = PreferenceFile(fileName)
          val state by intPreferenceState(activity, file, default = 0)
 
          var i = -1
@@ -103,7 +103,7 @@ class PreferenceStateTest {
                .putInt("key", 42)
                .commit()
 
-         val file = PreferenceState.PreferenceFile(fileName)
+         val file = PreferenceFile(fileName)
          val state by intPreferenceState(activity, file, "key", default = 0)
 
          assertEquals(42, state.value)

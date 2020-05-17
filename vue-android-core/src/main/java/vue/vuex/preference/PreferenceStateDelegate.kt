@@ -22,7 +22,7 @@ import kotlin.reflect.*
 class PreferenceStateDelegate<T>(
       private val loader: PreferenceState.Loader<T>,
       private val context: Context,
-      private val file: PreferenceState.PreferenceFile,
+      private val file: PreferenceFile,
       private val key: String?,
       private val default: T
 ) {

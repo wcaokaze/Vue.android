@@ -20,14 +20,14 @@ import android.content.*
 
 fun intPreferenceState(
       context: Context,
-      file: PreferenceState.PreferenceFile,
+      file: PreferenceFile,
       key: String,
       default: Int
 ) = PreferenceStateDelegate(IntPreferenceLoader, context, file, key, default)
 
 fun intPreferenceState(
       context: Context,
-      file: PreferenceState.PreferenceFile,
+      file: PreferenceFile,
       default: Int
 ) = PreferenceStateDelegate(IntPreferenceLoader, context, file, null, default)
 

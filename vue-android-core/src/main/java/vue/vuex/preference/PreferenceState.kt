@@ -44,8 +44,6 @@ class PreferenceState<T>
       fun put(sharedPreferences: SharedPreferences, key: String, value: T)
    }
 
-   class PreferenceFile(val name: String, val mode: Int = Context.MODE_PRIVATE)
-
    constructor(
          loader: Loader<T>,
          context: Context,
