@@ -33,7 +33,7 @@ import vue.vuex.*
  */
 class PreferenceState<T>
       private constructor(private val loader: Loader<T>,
-                          context: Context,
+                          private val context: Context,
                           private val file: PreferenceFile,
                           private val key: String,
                           private val delegate: StateImpl<T>)
@@ -70,5 +70,11 @@ class PreferenceState<T>
       get() = delegate.value
       @UiThread set(value) {
          delegate.value = value
+
+         loader.put(
+               context.getSharedPreferences(file.name, file.mode),
+               key,
+               value
+         )
       }
 }

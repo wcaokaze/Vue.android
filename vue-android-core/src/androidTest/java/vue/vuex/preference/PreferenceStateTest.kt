@@ -46,6 +46,27 @@ class PreferenceStateTest {
       }
    }
 
+   @Test fun savePreference() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val fileName = "savePreference"
+         val file = PreferenceState.PreferenceFile(fileName)
+
+         activity.getSharedPreferences(fileName, Context.MODE_PRIVATE)
+               .edit()
+               .putInt("state", 0)
+               .commit()
+
+         val state by intPreferenceState(activity, file, default = 0)
+
+         state.value = 42
+
+         val savedValue = activity.getSharedPreferences(fileName, Context.MODE_PRIVATE)
+               .getInt("state", 0)
+
+         assertEquals(42, savedValue)
+      }
+   }
+
    @Test fun reactivation() {
       activityScenarioRule.scenario.onActivity { activity ->
          val file = PreferenceState.PreferenceFile("reactivation")
