@@ -46,6 +46,19 @@ class PreferenceStateTest {
       }
    }
 
+   @Test fun useDefault() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val fileName = "useDefault"
+
+         removeSharedPreference(activity, fileName, "state")
+
+         val file = PreferenceState.PreferenceFile(fileName)
+         val state by intPreferenceState(activity, file, default = 42)
+
+         assertEquals(42, state.value)
+      }
+   }
+
    @Test fun savePreference() {
       activityScenarioRule.scenario.onActivity { activity ->
          val fileName = "savePreference"
