@@ -94,6 +94,33 @@ class PreferenceStateTest {
       }
    }
 
+   @Test fun nameKey() {
+      activityScenarioRule.scenario.onActivity { activity ->
+         val fileName = "nameKey"
+
+         activity.getSharedPreferences(fileName, Context.MODE_PRIVATE)
+               .edit()
+               .putInt("key", 42)
+               .commit()
+
+         val file = PreferenceState.PreferenceFile(fileName)
+         val state by intPreferenceState(activity, file, "key", default = 0)
+
+         assertEquals(42, state.value)
+
+         var i = -1
+         state.addObserver { i = it.getOrThrow() }
+         state.value = 1
+
+         assertEquals(1, i)
+
+         val savedValue = activity.getSharedPreferences(fileName, Context.MODE_PRIVATE)
+               .getInt("key", 0)
+
+         assertEquals(1, savedValue)
+      }
+   }
+
    private fun removeSharedPreference(context: Context, fileName: String, key: String) {
       context.getSharedPreferences(fileName, Context.MODE_PRIVATE)
             .edit()
