@@ -107,14 +107,33 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     *
     * watcher invokes [removeObserver][ReactiveField.removeObserver] automatically.
     * You don't have to manage the Component's lifetime.
+    *
+    * @param immediate
+    *   if `true`, the watcher function will be triggered immediately with the
+    *   current value of the ReactiveField.
     */
-   fun <T> watcher(watchedReactiveField: ReactiveField<T>, watcher: (T) -> Unit) {
+   fun <T> watcher(watchedReactiveField: ReactiveField<T>,
+                   immediate: Boolean = false,
+                   watcher: (T) -> Unit)
+   {
       val observer = fun (r: Result<T>) {
          val v = r.getOrNull() ?: return
          watcher(v)
       }
 
+      var shouldTrigger = immediate
+
       componentLifecycle.onAttachedToActivity += {
+         if (shouldTrigger) {
+            shouldTrigger = false
+
+            try {
+               watcher(watchedReactiveField.value)
+            } catch (e: Throwable) {
+               // the ReactiveField is poisoned. ignore
+            }
+         }
+
          watchedReactiveField.addObserver(observer)
       }
 

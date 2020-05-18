@@ -20,7 +20,6 @@ import android.content.*
 import android.os.*
 import android.text.*
 import android.widget.*
-import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
 import vue.*
@@ -54,7 +53,7 @@ class StatusComponent(context: Context, override val store: MastodonStore)
 
    private val tooter: V<Account?> = getter {
       val toot = toot() ?: return@getter null
-      getter.modules[MASTODON].getAccount(toot.tooterAccountId)()
+      getter.getAccount(toot.tooterAccountId)()
    }
 
    private val tootContent: V<Spannable?> = getter {

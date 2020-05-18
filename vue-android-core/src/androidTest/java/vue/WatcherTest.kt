@@ -114,4 +114,143 @@ class WatcherTest {
             .onActivity { containerView.addView(component.componentView) }
             .onActivity { assertEquals(1, state.observerCount) }
    }
+
+   @Test fun noImmediate() {
+      val state = state(0)
+      var wasCalled = false
+
+      class WatcherTestComponent(context: Context) : VComponent<Nothing>() {
+         override val componentView = View(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
+
+         init {
+            watcher(state, immediate = false) {
+               wasCalled = true
+            }
+         }
+      }
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               val containerView = FrameLayout(activity)
+               val component = WatcherTestComponent(activity)
+               containerView.addView(component.componentView)
+               activity.setContentView(containerView)
+            }
+            .onActivity { assertFalse(wasCalled) }
+   }
+
+   @Test fun immediate() {
+      val state = state(0)
+      var wasCalled = false
+
+      class WatcherTestComponent(context: Context) : VComponent<Nothing>() {
+         override val componentView = View(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
+
+         init {
+            watcher(state, immediate = true) {
+               wasCalled = true
+            }
+         }
+      }
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               val containerView = FrameLayout(activity)
+               val component = WatcherTestComponent(activity)
+               containerView.addView(component.componentView)
+               activity.setContentView(containerView)
+            }
+            .onActivity { assertTrue(wasCalled) }
+   }
+
+   @Test fun immediate_butNotAttached() {
+      val state = state(0)
+      var wasCalled = false
+
+      class WatcherTestComponent(context: Context) : VComponent<Nothing>() {
+         override val componentView = View(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
+
+         init {
+            watcher(state, immediate = true) {
+               wasCalled = true
+            }
+         }
+      }
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               WatcherTestComponent(activity)
+            }
+            .onActivity { assertFalse(wasCalled) }
+   }
+
+   @Test fun immediate_attachedLater() {
+      val state = state(0)
+      var wasCalled = false
+
+      class WatcherTestComponent(context: Context) : VComponent<Nothing>() {
+         override val componentView = View(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
+
+         init {
+            watcher(state, immediate = true) {
+               wasCalled = true
+            }
+         }
+      }
+
+      lateinit var component: WatcherTestComponent
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               component = WatcherTestComponent(activity)
+            }
+            .onActivity { assertFalse(wasCalled) }
+            .onActivity { activity ->
+               activity.setContentView(component.componentView)
+            }
+            .onActivity { assertTrue(wasCalled) }
+   }
+
+   @Test fun immediate_attachedTwice() {
+      val state = state(0)
+      var calledCount = 0
+
+      class WatcherTestComponent(context: Context) : VComponent<Nothing>() {
+         override val componentView = View(context)
+         override val store: Nothing get() = throw UnsupportedOperationException()
+
+         init {
+            watcher(state, immediate = true) {
+               calledCount++
+            }
+         }
+      }
+
+      lateinit var containerView: FrameLayout
+      lateinit var component: WatcherTestComponent
+
+      activityScenarioRule.scenario
+            .onActivity { activity ->
+               containerView = FrameLayout(activity)
+               component = WatcherTestComponent(activity)
+               activity.setContentView(containerView)
+            }
+            .onActivity { assertEquals(0, calledCount) }
+            .onActivity {
+               containerView.addView(component.componentView)
+            }
+            .onActivity { assertEquals(1, calledCount) }
+            .onActivity {
+               containerView.removeView(component.componentView)
+            }
+            .onActivity { assertEquals(1, calledCount) }
+            .onActivity {
+               containerView.addView(component.componentView)
+            }
+            .onActivity { assertEquals(1, calledCount) }
+   }
 }
