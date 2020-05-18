@@ -53,10 +53,16 @@ class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
       koshian(this) {
          componentView = LinearLayout {
+            view.orientation = VERTICAL
+
             Component[StatusComponent, MASTODON] {
                layout.width  = MATCH_PARENT
-               layout.height = MATCH_PARENT
                component.status { getter.modules[MASTODON].getStatus(id)() }
+            }
+
+            Component[FooterComponent] {
+               layout.width = MATCH_PARENT
+               layout.verticalMargin = 8.dip
             }
          }
       }
