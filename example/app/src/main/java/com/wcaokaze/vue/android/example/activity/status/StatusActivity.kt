@@ -40,9 +40,8 @@ class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
    override lateinit var componentView: LinearLayout
 
-   override val store: Store get() = application.store
-
-   private val application by lazy { getApplication() as Application }
+   override val store: Store
+      get() = (application as Application).store
 
    @OptIn(ExperimentalContracts::class)
    override fun onCreate(savedInstanceState: Bundle?) {

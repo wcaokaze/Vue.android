@@ -45,7 +45,8 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
    override lateinit var componentView: FrameLayout
 
-   override val store: Store by lazy { (application as Application).store }
+   override val store: Store
+      get() = (application as Application).store
 
    private val authorizator by lazy { MastodonAuthorizator(kodein) }
 
