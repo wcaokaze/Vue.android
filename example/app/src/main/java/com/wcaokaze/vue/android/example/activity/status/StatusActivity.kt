@@ -32,7 +32,7 @@ import kotlin.contracts.*
 
 class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
    companion object {
-      const val INTENT_KEY_STATUS_ID = "GGZbOLON4U8o9Qp8"
+      const val INTENT_KEY_STATUS_ID = "STATUS_ID"
    }
 
    override val kodein by closestKodein()
