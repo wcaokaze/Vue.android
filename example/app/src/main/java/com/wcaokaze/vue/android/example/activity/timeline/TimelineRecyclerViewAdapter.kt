@@ -22,7 +22,6 @@ import android.os.*
 import android.text.*
 import android.widget.*
 import com.wcaokaze.vue.android.example.R
-import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
 import koshian.recyclerview.*
@@ -71,7 +70,7 @@ class TimelineRecyclerViewAdapter(context: Context,
       is StatusItem -> VueHolderProvider(item) {
          val status: V<Status?> = getter {
             val id = reactiveItem().statusId
-            getter.modules[MASTODON].getStatus(id)()
+            getter.getStatus(id)()
          }
 
          val toot: V<Status.Toot?> = getter {
@@ -84,24 +83,24 @@ class TimelineRecyclerViewAdapter(context: Context,
 
          val tooter: V<Account?> = getter {
             val id = toot()?.tooterAccountId ?: return@getter null
-            getter.modules[MASTODON].getAccount(id)()
+            getter.getAccount(id)()
          }
 
          val tooterIcon: V<Bitmap?> = getter {
             val id = toot()?.tooterAccountId ?: return@getter null
-            getter.modules[MASTODON].getAccountIcon(id)()
+            getter.getAccountIcon(id)()
          }
 
          val boost: V<Status.Boost?> = getter { status() as? Status.Boost }
 
          val booster: V<Account?> = getter {
             val id = boost()?.boosterAccountId ?: return@getter null
-            getter.modules[MASTODON].getAccount(id)()
+            getter.getAccount(id)()
          }
 
          val boosterIcon: V<Bitmap?> = getter {
             val id = boost()?.boosterAccountId ?: return@getter null
-            getter.modules[MASTODON].getAccountIcon(id)()
+            getter.getAccountIcon(id)()
          }
 
          val tootContent: V<Spannable?> = getter {
