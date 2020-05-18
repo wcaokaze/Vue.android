@@ -44,9 +44,11 @@ object NullableFloatPreferenceLoader : PreferenceState.Loader<Float?> {
                     key: String,
                     default: Float?): Float?
    {
-      val str = sharedPreferences.getString(key, null) ?: return default
-
-      return str.toFloatOrNull() ?: return default
+      return when (val str = sharedPreferences.getString(key, null)) {
+         null   -> default
+         "null" -> null
+         else   -> str.toFloatOrNull() ?: default
+      }
    }
 
    override fun put(sharedPreferences: SharedPreferences,
@@ -55,7 +57,7 @@ object NullableFloatPreferenceLoader : PreferenceState.Loader<Float?> {
    {
       if (value == null) {
          sharedPreferences.edit()
-               .remove(key)
+               .putString(key, "null")
                .apply()
       } else {
          sharedPreferences.edit()
