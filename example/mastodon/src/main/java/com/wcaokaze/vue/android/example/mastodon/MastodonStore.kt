@@ -18,8 +18,7 @@ package com.wcaokaze.vue.android.example.mastodon
 
 import android.graphics.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.Account as IAccount
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.Status as IStatus
+import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.statuses.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines.*
 import io.ktor.client.*
 import io.ktor.client.request.*
@@ -29,11 +28,8 @@ import org.kodein.di.generic.*
 import vue.*
 import vue.vuex.*
 import java.io.*
-import java.net.*
-import java.text.*
 import java.util.*
 import kotlin.collections.*
-import kotlin.math.*
 
 class MastodonStore(private val kodein: Kodein)
    : VuexStore<MastodonState, MastodonMutation, MastodonAction, MastodonGetter>()
@@ -81,6 +77,11 @@ class MastodonMutation : VuexMutation<MastodonState>() {
       state.statuses.value =
          state.statuses.value + statuses.asSequence().map { it.id to it }
    }
+
+   internal fun addAllConvertedEntities(entityConverter: EntityConverter) {
+      addAccounts(entityConverter.getAllConvertedAccounts())
+      addStatuses(entityConverter.getAllConvertedStatuses())
+   }
 }
 
 // =============================================================================
@@ -99,133 +100,82 @@ class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGette
             sinceId = sinceId?.id
          )
 
-      val accountMemo = HashMap<String, Account>()
-      val statusMemo  = HashMap<String, Status>()
+      val converter = EntityConverter(state.timeZone)
+      val statusIds = iStatuses.map { converter.convertStatus(it).id }
+      mutation.addAllConvertedEntities(converter)
 
-      val statusIds = iStatuses.map { convertStatus(statusMemo, accountMemo, it).id }
-
-      mutation.addAccounts(accountMemo.values)
-      mutation.addStatuses(statusMemo .values)
-
-      for ((_, account) in accountMemo) {
-         fetchAccountIcon(account)
+      GlobalScope.launch(Dispatchers.Main) {
+         for (account in converter.getAllConvertedAccounts()) {
+            fetchAccountIcon(account)
+         }
       }
 
       return statusIds
    }
 
-   fun fetchAccountIcon(account: Account) {
-      GlobalScope.launch(Dispatchers.Main) {
-         if (account.iconUrl == null) {
-            mutation.addAccountIcon(account.id, null)
-            throw CancellationException()
-         }
-
-         val bitmapByteArray: ByteArray = try {
-            state.httpClient.get(account.iconUrl)
-         } catch (e: CancellationException) {
-            throw e
-         } catch (e: Exception) {
-            mutation.addAccountIcon(account.id, null)
-            throw CancellationException()
-         }
-
-         val bitmap = BitmapFactory
-            .decodeByteArray(bitmapByteArray, 0, bitmapByteArray.size)
-
-         mutation.addAccountIcon(account.id, bitmap)
+   suspend fun fetchAccountIcon(account: Account) {
+      if (account.iconUrl == null) {
+         mutation.addAccountIcon(account.id, null)
+         throw CancellationException()
       }
+
+      val bitmapByteArray: ByteArray = try {
+         state.httpClient.get(account.iconUrl)
+      } catch (e: CancellationException) {
+         throw e
+      } catch (e: Exception) {
+         mutation.addAccountIcon(account.id, null)
+         throw CancellationException()
+      }
+
+      val bitmap = BitmapFactory
+         .decodeByteArray(bitmapByteArray, 0, bitmapByteArray.size)
+
+      mutation.addAccountIcon(account.id, bitmap)
    }
 
-   private fun convertAccount(
-      accountMemo: MutableMap<String, in Account>,
-      iAccount: IAccount
-   ): Account {
-      val account = Account(
-         Account.Id(iAccount.id),
-         if (iAccount.displayName.isNullOrEmpty()) {
-            iAccount.username
-         } else {
-            iAccount.displayName
-         },
-         iAccount.acct ?: iAccount.username,
-         iAccount.locked ?: false,
-         try {
-            URL(iAccount.avatarStatic)
-         } catch (e: MalformedURLException) {
-            null
-         },
-         iAccount.followersCount ?: 0L,
-         iAccount.followingCount ?: 0L,
-         iAccount.statusesCount ?: 0L,
-         iAccount.note,
-         iAccount.fields?.map { Pair(it.name ?: "", it.value ?: "") } ?: emptyList()
-      )
+   suspend fun boost(statusId: Status.Id) {
+      val credential = getter.getCredentialOrThrow()
 
-      accountMemo[iAccount.id] = account
+      val iStatus = getter.getMastodonInstance(credential)
+         .reblogStatus(credential.accessToken, statusId.id)
 
-      return account
+      val converter = EntityConverter(state.timeZone)
+      converter.convertStatus(iStatus)
+      mutation.addAllConvertedEntities(converter)
    }
 
-   private fun convertStatus(
-      statusMemo:  MutableMap<String, in Status>,
-      accountMemo: MutableMap<String, in Account>,
-      iStatus: IStatus
-   ): Status {
-      if (iStatus.reblog == null) {
-         val tooter = convertAccount(accountMemo, iStatus.account)
+   suspend fun unboost(statusId: Status.Id) {
+      val credential = getter.getCredentialOrThrow()
 
-         val toot = Status.Toot(
-            Status.Id(iStatus.id),
-            tooter.id,
-            iStatus.spoilerText,
-            iStatus.content,
-            parseDateOrThrow(iStatus.createdAt),
-            iStatus.reblogsCount    ?: 0L,
-            iStatus.favouritesCount ?: 0L,
-            iStatus.reblogged  ?: false,
-            iStatus.favourited ?: false
-         )
+      val iStatus = getter.getMastodonInstance(credential)
+         .unreblogStatus(credential.accessToken, statusId.id)
 
-         statusMemo[iStatus.id] = toot
-
-         return toot
-      } else {
-         val booster = convertAccount(accountMemo, iStatus.account)
-         val boostedStatus = convertStatus(statusMemo, accountMemo, iStatus.reblog)
-
-         val toot = when (boostedStatus) {
-            is Status.Toot -> boostedStatus
-            is Status.Boost -> boostedStatus.toot
-         }
-
-         val boost = Status.Boost(
-            Status.Id(iStatus.id),
-            booster.id,
-            toot.copy(
-               boostCount    = max(toot.boostCount,    iStatus.reblogsCount    ?: 0L),
-               favoriteCount = max(toot.favoriteCount, iStatus.favouritesCount ?: 0L),
-               isBoosted   = toot.isBoosted   || iStatus.reblogged  ?: false,
-               isFavorited = toot.isFavorited || iStatus.favourited ?: false
-            ),
-            parseDateOrThrow(iStatus.createdAt)
-         )
-
-         statusMemo[iStatus.id] = boost
-
-         return boost
-      }
+      val converter = EntityConverter(state.timeZone)
+      converter.convertStatus(iStatus)
+      mutation.addAllConvertedEntities(converter)
    }
 
-   private val apiDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+   suspend fun favorite(statusId: Status.Id) {
+      val credential = getter.getCredentialOrThrow()
 
-   private fun parseDateOrThrow(dateString: String): Date {
-      try {
-         val utc = apiDateFormat.parse(dateString)
-         return Date(utc.time + state.timeZone.rawOffset)
-      } catch (e: ParseException) {
-         throw IOException("can not parse date: $dateString")
-      }
+      val iStatus = getter.getMastodonInstance(credential)
+         .favouriteStatus(credential.accessToken, statusId.id)
+
+      val converter = EntityConverter(state.timeZone)
+      converter.convertStatus(iStatus)
+      mutation.addAllConvertedEntities(converter)
+   }
+
+   suspend fun unfavorite(statusId: Status.Id) {
+      val credential = getter.getCredentialOrThrow()
+
+      val iStatus = getter.getMastodonInstance(credential)
+         .unfavouriteStatus(credential.accessToken, statusId.id)
+
+      val converter = EntityConverter(state.timeZone)
+      converter.convertStatus(iStatus)
+      mutation.addAllConvertedEntities(converter)
    }
 }
 

@@ -75,9 +75,9 @@ class AccountComponent(context: Context, override val store: MastodonStore)
 
       componentView.applyKoshian {
          iconView {
-            layout.width  = 48.dip
-            layout.height = 48.dip
-            layout.margins = 8.dip
+            layout.width  = 48.dp
+            layout.height = 48.dp
+            layout.margins = 8.dp
          }
 
          LinearLayout {
@@ -87,8 +87,8 @@ class AccountComponent(context: Context, override val store: MastodonStore)
             usernameView {
                layout.width = MATCH_PARENT
                layout.gravity = CENTER_VERTICAL
-               layout.horizontalMargin = 2.dip
-               layout.verticalMargin   = 2.dip
+               layout.horizontalMargin = 2.dp
+               layout.verticalMargin   = 2.dp
                view.textColor = 0x2196f3.opaque
                view.typeface = BOLD
                view.maxLines = 1
@@ -98,8 +98,8 @@ class AccountComponent(context: Context, override val store: MastodonStore)
             acctView {
                layout.width = MATCH_PARENT
                layout.gravity = CENTER_VERTICAL
-               layout.horizontalMargin = 2.dip
-               layout.verticalMargin   = 2.dip
+               layout.horizontalMargin = 2.dp
+               layout.verticalMargin   = 2.dp
                view.textColor = 0x000000 opacity 0.54
                view.maxLines = 1
                view.textSizeSp = 14

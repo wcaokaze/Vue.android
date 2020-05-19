@@ -42,9 +42,8 @@ class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
    override lateinit var componentView: FrameLayout
 
-   override val store: Store get() = application.store
-
-   private val application by lazy { getApplication() as Application }
+   override val store: Store
+      get() = (application as Application).store
 
    private val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
 
@@ -54,7 +53,7 @@ class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
       launch {
          val statusIds = try {
-            application.action.modules[MASTODON].fetchHomeTimeline()
+            action[MASTODON].fetchHomeTimeline()
          } catch (e: CancellationException) {
             throw e
          } catch (e: Exception) {
@@ -73,12 +72,12 @@ class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
    }
 
    private fun buildContentView() {
-      val recyclerViewAdapterApplicable: VComponentApplicable<TimelineRecyclerViewAdapter>
+      val recyclerViewAdapter: TimelineRecyclerViewAdapter
 
       @OptIn(ExperimentalContracts::class)
       koshian(this) {
          componentView = FrameLayout {
-            recyclerViewAdapterApplicable = Component[TimelineRecyclerViewAdapter, MASTODON] {
+            recyclerViewAdapter = Component[TimelineRecyclerViewAdapter, MASTODON] {
                component.itemsBinder(recyclerViewItems)
 
                component.onItemClick
@@ -90,7 +89,7 @@ class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
       }
 
       componentView.applyKoshian {
-         recyclerViewAdapterApplicable {
+         Component[recyclerViewAdapter] {
             layout.width  = MATCH_PARENT
             layout.height = MATCH_PARENT
             val layoutManager = LinearLayoutManager(view.context)

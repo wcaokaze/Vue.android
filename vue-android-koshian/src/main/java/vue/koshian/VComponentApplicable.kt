@@ -24,10 +24,12 @@ import vue.*
  * @see Component
  */
 class VComponentApplicable<out C : VComponentInterface<*>>
-      (val component: C) : KoshianApplicable
+      (val component: C) : KoshianApplicable<C>
 {
    override val view: View
       get() = component.componentView
+
+   override fun getResult(mode: KoshianApplicable.ApplicableMode): C = component
 }
 
 inline val <C : VComponentInterface<*>>

@@ -27,6 +27,21 @@ abstract class VuexAction<S, M, G>
    val modules: ModuleMap
    val rootModule: VuexAction<*, *, *> get() = modules.rootModule.action
 
+   /**
+    * shorthand for `modules[key]`.
+    *
+    * @return the submodule for the specified key
+    */
+   operator fun <MS, MM, MA, MG>
+         get(key: VuexStore.Module.Key<*, MS, MM, MA, MG>): MA
+         where MS : VuexState,
+               MM : VuexMutation<MS>,
+               MA : VuexAction<MS, MM, MG>,
+               MG : VuexGetter<MS>
+   {
+      return modules[key]
+   }
+
    init {
       val storeStack = storeStack.get()
 

@@ -79,6 +79,11 @@ val Component: VComponentApplicableProvider get() {
 
 class VComponentApplicableProvider(private val context: Context) {
    /**
+    * Use an already instantiated Store.
+    */
+   operator fun <C : VComponentInterface<*>> get(component: C) = VComponentApplicable(component)
+
+   /**
     * Manually Store injection.
     * ```kotlin
     * koshian(context) {

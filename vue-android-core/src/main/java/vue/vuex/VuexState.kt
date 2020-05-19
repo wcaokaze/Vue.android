@@ -29,13 +29,20 @@ abstract class VuexState {
    /**
     * [state][vue.state] that can be written only from [VuexMutation]
     */
-   fun <T> state(initialValue: T) = StateField(StateImpl(initialValue))
+   fun <T> state(initialValue: T): StateField<T>
+         = StateFieldImpl(StateImpl(initialValue))
 
-   class StateField<T>
-         internal constructor(private val delegate: StateImpl<T>)
-         : ReactiveField<T> by delegate
+   abstract class StateField<T>
+         internal constructor() : ReactiveField<T>
    {
-      internal var value: T
+      internal abstract var value: T
+   }
+
+   private class StateFieldImpl<T>
+         internal constructor(private val delegate: StateImpl<T>)
+         : StateField<T>(), ReactiveField<T> by delegate
+   {
+      override var value: T
          get() = delegate.value
          @UiThread set(value) {
             delegate.value = value
@@ -44,6 +51,21 @@ abstract class VuexState {
 
    val modules: ModuleMap
    val rootModule: VuexState get() = modules.rootModule.state
+
+   /**
+    * shorthand for `modules[key]`.
+    *
+    * @return the submodule for the specified key
+    */
+   operator fun <MS, MM, MA, MG>
+         get(key: VuexStore.Module.Key<*, MS, MM, MA, MG>): MS
+         where MS : VuexState,
+               MM : VuexMutation<MS>,
+               MA : VuexAction<MS, MM, MG>,
+               MG : VuexGetter<MS>
+   {
+      return modules[key]
+   }
 
    init {
       val storeStack = storeStack.get()

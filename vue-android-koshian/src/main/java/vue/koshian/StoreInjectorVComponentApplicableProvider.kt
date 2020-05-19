@@ -83,6 +83,11 @@ class StoreInjectorVComponentApplicableProvider<P>
       (private val parent: VComponentInterface<P>, private val context: Context)
       where P : VuexStore<*, *, *, *>
 {
+   /**
+    * Use an already instantiated Store.
+    */
+   operator fun <C : VComponentInterface<*>> get(component: C) = VComponentApplicable(component)
+
    @JvmName("getComponentApplicableWithIllegalStore")
    @Deprecated(
          "Store type mismatch. Check the type of Store for the Component.",

@@ -25,11 +25,11 @@ import android.widget.*
 import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.Application
 import com.wcaokaze.vue.android.example.BuildConfig
+import com.wcaokaze.vue.android.example.Store.ModuleKeys.CREDENTIAL_PREFERENCE
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.activity.timeline.*
 import com.wcaokaze.vue.android.example.mastodon.*
 import com.wcaokaze.vue.android.example.mastodon.auth.*
-import com.wcaokaze.vue.android.example.preference.*
 import koshian.*
 import kotlinx.coroutines.*
 import org.kodein.di.*
@@ -45,9 +45,8 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
    override lateinit var componentView: FrameLayout
 
-   override val store: Store get() = application.store
-
-   private val application by lazy { getApplication() as Application }
+   override val store: Store
+      get() = (application as Application).store
 
    private val authorizator by lazy { MastodonAuthorizator(kodein) }
 
@@ -66,10 +65,10 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
       super.onCreate(savedInstanceState)
       buildContentView()
 
-      val credential = CredentialPreference(this).credential
-
-      if (credential != null) {
-         startTimelineActivity(credential)
+      watcher(getter[CREDENTIAL_PREFERENCE].credential, immediate = true) {
+         if (it != null) {
+            startTimelineActivity(it)
+         }
       }
    }
 
@@ -83,7 +82,7 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
    }
 
    private fun startTimelineActivity(credential: Credential) {
-      application.mutation.modules[MASTODON].setCredential(credential)
+      mutation[MASTODON].setCredential(credential)
 
       startActivity(
          Intent(this, TimelineActivity::class.java))
@@ -138,9 +137,7 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
             throw CancellationException()
          }
 
-         CredentialPreference(this@AuthActivity).credential = credential
-
-         startTimelineActivity(credential)
+         mutation[CREDENTIAL_PREFERENCE].setCredential(credential)
       }
    }
 
@@ -190,7 +187,7 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
       }
 
       componentView.applyKoshian {
-         view.padding = 16.dip
+         view.padding = 16.dp
 
          LinearLayout {
             layout.width  = MATCH_PARENT
@@ -217,20 +214,20 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
                progressBar {
                   layout.gravity = CENTER_VERTICAL
-                  layout.width  = 24.dip
-                  layout.height = 24.dip
+                  layout.width  = 24.dp
+                  layout.height = 24.dp
                }
 
                startButton {
-                  layout.margins = 8.dip
+                  layout.margins = 8.dp
                   layout.gravity = CENTER_VERTICAL
                }
             }
          }
 
          tokenReceiverView {
-            layout.horizontalMargin = 8.dip
-            layout.verticalMargin   = 4.dip
+            layout.horizontalMargin = 8.dp
+            layout.verticalMargin   = 4.dp
          }
       }
 

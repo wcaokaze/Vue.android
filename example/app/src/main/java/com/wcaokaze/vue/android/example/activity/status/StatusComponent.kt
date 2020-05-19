@@ -20,7 +20,6 @@ import android.content.*
 import android.os.*
 import android.text.*
 import android.widget.*
-import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
 import vue.*
@@ -54,7 +53,7 @@ class StatusComponent(context: Context, override val store: MastodonStore)
 
    private val tooter: V<Account?> = getter {
       val toot = toot() ?: return@getter null
-      getter.modules[MASTODON].getAccount(toot.tooterAccountId)()
+      getter.getAccount(toot.tooterAccountId)()
    }
 
    private val tootContent: V<Spannable?> = getter {
@@ -86,7 +85,7 @@ class StatusComponent(context: Context, override val store: MastodonStore)
    }
 
    init {
-      val accountComponent: VComponentApplicable<AccountComponent>
+      val accountComponent: AccountComponent
 
       @OptIn(ExperimentalContracts::class)
       koshian(context) {
@@ -108,23 +107,23 @@ class StatusComponent(context: Context, override val store: MastodonStore)
       }
 
       componentView.applyKoshian {
-         view.padding = 8.dip
+         view.padding = 8.dp
 
-         accountComponent {
+         Component[accountComponent] {
             layout.width = MATCH_PARENT
          }
 
          contentView {
             layout.width = MATCH_PARENT
-            layout.margins = 8.dip
+            layout.margins = 8.dp
             view.textColor = 0x000000.opaque
             view.textSizeSp = 15
-            view.setLineSpacing(2.dip.toFloat(), 1.0f)
+            view.setLineSpacing(2.dp.toFloat(), 1.0f)
          }
 
          createdDateView {
             layout.gravity = END
-            layout.horizontalMargin = 8.dip
+            layout.horizontalMargin = 8.dp
             view.textColor = 0x000000 opacity 0.54
             view.textSizeSp = 12
          }

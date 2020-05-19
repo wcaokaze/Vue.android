@@ -67,38 +67,38 @@ class VComponentApplicableTest {
 
    @Test fun addComponent() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val componentApplicable: VComponentApplicable<NoStoreComponent>
+         val componentAsResult: NoStoreComponent
          lateinit var componentInDsl: NoStoreComponent
 
          @OptIn(ExperimentalContracts::class)
          val rootView = koshian(activity) {
             FrameLayout {
-               componentApplicable = Component[NoStoreComponent] {
+               componentAsResult = Component[NoStoreComponent] {
                   componentInDsl = component
                }
             }
          }
 
-         assertSame(componentInDsl, componentApplicable.component)
-         assertSame(rootView.getChildAt(0), componentApplicable.component.componentView)
+         assertSame(componentInDsl, componentAsResult)
+         assertSame(rootView.getChildAt(0), componentAsResult.componentView)
       }
    }
 
    @Test fun applyComponent() {
       activityScenarioRule.scenario.onActivity { activity ->
-         val componentApplicable: VComponentApplicable<NoStoreComponent>
+         val componentAsResult: NoStoreComponent
 
          @OptIn(ExperimentalContracts::class)
          val rootView = koshian(activity) {
             FrameLayout {
-               componentApplicable = Component[NoStoreComponent] {
+               componentAsResult = Component[NoStoreComponent] {
                }
             }
          }
 
          rootView.applyKoshian {
-            componentApplicable {
-               assertSame(componentApplicable.component, component)
+            Component[componentAsResult] {
+               assertSame(componentAsResult, component)
             }
          }
       }
@@ -108,17 +108,17 @@ class VComponentApplicableTest {
       val store = Store()
 
       activityScenarioRule.scenario.onActivity { activity ->
-         val componentApplicable: VComponentApplicable<StoreComponent>
+         val componentAsResult: StoreComponent
 
          @OptIn(ExperimentalContracts::class)
          koshian(activity) {
             FrameLayout {
-               componentApplicable = Component[StoreComponent, store] {
+               componentAsResult = Component[StoreComponent, store] {
                }
             }
          }
 
-         assertSame(store, componentApplicable.component.store)
+         assertSame(store, componentAsResult.store)
       }
    }
 
@@ -133,10 +133,8 @@ class VComponentApplicableTest {
             @OptIn(ExperimentalContracts::class)
             koshian(context) {
                componentView = FrameLayout {
-                  val childComponentApplicable = Component[StoreComponent] {
+                  childComponent = Component[StoreComponent] {
                   }
-
-                  childComponent = childComponentApplicable.component
                }
             }
          }
@@ -149,17 +147,17 @@ class VComponentApplicableTest {
       val store = Store()
 
       activityScenarioRule.scenario.onActivity { activity ->
-         val componentApplicable: VComponentApplicable<InheritStoreComponent>
+         val parentComponent: InheritStoreComponent
 
          @OptIn(ExperimentalContracts::class)
          koshian(activity) {
             FrameLayout {
-               componentApplicable = Component[inheritStoreComponentConstructor, store] {
+               parentComponent = Component[inheritStoreComponentConstructor, store] {
                }
             }
          }
 
-         assertSame(store, componentApplicable.component.childComponent.store)
+         assertSame(store, parentComponent.childComponent.store)
       }
    }
 
@@ -192,10 +190,8 @@ class VComponentApplicableTest {
             @OptIn(ExperimentalContracts::class)
             koshian(context) {
                componentView = FrameLayout {
-                  val childComponentApplicable = Component[StoreComponent, moduleKey] {
+                  childComponent = Component[StoreComponent, moduleKey] {
                   }
-
-                  childComponent = childComponentApplicable.component
                }
             }
          }
@@ -209,17 +205,17 @@ class VComponentApplicableTest {
       val childStore = parentStore.modules[moduleKey]
 
       activityScenarioRule.scenario.onActivity { activity ->
-         val componentApplicable: VComponentApplicable<ParentComponent>
+         val parentComponent: ParentComponent
 
          @OptIn(ExperimentalContracts::class)
          koshian(activity) {
             FrameLayout {
-               componentApplicable = Component[parentComponentConstructor, parentStore] {
+               parentComponent = Component[parentComponentConstructor, parentStore] {
                }
             }
          }
 
-         assertSame(childStore, componentApplicable.component.childComponent.store)
+         assertSame(childStore, parentComponent.childComponent.store)
       }
    }
 
