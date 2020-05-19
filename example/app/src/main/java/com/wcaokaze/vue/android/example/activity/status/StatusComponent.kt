@@ -85,7 +85,7 @@ class StatusComponent(context: Context, override val store: MastodonStore)
    }
 
    init {
-      val accountComponent: VComponentApplicable<AccountComponent>
+      val accountComponent: AccountComponent
 
       @OptIn(ExperimentalContracts::class)
       koshian(context) {
@@ -109,7 +109,7 @@ class StatusComponent(context: Context, override val store: MastodonStore)
       componentView.applyKoshian {
          view.padding = 8.dip
 
-         accountComponent {
+         Component[accountComponent] {
             layout.width = MATCH_PARENT
          }
 

@@ -73,12 +73,12 @@ class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
    }
 
    private fun buildContentView() {
-      val recyclerViewAdapterApplicable: VComponentApplicable<TimelineRecyclerViewAdapter>
+      val recyclerViewAdapter: TimelineRecyclerViewAdapter
 
       @OptIn(ExperimentalContracts::class)
       koshian(this) {
          componentView = FrameLayout {
-            recyclerViewAdapterApplicable = Component[TimelineRecyclerViewAdapter, MASTODON] {
+            recyclerViewAdapter = Component[TimelineRecyclerViewAdapter, MASTODON] {
                component.itemsBinder(recyclerViewItems)
 
                component.onItemClick
@@ -90,7 +90,7 @@ class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
       }
 
       componentView.applyKoshian {
-         recyclerViewAdapterApplicable {
+         Component[recyclerViewAdapter] {
             layout.width  = MATCH_PARENT
             layout.height = MATCH_PARENT
             val layoutManager = LinearLayoutManager(view.context)
