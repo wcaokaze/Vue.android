@@ -24,6 +24,7 @@ import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.Application
 import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
+import kotlinx.coroutines.*
 import org.kodein.di.*
 import org.kodein.di.android.*
 import vue.*
@@ -32,7 +33,7 @@ import kotlin.contracts.*
 
 class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
    companion object {
-      const val INTENT_KEY_STATUS_ID = "GGZbOLON4U8o9Qp8"
+      const val INTENT_KEY_STATUS_ID = "STATUS_ID"
    }
 
    override val kodein by closestKodein()
@@ -40,9 +41,55 @@ class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
    override lateinit var componentView: LinearLayout
 
-   override val store: Store get() = application.store
+   override val store: Store
+      get() = (application as Application).store
 
-   private val application by lazy { getApplication() as Application }
+   private val statusId = state<Status.Id?>(null)
+
+   private val status: V<Status?> = getter {
+      val statusId = statusId() ?: return@getter null
+      getter.modules[MASTODON].getStatus(statusId)()
+   }
+
+   private val toot: V<Status.Toot?> = getter {
+      when (val status = status()) {
+         null            -> null
+         is Status.Toot  -> status
+         is Status.Boost -> status.toot
+      }
+   }
+
+   private suspend fun onBoostButtonClick() {
+      val statusId = statusId() ?: return
+
+      try {
+         if (toot()?.isBoosted == true) {
+            action.modules[MASTODON].unboost(statusId)
+         } else {
+            action.modules[MASTODON].boost(statusId)
+         }
+      } catch (e: CancellationException) {
+         throw e
+      } catch (e: Exception) {
+         Toast.makeText(this, "Something goes wrong", Toast.LENGTH_LONG).show()
+      }
+   }
+
+   private suspend fun onFavoriteButtonClick() {
+      val statusId = statusId() ?: return
+
+      try {
+         if (toot()?.isFavorited == true) {
+            action.modules[MASTODON].unfavorite(statusId)
+         } else {
+            action.modules[MASTODON].favorite(statusId)
+         }
+      } catch (e: CancellationException) {
+         throw e
+      } catch (e: Exception) {
+         Toast.makeText(this, "Something goes wrong", Toast.LENGTH_LONG).show()
+      }
+   }
 
    @OptIn(ExperimentalContracts::class)
    override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,13 +97,24 @@ class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
       val id = intent.getSerializableExtra(INTENT_KEY_STATUS_ID) as? Status.Id
       require(id != null) { "Status ID is not specified." }
+      statusId.value = id
 
       koshian(this) {
          componentView = LinearLayout {
+            view.orientation = VERTICAL
+
             Component[StatusComponent, MASTODON] {
                layout.width  = MATCH_PARENT
-               layout.height = MATCH_PARENT
-               component.status { getter.modules[MASTODON].getStatus(id)() }
+               component.status(status)
+            }
+
+            Component[FooterComponent] {
+               layout.width = MATCH_PARENT
+               layout.verticalMargin = 8.dip
+               component.isBoosted   { toot()?.isBoosted   }
+               component.isFavorited { toot()?.isFavorited }
+               component.onBoostButtonClick    { onBoostButtonClick()    }
+               component.onFavoriteButtonClick { onFavoriteButtonClick() }
             }
          }
       }
