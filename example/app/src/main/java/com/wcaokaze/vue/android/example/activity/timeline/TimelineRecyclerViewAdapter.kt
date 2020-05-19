@@ -52,6 +52,8 @@ object MissingStatusItem : TimelineRecyclerViewItem() {
    override fun isItemsTheSameWith(item: Any) = item is MissingStatusItem
 }
 
+// =============================================================================
+
 class TimelineRecyclerViewAdapter(context: Context,
                                   override val store: MastodonStore)
    : RecyclerViewAdapterComponent<TimelineRecyclerViewItem, MastodonStore>(context)
@@ -130,6 +132,8 @@ class TimelineRecyclerViewAdapter(context: Context,
             val createdDate = toot()?.tootedDate ?: return@getter null
             SimpleDateFormat("HH:mm MMM d yyyy", Locale.US).format(createdDate)
          }
+
+         // --------
 
          val iconView: ImageView
          val usernameView: TextView
@@ -281,6 +285,8 @@ class TimelineRecyclerViewAdapter(context: Context,
          itemView
       }
 
+      // =======================================================================
+
       is LoadingIndicatorItem -> VueHolderProvider(item) {
          koshian(context) {
             FrameLayout {
@@ -295,6 +301,8 @@ class TimelineRecyclerViewAdapter(context: Context,
             }
          }
       }
+
+      // =======================================================================
 
       is MissingStatusItem -> VueHolderProvider(item) {
          koshian(context) {
