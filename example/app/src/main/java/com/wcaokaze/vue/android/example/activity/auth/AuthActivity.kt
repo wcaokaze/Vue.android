@@ -187,7 +187,7 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
       }
 
       componentView.applyKoshian {
-         view.padding = 16.dip
+         view.padding = 16.dp
 
          LinearLayout {
             layout.width  = MATCH_PARENT
@@ -214,20 +214,20 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
                progressBar {
                   layout.gravity = CENTER_VERTICAL
-                  layout.width  = 24.dip
-                  layout.height = 24.dip
+                  layout.width  = 24.dp
+                  layout.height = 24.dp
                }
 
                startButton {
-                  layout.margins = 8.dip
+                  layout.margins = 8.dp
                   layout.gravity = CENTER_VERTICAL
                }
             }
          }
 
          tokenReceiverView {
-            layout.horizontalMargin = 8.dip
-            layout.verticalMargin   = 4.dip
+            layout.horizontalMargin = 8.dp
+            layout.verticalMargin   = 4.dp
          }
       }
 

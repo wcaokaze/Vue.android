@@ -107,7 +107,7 @@ class StatusComponent(context: Context, override val store: MastodonStore)
       }
 
       componentView.applyKoshian {
-         view.padding = 8.dip
+         view.padding = 8.dp
 
          Component[accountComponent] {
             layout.width = MATCH_PARENT
@@ -115,15 +115,15 @@ class StatusComponent(context: Context, override val store: MastodonStore)
 
          contentView {
             layout.width = MATCH_PARENT
-            layout.margins = 8.dip
+            layout.margins = 8.dp
             view.textColor = 0x000000.opaque
             view.textSizeSp = 15
-            view.setLineSpacing(2.dip.toFloat(), 1.0f)
+            view.setLineSpacing(2.dp.toFloat(), 1.0f)
          }
 
          createdDateView {
             layout.gravity = END
-            layout.horizontalMargin = 8.dip
+            layout.horizontalMargin = 8.dp
             view.textColor = 0x000000 opacity 0.54
             view.textSizeSp = 12
          }

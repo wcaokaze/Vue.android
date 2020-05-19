@@ -62,7 +62,7 @@ import vue.*
  *       is LoadingIndicatorItem -> ViewHolderProvider(item) {
  *          koshian(context) {
  *             FrameLayout {
- *                layout.height = 48.dip
+ *                layout.height = 48.dp
  *
  *                ProgressBar {
  *                   layout.gravity = CENTER

@@ -110,7 +110,7 @@ class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
             Component[FooterComponent] {
                layout.width = MATCH_PARENT
-               layout.verticalMargin = 8.dip
+               layout.verticalMargin = 8.dp
                component.isBoosted   { toot()?.isBoosted   }
                component.isFavorited { toot()?.isFavorited }
                component.onBoostButtonClick    { onBoostButtonClick()    }

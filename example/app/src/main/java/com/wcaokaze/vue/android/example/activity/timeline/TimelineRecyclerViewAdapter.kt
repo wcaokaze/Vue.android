@@ -202,25 +202,25 @@ class TimelineRecyclerViewAdapter(context: Context,
 
          itemView.applyKoshian {
             layout.width = MATCH_PARENT
-            view.padding = 8.dip
+            view.padding = 8.dp
 
             iconView {
-               layout.width  = 40.dip
-               layout.height = 40.dip
-               layout.margins = 4.dip
+               layout.width  = 40.dp
+               layout.height = 40.dp
+               layout.margins = 4.dp
             }
 
             LinearLayout {
                layout.width = MATCH_PARENT
-               layout.margins = 4.dip
+               layout.margins = 4.dp
 
                LinearLayout {
                   layout.width = MATCH_PARENT
 
                   usernameView {
                      layout.gravity = CENTER_VERTICAL
-                     layout.horizontalMargin = 2.dip
-                     layout.verticalMargin   = 4.dip
+                     layout.horizontalMargin = 2.dp
+                     layout.verticalMargin   = 4.dp
                      view.textColor = 0x2196f3.opaque
                      view.typeface = BOLD
                      view.maxLines = 1
@@ -229,8 +229,8 @@ class TimelineRecyclerViewAdapter(context: Context,
 
                   acctView {
                      layout.gravity = CENTER_VERTICAL
-                     layout.horizontalMargin = 2.dip
-                     layout.verticalMargin   = 4.dip
+                     layout.horizontalMargin = 2.dp
+                     layout.verticalMargin   = 4.dp
                      view.textColor = 0x000000 opacity 0.54
                      view.maxLines = 1
                      view.textSizeSp = 13
@@ -239,10 +239,10 @@ class TimelineRecyclerViewAdapter(context: Context,
 
                contentView {
                   layout.width = MATCH_PARENT
-                  layout.margins = 8.dip
+                  layout.margins = 8.dp
                   view.textColor = 0x000000.opaque
                   view.textSizeSp = 13
-                  view.setLineSpacing(2.dip.toFloat(), 1.0f)
+                  view.setLineSpacing(2.dp.toFloat(), 1.0f)
                }
 
                createdDateView {
@@ -254,20 +254,20 @@ class TimelineRecyclerViewAdapter(context: Context,
                LinearLayout {
                   ImageView {
                      layout.gravity = CENTER_VERTICAL
-                     layout.horizontalMargin = 8.dip
+                     layout.horizontalMargin = 8.dp
                   }
 
                   boosterIconView {
-                     layout.width  = 24.dip
-                     layout.height = 24.dip
+                     layout.width  = 24.dp
+                     layout.height = 24.dp
                      layout.gravity = CENTER_VERTICAL
-                     layout.horizontalMargin = 4.dip
+                     layout.horizontalMargin = 4.dp
                   }
 
                   boosterNameView {
                      layout.width  = MATCH_PARENT
                      layout.height = WRAP_CONTENT
-                     layout.horizontalMargin = 4.dip
+                     layout.horizontalMargin = 4.dp
                      layout.gravity = CENTER_VERTICAL
                      view.textColor = 0x000000 opacity 0.54
                      view.textSizeSp = 12
@@ -287,10 +287,10 @@ class TimelineRecyclerViewAdapter(context: Context,
                layout.width = MATCH_PARENT
 
                ProgressBar {
-                  layout.width  = 32.dip
-                  layout.height = 32.dip
+                  layout.width  = 32.dp
+                  layout.height = 32.dp
                   layout.gravity = CENTER_HORIZONTAL
-                  layout.margins = 8.dip
+                  layout.margins = 8.dp
                }
             }
          }
@@ -303,7 +303,7 @@ class TimelineRecyclerViewAdapter(context: Context,
 
                ImageView {
                   layout.gravity = CENTER_HORIZONTAL
-                  layout.margins = 8.dip
+                  layout.margins = 8.dp
                   view.image = drawable(R.drawable.timeline_missing_item)
                }
             }

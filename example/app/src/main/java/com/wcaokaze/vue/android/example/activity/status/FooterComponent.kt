@@ -78,13 +78,13 @@ class FooterComponent(context: Context) : VComponent<Nothing>() {
       }
 
       componentView.applyKoshian {
-         view.setPadding(horizontal = 16.dip, vertical = 0)
+         view.setPadding(horizontal = 16.dp, vertical = 0)
 
          ImageButton("button") {
             layout.width  = 0
-            layout.height = 48.dip
+            layout.height = 48.dp
             layout.weight = 2.0f
-            layout.horizontalMargin = 8.dip
+            layout.horizontalMargin = 8.dp
             view.scaleType = SCALE_TYPE_CENTER
          }
       }
