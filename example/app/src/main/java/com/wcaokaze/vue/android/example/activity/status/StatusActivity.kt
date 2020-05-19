@@ -48,7 +48,7 @@ class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
    private val status: V<Status?> = getter {
       val statusId = statusId() ?: return@getter null
-      getter.modules[MASTODON].getStatus(statusId)()
+      getter[MASTODON].getStatus(statusId)()
    }
 
    private val toot: V<Status.Toot?> = getter {
@@ -64,9 +64,9 @@ class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
       try {
          if (toot()?.isBoosted == true) {
-            action.modules[MASTODON].unboost(statusId)
+            action[MASTODON].unboost(statusId)
          } else {
-            action.modules[MASTODON].boost(statusId)
+            action[MASTODON].boost(statusId)
          }
       } catch (e: CancellationException) {
          throw e
@@ -80,9 +80,9 @@ class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
       try {
          if (toot()?.isFavorited == true) {
-            action.modules[MASTODON].unfavorite(statusId)
+            action[MASTODON].unfavorite(statusId)
          } else {
-            action.modules[MASTODON].favorite(statusId)
+            action[MASTODON].favorite(statusId)
          }
       } catch (e: CancellationException) {
          throw e

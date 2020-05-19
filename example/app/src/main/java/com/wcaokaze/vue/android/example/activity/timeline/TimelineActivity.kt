@@ -53,7 +53,7 @@ class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
       launch {
          val statusIds = try {
-            action.modules[MASTODON].fetchHomeTimeline()
+            action[MASTODON].fetchHomeTimeline()
          } catch (e: CancellationException) {
             throw e
          } catch (e: Exception) {

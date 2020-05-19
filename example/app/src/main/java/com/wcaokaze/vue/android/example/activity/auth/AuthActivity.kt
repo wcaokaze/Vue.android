@@ -65,7 +65,7 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
       super.onCreate(savedInstanceState)
       buildContentView()
 
-      watcher(getter.modules[CREDENTIAL_PREFERENCE].credential, immediate = true) {
+      watcher(getter[CREDENTIAL_PREFERENCE].credential, immediate = true) {
          if (it != null) {
             startTimelineActivity(it)
          }
@@ -82,7 +82,7 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
    }
 
    private fun startTimelineActivity(credential: Credential) {
-      mutation.modules[MASTODON].setCredential(credential)
+      mutation[MASTODON].setCredential(credential)
 
       startActivity(
          Intent(this, TimelineActivity::class.java))
@@ -137,7 +137,7 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
             throw CancellationException()
          }
 
-         mutation.modules[CREDENTIAL_PREFERENCE].setCredential(credential)
+         mutation[CREDENTIAL_PREFERENCE].setCredential(credential)
       }
    }
 

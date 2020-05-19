@@ -52,6 +52,21 @@ abstract class VuexState {
    val modules: ModuleMap
    val rootModule: VuexState get() = modules.rootModule.state
 
+   /**
+    * shorthand for `modules[key]`.
+    *
+    * @return the submodule for the specified key
+    */
+   operator fun <MS, MM, MA, MG>
+         get(key: VuexStore.Module.Key<*, MS, MM, MA, MG>): MS
+         where MS : VuexState,
+               MM : VuexMutation<MS>,
+               MA : VuexAction<MS, MM, MG>,
+               MG : VuexGetter<MS>
+   {
+      return modules[key]
+   }
+
    init {
       val storeStack = storeStack.get()
 
