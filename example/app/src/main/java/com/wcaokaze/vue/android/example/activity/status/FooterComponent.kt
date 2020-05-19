@@ -33,8 +33,8 @@ class FooterComponent(context: Context) : VComponent<Nothing>() {
 
    override val componentView: LinearLayout
 
-   val isBoosted   = vBinder<Boolean>()
-   val isFavorited = vBinder<Boolean>()
+   val isBoosted   = vBinder<Boolean?>()
+   val isFavorited = vBinder<Boolean?>()
 
    val onBoostButtonClick    = vEvent0()
    val onFavoriteButtonClick = vEvent0()
