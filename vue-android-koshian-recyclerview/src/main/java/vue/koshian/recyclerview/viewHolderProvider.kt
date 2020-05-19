@@ -81,19 +81,16 @@ inline fun <I> VueHolderProvider(
 ): ViewHolderProvider<I> {
    return object : ViewHolderProvider<I> {
       override fun provide(context: Context): KoshianViewHolder<I> {
-         val reactiveItem = state(item)
-
-         return object : VueHolder<I>(context, reactiveItem) {
+         return object : VueHolder<I>(context, item) {
             override val itemView: View = itemViewCreatorAction(this)
          }
       }
    }
 }
 
-abstract class VueHolder<I>(
-   val context: Context,
-   val reactiveItem: StateField<I>
-) : KoshianViewHolder<I>() {
+abstract class VueHolder<I>(val context: Context, initialItem: I) : KoshianViewHolder<I>() {
+   val reactiveItem = state(initialItem)
+
    final override fun bind(item: I) {
       reactiveItem.value = item
    }
