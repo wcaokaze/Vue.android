@@ -22,50 +22,18 @@ import vue.*
 import vue.vuex.*
 
 /**
- * At first, declare a [KoshianComponentConstructor].
- * ```kotlin
- * val FooComponent get() = KoshianComponentConstructor { context, store: FooStore ->
- *    FooComponent(context, store)
- * }
- * ```
- *
- * Or companion object is also a good way if you can.
- * ```kotlin
- * class FooComponent(context: Context, override val store: FooStore) : VComponent<FooStore>() {
- *    companion object : KoshianComponentConstructor<FooComponent, FooStore> {
- *       override fun instantiate(context: Context, store: FooStore)
- *             = FooComponent(context, store)
- *    }
- * }
- * ```
- *
  * We can create the component in Koshian DSL.
  * ```kotlin
  * koshian(context) {
  *    FrameLayout {
- *       Component[FooComponent, fooStore] {
+ *       Component[::FooComponent, fooStore] {
  *       }
  *    }
  * }
  * ```
  *
- * Note that `Component` can not match in applier.
- * We have to receive an Applicable to match it later.
- * ```kotlin
- * val componentApplicable: VComponentApplicable<FooComponent>
- *
- * val layout = koshian(context) {
- *    FrameLayout {
- *       componentApplicable = Component[FooComponent, fooStore] {
- *       }
- *    }
- * }
- *
- * layout.applyKoshian {
- *    componentApplicable {
- *    }
- * }
- * ```
+ * Note that the Component must have `constructor(Context, VuexStore)` or
+ * `constructor(Context)`.
  */
 val Component: VComponentApplicableProvider get() {
    val context = `$$KoshianInternal`.context
@@ -88,46 +56,28 @@ class VComponentApplicableProvider(private val context: Context) {
     * ```kotlin
     * koshian(context) {
     *    FrameLayout {
-    *       Component[FooComponent, fooStore] {
+    *       Component[::FooComponent, fooStore] {
     *       }
-    *    }
-    * }
-    * ```
-    *
-    * Note that `Component` can not match in applier.
-    * We have to receive an Applicable to match it later.
-    * ```kotlin
-    * val componentApplicable: VComponentApplicable<FooComponent>
-    *
-    * val layout = koshian(context) {
-    *    FrameLayout {
-    *       componentApplicable = Component[FooComponent, fooStore] {
-    *       }
-    *    }
-    * }
-    *
-    * layout.applyKoshian {
-    *    componentApplicable {
     *    }
     * }
     * ```
     */
    operator fun <C, S> get(
-         componentConstructor: KoshianComponentConstructor<C, S>,
+         componentConstructor: (Context, S) -> C,
          store: S
    ): VComponentApplicable<C>
          where C : VComponentInterface<S>,
                S : VuexStore<*, *, *, *>
    {
-      val component = componentConstructor.instantiate(context, store)
+      val component = componentConstructor(context, store)
       return VComponentApplicable(component)
    }
 
    @Deprecated(
-         "This Component requires a VuexStore. Specify a VuexStore like `[Component, store]`",
+         "This Component requires a VuexStore. Specify a VuexStore like `[::Component, store]`",
          level = DeprecationLevel.ERROR)
    operator fun <C, S> get(
-         componentConstructor: KoshianComponentConstructor<C, S>
+         componentConstructor: (Context, S) -> C
    ): VComponentApplicable<C>
          where C : VComponentInterface<S>,
                S : VuexStore<*, *, *, *>
@@ -140,36 +90,18 @@ class VComponentApplicableProvider(private val context: Context) {
     * ```kotlin
     * koshian(context) {
     *    FrameLayout {
-    *       Component[FooComponent] {
+    *       Component[::FooComponent] {
     *       }
-    *    }
-    * }
-    * ```
-    *
-    * Note that `Component` can not match in applier.
-    * We have to receive an Applicable to match it later.
-    * ```kotlin
-    * val componentApplicable: VComponentApplicable<FooComponent>
-    *
-    * val layout = koshian(context) {
-    *    FrameLayout {
-    *       componentApplicable = Component[FooComponent] {
-    *       }
-    *    }
-    * }
-    *
-    * layout.applyKoshian {
-    *    componentApplicable {
     *    }
     * }
     * ```
     */
    operator fun <C> get(
-         componentConstructor: KoshianNoStoreComponentConstructor<C>
+         componentConstructor: (Context) -> C
    ): VComponentApplicable<C>
          where C : VComponentInterface<Nothing>
    {
-      val component = componentConstructor.instantiate(context)
+      val component = componentConstructor(context)
       return VComponentApplicable(component)
    }
 }

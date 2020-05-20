@@ -103,12 +103,12 @@ class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
          componentView = LinearLayout {
             view.orientation = VERTICAL
 
-            Component[StatusComponent, MASTODON] {
+            Component[::StatusComponent, MASTODON] {
                layout.width  = MATCH_PARENT
                component.status(status)
             }
 
-            Component[FooterComponent] {
+            Component[::FooterComponent] {
                layout.width = MATCH_PARENT
                layout.verticalMargin = 8.dp
                component.isBoosted   { toot()?.isBoosted   }

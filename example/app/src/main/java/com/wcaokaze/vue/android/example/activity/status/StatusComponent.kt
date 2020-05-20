@@ -31,11 +31,6 @@ import kotlin.contracts.*
 class StatusComponent(context: Context, override val store: MastodonStore)
    : VComponent<MastodonStore>()
 {
-   companion object : KoshianComponentConstructor<StatusComponent, MastodonStore> {
-      override fun instantiate(context: Context, store: MastodonStore)
-            = StatusComponent(context, store)
-   }
-
    override val componentView: LinearLayout
 
    private val contentView: TextView
@@ -92,7 +87,7 @@ class StatusComponent(context: Context, override val store: MastodonStore)
          componentView = LinearLayout {
             view.orientation = VERTICAL
 
-            accountComponent = Component[AccountComponent] {
+            accountComponent = Component[::AccountComponent] {
                component.account(tooter)
             }
 

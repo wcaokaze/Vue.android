@@ -77,7 +77,7 @@ class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
       @OptIn(ExperimentalContracts::class)
       koshian(this) {
          componentView = FrameLayout {
-            recyclerViewAdapter = Component[TimelineRecyclerViewAdapter, MASTODON] {
+            recyclerViewAdapter = Component[::TimelineRecyclerViewAdapter, MASTODON] {
                component.itemsBinder(recyclerViewItems)
 
                component.onItemClick

@@ -58,11 +58,6 @@ class TimelineRecyclerViewAdapter(context: Context,
                                   override val store: MastodonStore)
    : RecyclerViewAdapterComponent<TimelineRecyclerViewItem, MastodonStore>(context)
 {
-   companion object : KoshianComponentConstructor<TimelineRecyclerViewAdapter, MastodonStore> {
-      override fun instantiate(context: Context, store: MastodonStore)
-            = TimelineRecyclerViewAdapter(context, store)
-   }
-
    val onItemClick = vEvent2<Int, TimelineRecyclerViewItem>()
 
    @OptIn(ExperimentalContracts::class)
