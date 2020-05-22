@@ -27,10 +27,12 @@ import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.activity.status.*
 import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
+import koshian.androidx.*
 import kotlinx.coroutines.*
 import org.kodein.di.*
 import org.kodein.di.android.*
 import vue.*
+import vue.androidx.*
 import vue.koshian.recyclerview.*
 import vue.koshian.*
 import vue.stream.*
@@ -46,6 +48,9 @@ class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
       get() = (application as Application).store
 
    private val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
+
+   private val fetchingNewerJob = state(Job.completed())
+   private val isFetchingNewer = getter { fetchingNewerJob().toReactiveField()() }
 
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
@@ -71,30 +76,64 @@ class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
       startActivity(intent)
    }
 
+   private fun fetchNewer() {
+      fetchingNewerJob().cancel()
+
+      fetchingNewerJob.value = launch {
+         try {
+            val sinceId = recyclerViewItems()
+               .filterIsInstance<StatusItem>()
+               .firstOrNull()
+               ?.statusId
+               ?: throw CancellationException()
+
+            val newerIds = action[MASTODON].fetchHomeTimeline(sinceId = sinceId)
+
+            val newerItems = newerIds.map { StatusItem(it) }
+
+            val olderItems = recyclerViewItems()
+               .dropWhile { it is LoadingIndicatorItem || it is MissingStatusItem }
+
+            recyclerViewItems.value = newerItems + olderItems
+         } catch (e: CancellationException) {
+            throw e
+         } catch (e: Exception) {
+            Toast.makeText(this@TimelineActivity, "Something goes wrong", Toast.LENGTH_LONG).show()
+         }
+      }
+   }
+
    private fun buildContentView() {
       val recyclerViewAdapter: TimelineRecyclerViewAdapter
 
       @OptIn(ExperimentalContracts::class)
       koshian(this) {
          componentView = FrameLayout {
-            recyclerViewAdapter = Component[::TimelineRecyclerViewAdapter, MASTODON] {
-               component.itemsBinder(recyclerViewItems)
+            SwipeRefreshLayout {
+               vBind.isRefreshing(isFetchingNewer)
+               vOn.refresh { fetchNewer() }
 
-               component.onItemClick
-                  .map { _, item -> item }
-                  .filterIsInstance<StatusItem>()
-                  .invoke { startStatusActivity(it.statusId) }
+               recyclerViewAdapter = Component[::TimelineRecyclerViewAdapter, MASTODON] {
+                  component.itemsBinder(recyclerViewItems)
+
+                  component.onItemClick
+                     .map { _, item -> item }
+                     .filterIsInstance<StatusItem>()
+                     .invoke { startStatusActivity(it.statusId) }
+               }
             }
          }
       }
 
       componentView.applyKoshian {
-         Component[recyclerViewAdapter] {
-            layout.width  = MATCH_PARENT
-            layout.height = MATCH_PARENT
-            val layoutManager = LinearLayoutManager(view.context)
-            view.layoutManager = layoutManager
-            view.addItemDecoration(DividerItemDecoration(view.context, layoutManager.orientation))
+         SwipeRefreshLayout {
+            Component[recyclerViewAdapter] {
+               layout.width  = MATCH_PARENT
+               layout.height = MATCH_PARENT
+               val layoutManager = LinearLayoutManager(view.context)
+               view.layoutManager = layoutManager
+               view.addItemDecoration(DividerItemDecoration(view.context, layoutManager.orientation))
+            }
          }
       }
 

@@ -19,7 +19,7 @@ package com.wcaokaze.vue.android.example
 
 import android.app.Application
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
+import io.ktor.client.engine.android.*
 import io.ktor.client.features.*
 import io.ktor.client.features.compression.*
 import io.ktor.client.features.json.*
@@ -39,7 +39,7 @@ class Application : Application(), KodeinAware {
 
       bind<HttpClient>() with provider {
          @OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
-         HttpClient(CIO) {
+         HttpClient(Android) {
             install(JsonFeature) {
                val jsonConfiguration = JsonConfiguration(ignoreUnknownKeys = true)
                serializer = KotlinxSerializer(Json(jsonConfiguration))

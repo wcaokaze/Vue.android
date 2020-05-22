@@ -55,10 +55,10 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
    private val client = state<Client?>(null)
 
-   private val clientRegistrationJob = state<Job>(Job().apply { complete() })
+   private val clientRegistrationJob = state(Job.completed())
    private val isRegisteringClient = getter { clientRegistrationJob().toReactiveField()() }
 
-   private val credentialPublishingJob = state<Job>(Job().apply { complete() })
+   private val credentialPublishingJob = state(Job.completed())
    private val isPublishingCredential = getter { credentialPublishingJob().toReactiveField()() }
 
    override fun onCreate(savedInstanceState: Bundle?) {
