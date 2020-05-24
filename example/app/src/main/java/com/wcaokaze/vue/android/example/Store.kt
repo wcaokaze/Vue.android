@@ -17,13 +17,9 @@
 package com.wcaokaze.vue.android.example
 
 import com.wcaokaze.vue.android.example.mastodon.*
-import org.kodein.di.*
 import vue.vuex.*
 
-class Store(
-   private val kodein: Kodein,
-   private val application: Application
-) : VuexStore<State, Mutation, Action, Getter>() {
+class Store : VuexStore<State, Mutation, Action, Getter>() {
    object ModuleKeys {
       val MASTODON = Module.Key<MastodonStore, MastodonState, MastodonMutation, MastodonAction, MastodonGetter>()
       val CREDENTIAL_PREFERENCE = Module.Key<CredentialPreferenceStore, CredentialPreferenceState, CredentialPreferenceMutation, CredentialPreferenceAction, CredentialPreferenceGetter>()
@@ -35,8 +31,8 @@ class Store(
    override fun createGetter()   = Getter()
 
    override fun createModules() = listOf(
-      Module(ModuleKeys.MASTODON, MastodonStore(kodein)),
-      Module(ModuleKeys.CREDENTIAL_PREFERENCE, CredentialPreferenceStore(application))
+      Module(ModuleKeys.MASTODON, MastodonStore()),
+      Module(ModuleKeys.CREDENTIAL_PREFERENCE, CredentialPreferenceStore())
    )
 }
 

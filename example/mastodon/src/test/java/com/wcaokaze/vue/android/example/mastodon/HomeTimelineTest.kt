@@ -18,8 +18,9 @@ package com.wcaokaze.vue.android.example.mastodon
 
 import org.junit.runner.*
 import org.junit.runners.*
-import org.kodein.di.*
-import org.kodein.di.generic.*
+import org.koin.core.context.*
+import org.koin.dsl.*
+import org.koin.test.*
 import kotlin.test.*
 
 import io.ktor.client.*
@@ -38,11 +39,16 @@ import java.net.*
 import java.util.*
 
 @RunWith(JUnit4::class)
-class HomeTimelineTest {
+class HomeTimelineTest : KoinTest {
+   @AfterTest fun stop() {
+      stopKoin()
+   }
+
    @Test fun failsIfNoCredential() {
       runBlocking {
-         val kodein = mockJsonKodein { "[]" }
-         val store = MastodonStore(kodein)
+         startMockJsonKoin { "[]" }
+
+         val store = MastodonStore()
 
          assertFails {
             store.action.fetchHomeTimeline()
@@ -52,11 +58,11 @@ class HomeTimelineTest {
 
    @Test fun ioExceptionCanBeCaught() {
       runBlocking {
-         val kodein = mockJsonKodein {
+         startMockJsonKoin {
             throw IOException("Exception caused by network")
          }
 
-         val store = MastodonStore(kodein)
+         val store = MastodonStore()
 
          val exception = assertFailsWith<IOException> {
             store.mutation.setCredential(
@@ -73,7 +79,7 @@ class HomeTimelineTest {
 
    @Test fun returnsStatusIds() {
       runBlocking {
-         val kodein = mockJsonKodein {
+         startMockJsonKoin {
             """
                [
                   {
@@ -98,7 +104,7 @@ class HomeTimelineTest {
             """
          }
 
-         val store = MastodonStore(kodein)
+         val store = MastodonStore()
 
          store.mutation.setCredential(
             Credential(URL("https://example.com"), "0123456789abcdef"))
@@ -111,7 +117,7 @@ class HomeTimelineTest {
 
    @Test fun entitiesIsStored() {
       runBlocking {
-         val kodein = mockJsonKodein {
+         startMockJsonKoin {
             """
                [
                   {
@@ -163,7 +169,7 @@ class HomeTimelineTest {
             """
          }
 
-         val store = MastodonStore(kodein)
+         val store = MastodonStore()
 
          store.mutation.setCredential(
             Credential(URL("https://example.com"), "0123456789abcdef"))
@@ -250,33 +256,39 @@ class HomeTimelineTest {
       boostedDate
    )
 
-   private fun mockJsonKodein(mockJson: suspend (HttpRequestData) -> String) = Kodein {
-      bind<TimeZone>() with provider { TimeZone.getTimeZone("UTC") }
+   private fun startMockJsonKoin(mockJson: suspend (HttpRequestData) -> String) {
+      val module = module {
+         single { TimeZone.getTimeZone("UTC") }
 
-      bind<HttpClient>() with provider {
-         @OptIn(UnstableDefault::class)
-         HttpClient(MockEngine) {
-            install(JsonFeature) {
-               val jsonConfiguration = JsonConfiguration(ignoreUnknownKeys = true)
-               serializer = KotlinxSerializer(Json(jsonConfiguration))
-            }
+         factory {
+            @OptIn(UnstableDefault::class)
+            HttpClient(MockEngine) {
+               install(JsonFeature) {
+                  val jsonConfiguration = JsonConfiguration(ignoreUnknownKeys = true)
+                  serializer = KotlinxSerializer(Json(jsonConfiguration))
+               }
 
-            defaultRequest {
-               accept(ContentType.Application.Json)
-            }
+               defaultRequest {
+                  accept(ContentType.Application.Json)
+               }
 
-            engine {
-               addHandler { request ->
-                  val json = mockJson(request)
+               engine {
+                  addHandler { request ->
+                     val json = mockJson(request)
 
-                  respond(json,
-                     headers = headersOf(
-                        "Content-Type" to listOf(ContentType.Application.Json.toString())
+                     respond(json,
+                        headers = headersOf(
+                           "Content-Type" to listOf(ContentType.Application.Json.toString())
+                        )
                      )
-                  )
+                  }
                }
             }
          }
+      }
+
+      startKoin {
+         modules(module)
       }
    }
 }

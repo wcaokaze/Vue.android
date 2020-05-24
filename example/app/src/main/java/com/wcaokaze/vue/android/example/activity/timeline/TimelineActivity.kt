@@ -21,7 +21,6 @@ import android.content.*
 import android.os.*
 import android.widget.*
 import androidx.recyclerview.widget.*
-import com.wcaokaze.vue.android.example.Application
 import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.activity.status.*
@@ -29,8 +28,7 @@ import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
 import koshian.androidx.*
 import kotlinx.coroutines.*
-import org.kodein.di.*
-import org.kodein.di.android.*
+import org.koin.android.ext.android.*
 import vue.*
 import vue.androidx.*
 import vue.koshian.recyclerview.*
@@ -38,14 +36,12 @@ import vue.koshian.*
 import vue.stream.*
 import kotlin.contracts.*
 
-class TimelineActivity : Activity(), VComponentInterface<Store>, KodeinAware {
-   override val kodein by closestKodein()
+class TimelineActivity : Activity(), VComponentInterface<Store> {
    override val componentLifecycle = ComponentLifecycle(this)
 
    override lateinit var componentView: FrameLayout
 
-   override val store: Store
-      get() = (application as Application).store
+   override val store: Store by inject()
 
    private val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
 

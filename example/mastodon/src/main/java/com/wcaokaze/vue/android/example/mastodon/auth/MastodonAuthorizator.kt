@@ -20,12 +20,11 @@ import com.wcaokaze.vue.android.example.mastodon.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.oauth.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.apps.*
-import org.kodein.di.*
 import java.net.*
 
-class MastodonAuthorizator(override val kodein: Kodein) : KodeinAware {
+class MastodonAuthorizator {
    private fun getMastodonInstance(rootUrl: URL)
-         = MastodonInstance(kodein, rootUrl.toExternalForm())
+         = MastodonInstance(rootUrl.toExternalForm())
 
    suspend fun registerClient(instanceUrl: URL, redirectUri: String): Client {
       val mastodonClient = getMastodonInstance(instanceUrl)

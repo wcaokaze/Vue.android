@@ -18,6 +18,7 @@
 package com.wcaokaze.vue.android.example
 
 import android.app.Application
+import androidx.annotation.*
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.features.*
@@ -29,34 +30,51 @@ import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
-import org.kodein.di.*
-import org.kodein.di.generic.*
+import org.koin.android.ext.koin.*
+import org.koin.core.context.*
+import org.koin.dsl.*
 import java.util.*
 
-class Application : Application(), KodeinAware {
-   override val kodein = Kodein.lazy {
-      bind<TimeZone>() with provider { TimeZone.getDefault() }
+class Application : Application() {
+   companion object {
+      @set:VisibleForTesting
+      internal var mastodonModule = module {
+         single { TimeZone.getDefault() }
 
-      bind<HttpClient>() with provider {
-         @OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
-         HttpClient(Android) {
-            install(JsonFeature) {
-               val jsonConfiguration = JsonConfiguration(ignoreUnknownKeys = true)
-               serializer = KotlinxSerializer(Json(jsonConfiguration))
-            }
+         factory {
+            @OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
+            HttpClient(Android) {
+               install(JsonFeature) {
+                  val jsonConfiguration = JsonConfiguration(ignoreUnknownKeys = true)
+                  serializer = KotlinxSerializer(Json(jsonConfiguration))
+               }
 
-            ContentEncoding()
+               ContentEncoding()
 
-            defaultRequest {
-               accept(ContentType.Application.Json)
+               defaultRequest {
+                  accept(ContentType.Application.Json)
+               }
             }
          }
       }
+
+      @set:VisibleForTesting
+      internal var applicationModule = module {
+         single { Store() }
+      }
    }
 
-   val store    by lazy { Store(kodein, this) }
-   val state    by lazy { store.state }
-   val mutation by lazy { store.mutation }
-   val action   by lazy { store.action }
-   val getter   by lazy { store.getter }
+   override fun onCreate() {
+      super.onCreate()
+
+      startKoin {
+         androidLogger()
+         androidContext(this@Application)
+
+         modules(
+            mastodonModule,
+            applicationModule
+         )
+      }
+   }
 }

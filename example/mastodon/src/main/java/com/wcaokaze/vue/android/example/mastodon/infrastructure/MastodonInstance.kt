@@ -17,14 +17,12 @@
 package com.wcaokaze.vue.android.example.mastodon.infrastructure
 
 import io.ktor.client.*
-import org.kodein.di.*
-import org.kodein.di.generic.*
+import org.koin.core.*
 
 internal class MastodonInstance(
-      override val kodein: Kodein,
       rootUrl: String
-) : KodeinAware {
-   val httpClient: HttpClient by instance()
+) : KoinComponent {
+   val httpClient: HttpClient by inject()
 
    val rootUrl = if (rootUrl.endsWith('/')) {
       rootUrl

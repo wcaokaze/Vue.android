@@ -23,18 +23,17 @@ import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines.*
 import io.ktor.client.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.*
-import org.kodein.di.*
-import org.kodein.di.generic.*
+import org.koin.core.*
 import vue.*
 import vue.vuex.*
 import java.io.*
 import java.util.*
 import kotlin.collections.*
 
-class MastodonStore(private val kodein: Kodein)
+class MastodonStore
    : VuexStore<MastodonState, MastodonMutation, MastodonAction, MastodonGetter>()
 {
-   override fun createState()    = MastodonState(kodein)
+   override fun createState()    = MastodonState()
    override fun createMutation() = MastodonMutation()
    override fun createAction()   = MastodonAction()
    override fun createGetter()   = MastodonGetter()
@@ -42,9 +41,9 @@ class MastodonStore(private val kodein: Kodein)
 
 // =============================================================================
 
-class MastodonState(override val kodein: Kodein) : VuexState(), KodeinAware {
-   val httpClient: HttpClient by instance()
-   val timeZone: TimeZone by instance()
+class MastodonState : VuexState(), KoinComponent {
+   val httpClient: HttpClient by inject()
+   val timeZone: TimeZone by inject()
 
    val credential = state<Credential?>(null)
 
@@ -104,7 +103,7 @@ class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGette
       val statusIds = iStatuses.map { converter.convertStatus(it).id }
       mutation.addAllConvertedEntities(converter)
 
-      GlobalScope.launch(Dispatchers.Main) {
+      GlobalScope.launch {
          for (account in converter.getAllConvertedAccounts()) {
             fetchAccountIcon(account)
          }
@@ -195,5 +194,5 @@ class MastodonGetter : VuexGetter<MastodonState>() {
          = state.credential() ?: throw IOException()
 
    internal fun getMastodonInstance(credential: Credential)
-         = MastodonInstance(state.kodein, credential.instanceUrl.toExternalForm())
+         = MastodonInstance(credential.instanceUrl.toExternalForm())
 }
