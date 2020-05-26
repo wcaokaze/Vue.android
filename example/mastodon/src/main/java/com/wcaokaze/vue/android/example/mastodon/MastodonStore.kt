@@ -17,7 +17,6 @@
 package com.wcaokaze.vue.android.example.mastodon
 
 import android.graphics.*
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.statuses.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines.*
 import io.ktor.client.*
@@ -42,7 +41,6 @@ class MastodonStore
 // =============================================================================
 
 class MastodonState : VuexState(), KoinComponent {
-   val httpClient: HttpClient by inject()
    val timeZone: TimeZone by inject()
 
    val credential = state<Credential?>(null)
@@ -85,25 +83,29 @@ class MastodonMutation : VuexMutation<MastodonState>() {
 
 // =============================================================================
 
-class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGetter>() {
+class MastodonAction
+   : VuexAction<MastodonState, MastodonMutation, MastodonGetter>(),
+   KoinComponent
+{
+   private val httpClient: HttpClient by inject()
+
    suspend fun fetchHomeTimeline(
       maxId: Status.Id? = null,
       sinceId: Status.Id? = null
    ): List<Status.Id> {
       val credential = getter.getCredentialOrThrow()
+      val timelineService = getTimelineService(credential)
 
-      val iStatuses = getter.getMastodonInstance(credential)
-         .getHomeTimeline(
-            credential.accessToken,
-            maxId = maxId?.id,
-            sinceId = sinceId?.id
-         )
+      val iStatuses = timelineService.fetchHomeTimeline(
+         maxId = maxId?.id,
+         sinceId = sinceId?.id
+      )
 
       val converter = EntityConverter(state.timeZone)
       val statusIds = iStatuses.map { converter.convertStatus(it).id }
       mutation.addAllConvertedEntities(converter)
 
-      GlobalScope.launch {
+      GlobalScope.launch(Dispatchers.Main) {
          for (account in converter.getAllConvertedAccounts()) {
             fetchAccountIcon(account)
          }
@@ -119,7 +121,7 @@ class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGette
       }
 
       val bitmapByteArray: ByteArray = try {
-         state.httpClient.get(account.iconUrl)
+         httpClient.get(account.iconUrl)
       } catch (e: CancellationException) {
          throw e
       } catch (e: Exception) {
@@ -135,9 +137,9 @@ class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGette
 
    suspend fun boost(statusId: Status.Id) {
       val credential = getter.getCredentialOrThrow()
+      val statusService = getStatusService(credential)
 
-      val iStatus = getter.getMastodonInstance(credential)
-         .reblogStatus(credential.accessToken, statusId.id)
+      val iStatus = statusService.reblogStatus(statusId.id)
 
       val converter = EntityConverter(state.timeZone)
       converter.convertStatus(iStatus)
@@ -146,9 +148,9 @@ class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGette
 
    suspend fun unboost(statusId: Status.Id) {
       val credential = getter.getCredentialOrThrow()
+      val statusService = getStatusService(credential)
 
-      val iStatus = getter.getMastodonInstance(credential)
-         .unreblogStatus(credential.accessToken, statusId.id)
+      val iStatus = statusService.unreblogStatus(statusId.id)
 
       val converter = EntityConverter(state.timeZone)
       converter.convertStatus(iStatus)
@@ -157,9 +159,9 @@ class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGette
 
    suspend fun favorite(statusId: Status.Id) {
       val credential = getter.getCredentialOrThrow()
+      val statusService = getStatusService(credential)
 
-      val iStatus = getter.getMastodonInstance(credential)
-         .favouriteStatus(credential.accessToken, statusId.id)
+      val iStatus = statusService.favouriteStatus(statusId.id)
 
       val converter = EntityConverter(state.timeZone)
       converter.convertStatus(iStatus)
@@ -168,13 +170,27 @@ class MastodonAction : VuexAction<MastodonState, MastodonMutation, MastodonGette
 
    suspend fun unfavorite(statusId: Status.Id) {
       val credential = getter.getCredentialOrThrow()
+      val statusService = getStatusService(credential)
 
-      val iStatus = getter.getMastodonInstance(credential)
-         .unfavouriteStatus(credential.accessToken, statusId.id)
+      val iStatus = statusService.unfavouriteStatus(statusId.id)
 
       val converter = EntityConverter(state.timeZone)
       converter.convertStatus(iStatus)
       mutation.addAllConvertedEntities(converter)
+   }
+
+   private fun getStatusService(credential: Credential): StatusService {
+      return StatusServiceImpl(
+         credential.instanceUrl.toExternalForm(),
+         credential.accessToken
+      )
+   }
+
+   private fun getTimelineService(credential: Credential): TimelineService {
+      return TimelineServiceImpl(
+         credential.instanceUrl.toExternalForm(),
+         credential.accessToken
+      )
    }
 }
 
@@ -192,7 +208,4 @@ class MastodonGetter : VuexGetter<MastodonState>() {
 
    fun getCredentialOrThrow(): Credential
          = state.credential() ?: throw IOException()
-
-   internal fun getMastodonInstance(credential: Credential)
-         = MastodonInstance(credential.instanceUrl.toExternalForm())
 }

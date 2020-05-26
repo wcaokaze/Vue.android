@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines
@@ -20,17 +19,27 @@ package com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import io.ktor.client.request.*
 
-internal suspend fun MastodonInstance.getHomeTimeline(
-      accessToken: String,
+internal interface TimelineService {
+   suspend fun fetchHomeTimeline(
       local: Boolean? = null,
       onlyMedia: Boolean? = null,
       maxId: String? = null,
       sinceId: String? = null,
       limit: Int? = null
-): List<Status> {
-   return httpClient.use {
-      it.get(getApiUrl("api/v1/timelines/home")) {
-         header("Authorization", "Bearer $accessToken")
+   ): List<Status>
+}
+
+internal class TimelineServiceImpl(instanceUrl: String, accessToken: String)
+   : ApiServiceBase(instanceUrl, accessToken), TimelineService
+{
+   override suspend fun fetchHomeTimeline(
+      local: Boolean?,
+      onlyMedia: Boolean?,
+      maxId: String?,
+      sinceId: String?,
+      limit: Int?
+   ): List<Status> {
+      return get("api/v1/timelines/home") {
          parameter("local", local)
          parameter("only_media", onlyMedia)
          parameter("max_id", maxId)
