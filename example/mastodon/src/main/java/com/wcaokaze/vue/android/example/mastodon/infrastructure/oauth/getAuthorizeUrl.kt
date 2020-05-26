@@ -16,16 +16,17 @@
 
 package com.wcaokaze.vue.android.example.mastodon.infrastructure.oauth
 
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import io.ktor.http.*
 
-internal fun MastodonInstance.getAuthorizeUrl(
-      clientId: String,
-      responseType: String,
-      redirectUri: String,
-      scopes: List<String>
+internal fun getAuthorizeUrl(
+   instanceUrl: String,
+   clientId: String,
+   responseType: String,
+   redirectUri: String,
+   scopes: List<String>
 ): String {
-   val urlBuilder = URLBuilder(getApiUrl("oauth/authorize"))
+   val urlBuilder = URLBuilder(instanceUrl)
+   urlBuilder.path("oauth/authorize")
    urlBuilder.parameters.append("client_id", clientId)
    urlBuilder.parameters.append("response_type", responseType)
    urlBuilder.parameters.append("redirect_uri", redirectUri)
