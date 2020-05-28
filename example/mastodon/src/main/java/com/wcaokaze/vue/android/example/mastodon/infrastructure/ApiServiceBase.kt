@@ -22,7 +22,7 @@ import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import org.koin.core.*
 
-internal abstract class ApiServiceBase(
+abstract class ApiServiceBase(
    instanceUrl: String,
    protected val accessToken: String
 ) : KoinComponent {

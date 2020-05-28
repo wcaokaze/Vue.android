@@ -23,6 +23,7 @@ import io.ktor.client.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.*
 import org.koin.core.*
+import org.koin.core.parameter.*
 import vue.*
 import vue.vuex.*
 import java.io.*
@@ -88,6 +89,12 @@ class MastodonAction
    KoinComponent
 {
    private val httpClient: HttpClient by inject()
+
+   private fun getStatusService(credential: Credential): StatusService
+         = get { parametersOf(credential) }
+
+   private fun getTimelineService(credential: Credential): TimelineService
+         = get { parametersOf(credential) }
 
    suspend fun fetchHomeTimeline(
       maxId: Status.Id? = null,
@@ -177,20 +184,6 @@ class MastodonAction
       val converter = EntityConverter(state.timeZone)
       converter.convertStatus(iStatus)
       mutation.addAllConvertedEntities(converter)
-   }
-
-   private fun getStatusService(credential: Credential): StatusService {
-      return StatusServiceImpl(
-         credential.instanceUrl.toExternalForm(),
-         credential.accessToken
-      )
-   }
-
-   private fun getTimelineService(credential: Credential): TimelineService {
-      return TimelineServiceImpl(
-         credential.instanceUrl.toExternalForm(),
-         credential.accessToken
-      )
    }
 }
 

@@ -19,7 +19,7 @@ package com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 import io.ktor.client.request.*
 
-internal interface TimelineService {
+interface TimelineService {
    suspend fun fetchHomeTimeline(
       local: Boolean? = null,
       onlyMedia: Boolean? = null,
@@ -29,7 +29,7 @@ internal interface TimelineService {
    ): List<Status>
 }
 
-internal class TimelineServiceImpl(instanceUrl: String, accessToken: String)
+class TimelineServiceImpl(instanceUrl: String, accessToken: String)
    : ApiServiceBase(instanceUrl, accessToken), TimelineService
 {
    override suspend fun fetchHomeTimeline(

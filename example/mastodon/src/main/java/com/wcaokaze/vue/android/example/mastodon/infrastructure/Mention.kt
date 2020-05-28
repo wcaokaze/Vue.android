@@ -20,7 +20,7 @@ package com.wcaokaze.vue.android.example.mastodon.infrastructure
 import kotlinx.serialization.*
 
 @Serializable
-internal data class Mention(
+data class Mention(
    val url: String,
    val username: String,
    val acct: String? = null,

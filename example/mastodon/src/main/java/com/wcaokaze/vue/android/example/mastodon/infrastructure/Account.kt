@@ -20,7 +20,7 @@ package com.wcaokaze.vue.android.example.mastodon.infrastructure
 import kotlinx.serialization.*
 
 @Serializable
-internal data class Account(
+data class Account(
    val id: String,
    val username: String,
    val acct: String? = null,
@@ -35,7 +35,7 @@ internal data class Account(
    val fields: List<Field>? = null
 ) {
    @Serializable
-   internal data class Field(
+   data class Field(
       val name: String? = null,
       val value: String? = null
    )

@@ -18,14 +18,14 @@ package com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.statuses
 
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
 
-internal interface StatusService {
+interface StatusService {
    suspend fun reblogStatus(statusId: String): Status
    suspend fun unreblogStatus(statusId: String): Status
    suspend fun favouriteStatus(statusId: String): Status
    suspend fun unfavouriteStatus(statusId: String): Status
 }
 
-internal class StatusServiceImpl(instanceUrl: String, accessToken: String)
+class StatusServiceImpl(instanceUrl: String, accessToken: String)
    : ApiServiceBase(instanceUrl, accessToken), StatusService
 {
    override suspend fun reblogStatus(statusId: String): Status

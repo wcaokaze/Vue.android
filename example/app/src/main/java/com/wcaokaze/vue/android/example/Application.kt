@@ -19,6 +19,9 @@ package com.wcaokaze.vue.android.example
 
 import android.app.Application
 import androidx.annotation.*
+import com.wcaokaze.vue.android.example.mastodon.*
+import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.statuses.*
+import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines.*
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.features.*
@@ -40,6 +43,18 @@ class Application : Application() {
       @set:VisibleForTesting
       internal var mastodonModule = module {
          single { TimeZone.getDefault() }
+
+         factory<StatusService> { (credential: Credential) ->
+            StatusServiceImpl(
+               credential.instanceUrl.toExternalForm(),
+               credential.accessToken)
+         }
+
+         factory<TimelineService> { (credential: Credential) ->
+            TimelineServiceImpl(
+               credential.instanceUrl.toExternalForm(),
+               credential.accessToken)
+         }
 
          factory {
             @OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
