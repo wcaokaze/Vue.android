@@ -12,14 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package com.wcaokaze.vue.android.example
+package com.wcaokaze.vue.android.example.activity.timeline
 
-import android.app.Application
-import androidx.annotation.*
+import androidx.test.ext.junit.runners.*
+import androidx.test.rule.*
+import org.junit.*
+import org.junit.runner.*
+import org.koin.core.qualifier.*
+import org.koin.dsl.*
+import org.koin.test.*
+import kotlin.test.Test
+
+import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.mastodon.*
+import com.wcaokaze.vue.android.example.mastodon.infrastructure.Status
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.statuses.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines.*
 import io.ktor.client.*
@@ -31,22 +39,41 @@ import io.ktor.client.features.json.serializer.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.util.*
+import kotlinx.coroutines.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
-import org.koin.android.ext.koin.*
-import org.koin.core.context.*
-import org.koin.core.module.*
-import org.koin.core.qualifier.*
-import org.koin.dsl.*
-import vue.vuex.VuexState
 import vue.vuex.preference.*
 import java.util.*
 
-class Application : Application() {
-   companion object {
-      private fun getKoin() = KoinContextHandler.get()
+@RunWith(AndroidJUnit4::class)
+class TimelineTest : KoinTest {
+   @get:Rule
+   val activityRule = ActivityTestRule(
+      TimelineActivity::class.java,
+      /* initialTouchMode = */ false,
+      /* launchActivity = */ false)
 
-      private var _mastodonModule = module {
+   @Test fun fetchFirstTime() {
+      runBlocking {
+         startMockedTimelineModule(object : TimelineService {
+            override suspend fun fetchHomeTimeline(
+               local: Boolean?,
+               onlyMedia: Boolean?,
+               maxId: String?,
+               sinceId: String?,
+               limit: Int?
+            ): List<Status> {
+               return emptyList()
+            }
+         })
+
+         activityRule.launchActivity(null)
+         delay(500L)
+      }
+   }
+
+   private fun startMockedTimelineModule(timelineService: TimelineService) {
+      Application.mastodonModule = module {
          single { TimeZone.getDefault() }
 
          factory<StatusService> { (credential: Credential) ->
@@ -55,11 +82,7 @@ class Application : Application() {
                credential.accessToken)
          }
 
-         factory<TimelineService> { (credential: Credential) ->
-            TimelineServiceImpl(
-               credential.instanceUrl.toExternalForm(),
-               credential.accessToken)
-         }
+         factory { (_: Credential) -> timelineService }
 
          factory {
             @OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
@@ -78,58 +101,16 @@ class Application : Application() {
          }
       }
 
-      internal var mastodonModule: Module
-         get() = _mastodonModule
-         @VisibleForTesting set(value) {
-            getKoin().unloadModules(listOf(_mastodonModule))
-            _mastodonModule = value
-            getKoin().loadModules(listOf(value))
-         }
-
-      private var _applicationModule = module {
+      Application.applicationModule = module {
          single { Store() }
 
-         single { PreferenceFile("Credential") }
-
-         single(named("instanceUrlPreference")) {
-            PreferenceState(NullableStringPreferenceLoader,
-               context = get(),
-               file = get(),
-               key = "instanceUrl",
-               default = null
-            )
+         single<PreferenceState<String?>>(named("instanceUrlPreference")) {
+            StubPreferenceState { "https://example.com" }
          }
 
-         single(named("accessTokenPreference")) {
-            PreferenceState(NullableStringPreferenceLoader,
-               context = get(),
-               file = get(),
-               key = "accessToken",
-               default = null
-            )
+         single<PreferenceState<String?>>(named("accessTokenPreference")) {
+            StubPreferenceState { "accessToken" }
          }
-      }
-
-      internal var applicationModule: Module
-         get() = _applicationModule
-         @VisibleForTesting set(value) {
-            getKoin().unloadModules(listOf(_applicationModule))
-            _applicationModule = value
-            getKoin().loadModules(listOf(value))
-         }
-   }
-
-   override fun onCreate() {
-      super.onCreate()
-
-      startKoin {
-         androidLogger()
-         androidContext(this@Application)
-
-         modules(
-            mastodonModule,
-            applicationModule
-         )
       }
    }
 }

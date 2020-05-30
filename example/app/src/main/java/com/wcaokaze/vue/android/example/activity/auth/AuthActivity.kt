@@ -25,9 +25,7 @@ import android.widget.*
 import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.BuildConfig
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.CREDENTIAL_PREFERENCE
-import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.activity.timeline.*
-import com.wcaokaze.vue.android.example.mastodon.*
 import com.wcaokaze.vue.android.example.mastodon.auth.*
 import koshian.*
 import kotlinx.coroutines.*
@@ -63,7 +61,7 @@ class AuthActivity : Activity(), VComponentInterface<Store> {
 
       watcher(getter[CREDENTIAL_PREFERENCE].credential, immediate = true) {
          if (it != null) {
-            startTimelineActivity(it)
+            startTimelineActivity()
          }
       }
    }
@@ -77,9 +75,7 @@ class AuthActivity : Activity(), VComponentInterface<Store> {
       publishCredential(authCode)
    }
 
-   private fun startTimelineActivity(credential: Credential) {
-      mutation[MASTODON].setCredential(credential)
-
+   private fun startTimelineActivity() {
       startActivity(
          Intent(this, TimelineActivity::class.java))
 

@@ -20,7 +20,7 @@ import android.content.*
 
 /**
  * [PreferenceState] for String?.
- * @see PreferenceState
+ * @see [PreferenceState][PreferenceState.Companion.invoke]
  */
 fun nullableStringPreferenceState(
       context: Context,
@@ -31,7 +31,7 @@ fun nullableStringPreferenceState(
 
 /**
  * [PreferenceState] for String?.
- * @see PreferenceState
+ * @see [PreferenceState][PreferenceState.Companion.invoke]
  */
 fun nullableStringPreferenceState(
       context: Context,

@@ -18,6 +18,7 @@ package com.wcaokaze.vue.android.example
 
 import com.wcaokaze.vue.android.example.mastodon.*
 import org.koin.core.*
+import org.koin.core.qualifier.*
 import vue.*
 import vue.vuex.*
 import vue.vuex.preference.*
@@ -38,10 +39,8 @@ class CredentialPreferenceStore
 }
 
 class CredentialPreferenceState : VuexState(), KoinComponent {
-   private val file = PreferenceFile("Credential")
-
-   val instanceUrl by nullableStringPreferenceState(get(), file, default = null)
-   val accessToken by nullableStringPreferenceState(get(), file, default = null)
+   val instanceUrl: PreferenceState<String?> = get(named("instanceUrlPreference"))
+   val accessToken: PreferenceState<String?> = get(named("accessTokenPreference"))
 }
 
 class CredentialPreferenceMutation : VuexMutation<CredentialPreferenceState>() {

@@ -20,8 +20,10 @@ import android.app.*
 import android.content.*
 import android.os.*
 import android.widget.*
+import androidx.annotation.*
 import androidx.recyclerview.widget.*
 import com.wcaokaze.vue.android.example.*
+import com.wcaokaze.vue.android.example.Store.ModuleKeys.CREDENTIAL_PREFERENCE
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.activity.status.*
 import com.wcaokaze.vue.android.example.mastodon.*
@@ -43,7 +45,8 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
 
    override val store: Store by inject()
 
-   private val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
+   @VisibleForTesting
+   val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
 
    private val fetchingNewerJob = state(Job.completed())
    private val isFetchingNewer = getter { fetchingNewerJob().toReactiveField()() }
@@ -51,6 +54,12 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       buildContentView()
+
+      val credential = getter[CREDENTIAL_PREFERENCE].credential()
+
+      if (credential != null) {
+         mutation[MASTODON].setCredential(credential)
+      }
 
       launch {
          val statusIds = try {

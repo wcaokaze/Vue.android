@@ -17,18 +17,43 @@
 package vue.vuex.preference
 
 import android.content.*
+import vue.vuex.*
 import kotlin.reflect.*
 
-class PreferenceStateDelegate<T>(
+interface PreferenceStateDelegate<T> {
+   companion object {
+      operator fun <T> invoke(
+         loader: PreferenceState.Loader<T>,
+         context: Context,
+         file: PreferenceFile,
+         key: String?,
+         default: T
+      ): PreferenceStateDelegate<T> {
+         return PreferenceStateDelegateImpl(
+            loader,
+            context,
+            file,
+            key,
+            default
+         )
+      }
+   }
+
+   operator fun getValue(thisRef: VuexState, property: KProperty<*>): PreferenceState<T>
+}
+
+private class PreferenceStateDelegateImpl<T>(
       private val loader: PreferenceState.Loader<T>,
       private val context: Context,
       private val file: PreferenceFile,
       private val key: String?,
       private val default: T
-) {
+) : PreferenceStateDelegate<T> {
    private var preferenceState: PreferenceState<T>? = null
 
-   operator fun getValue(thisRef: Any?, property: KProperty<*>): PreferenceState<T> {
+   override operator fun getValue(thisRef: VuexState,
+                                  property: KProperty<*>): PreferenceState<T>
+   {
       if (preferenceState != null) { return preferenceState!! }
 
       synchronized (this) {

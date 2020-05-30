@@ -20,7 +20,7 @@ import android.content.*
 
 /**
  * [PreferenceState] for Float.
- * @see PreferenceState
+ * @see [PreferenceState][PreferenceState.Companion.invoke]
  */
 fun floatPreferenceState(
       context: Context,
@@ -31,7 +31,7 @@ fun floatPreferenceState(
 
 /**
  * [PreferenceState] for Float.
- * @see PreferenceState
+ * @see [PreferenceState][PreferenceState.Companion.invoke]
  */
 fun floatPreferenceState(
       context: Context,
