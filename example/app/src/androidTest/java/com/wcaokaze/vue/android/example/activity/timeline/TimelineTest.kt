@@ -222,6 +222,58 @@ class TimelineTest : KoinTest {
       }
    }
 
+   @Test fun fetchOlder_ignoreSecondTime() {
+      runBlocking {
+         startMockedTimelineModule(object : TimelineService {
+            private var invocationCount = 0
+
+            override suspend fun fetchHomeTimeline(
+               local: Boolean?, onlyMedia: Boolean?,
+               maxId: String?, sinceId: String?, limit: Int?
+            ): List<IStatus> {
+               val statuses = when (invocationCount) {
+                  0 -> {
+                     (21 downTo 1).map {
+                        iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                     }
+                  }
+
+                  1 -> {
+                     delay(50L)
+
+                     listOf(
+                        iStatus("0", iAccount("0", "wcaokaze"), "content0")
+                     )
+                  }
+
+                  else -> fail("fetchOlder should ignore on the second time")
+               }
+
+               invocationCount++
+
+               return statuses
+            }
+         })
+
+         activityRule.launchActivity(null)
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchOlder()
+         }
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchOlder()
+         }
+
+         delay(75L) // wait for launching the coroutine
+
+         assertEquals(
+            (21 downTo 0).map { StatusItem(Status.Id(it.toString())) },
+            activityRule.activity.recyclerViewItems()
+         )
+      }
+   }
+
    private fun startMockedTimelineModule(timelineService: TimelineService) {
       Application.mastodonModule = module {
          single { TimeZone.getDefault() }
