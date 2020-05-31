@@ -190,6 +190,38 @@ class TimelineTest : KoinTest {
       }
    }
 
+   @Test fun fetchOlder_indicator() {
+      runBlocking {
+         startMockedTimelineModule(object : TimelineService {
+            override suspend fun fetchHomeTimeline(
+               local: Boolean?, onlyMedia: Boolean?,
+               maxId: String?, sinceId: String?, limit: Int?
+            ): List<IStatus> {
+               return if (maxId == null) {
+                  (21 downTo 1).map {
+                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                  }
+               } else {
+                  delay(3000L)
+                  emptyList()
+               }
+            }
+         })
+
+         activityRule.launchActivity(null)
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchOlder()
+         }
+
+         delay(25L) // wait for launching the coroutine
+
+         assertTrue(
+            activityRule.activity.recyclerViewItems().lastOrNull() is LoadingIndicatorItem
+         )
+      }
+   }
+
    private fun startMockedTimelineModule(timelineService: TimelineService) {
       Application.mastodonModule = module {
          single { TimeZone.getDefault() }

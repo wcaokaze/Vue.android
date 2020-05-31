@@ -306,7 +306,7 @@ class TimelineRecyclerViewAdapter(context: Context,
                   layout.width  = 32.dp
                   layout.height = 32.dp
                   layout.gravity = CENTER_HORIZONTAL
-                  layout.margins = 8.dp
+                  layout.margins = 16.dp
                }
             }
          }
