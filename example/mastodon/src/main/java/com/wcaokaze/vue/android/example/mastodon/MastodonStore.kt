@@ -24,6 +24,7 @@ import io.ktor.client.request.*
 import kotlinx.coroutines.*
 import org.koin.core.*
 import org.koin.core.parameter.*
+import org.koin.core.qualifier.*
 import vue.*
 import vue.vuex.*
 import java.io.*
@@ -98,14 +99,16 @@ class MastodonAction
 
    suspend fun fetchHomeTimeline(
       maxId: Status.Id? = null,
-      sinceId: Status.Id? = null
+      sinceId: Status.Id? = null,
+      statusCountLimit: Int
    ): List<Status.Id> {
       val credential = getter.getCredentialOrThrow()
       val timelineService = getTimelineService(credential)
 
       val iStatuses = timelineService.fetchHomeTimeline(
          maxId = maxId?.id,
-         sinceId = sinceId?.id
+         sinceId = sinceId?.id,
+         limit = statusCountLimit
       )
 
       val converter = EntityConverter(state.timeZone)

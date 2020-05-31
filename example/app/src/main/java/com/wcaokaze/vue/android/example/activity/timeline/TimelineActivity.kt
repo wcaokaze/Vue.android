@@ -31,6 +31,7 @@ import koshian.*
 import koshian.androidx.*
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.*
+import org.koin.core.qualifier.*
 import vue.*
 import vue.androidx.*
 import vue.koshian.recyclerview.*
@@ -44,6 +45,7 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
    override lateinit var componentView: FrameLayout
 
    override val store: Store by inject()
+   private val fetchingStatusCountLimit: Int by inject(named("fetchingTimelineStatusCountLimit"))
 
    @VisibleForTesting
    val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
@@ -63,7 +65,7 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
 
       launch {
          val statusIds = try {
-            action[MASTODON].fetchHomeTimeline()
+            action[MASTODON].fetchHomeTimeline(statusCountLimit = fetchingStatusCountLimit)
          } catch (e: CancellationException) {
             throw e
          } catch (e: Exception) {
@@ -92,14 +94,22 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
                ?.statusId
                ?: throw CancellationException()
 
-            val newerIds = action[MASTODON].fetchHomeTimeline(sinceId = sinceId)
+            val statusCountLimit = fetchingStatusCountLimit
 
-            val newerItems = newerIds.map { StatusItem(it) }
+            val newerItems = action[MASTODON]
+               .fetchHomeTimeline(
+                  sinceId = sinceId,
+                  statusCountLimit = statusCountLimit)
+               .map { StatusItem(it) }
 
             val olderItems = recyclerViewItems()
                .dropWhile { it is LoadingIndicatorItem || it is MissingStatusItem }
 
-            recyclerViewItems.value = newerItems + olderItems
+            recyclerViewItems.value = if (newerItems.size < statusCountLimit) {
+               newerItems + olderItems
+            } else {
+               newerItems + MissingStatusItem + olderItems
+            }
          } catch (e: CancellationException) {
             throw e
          } catch (e: Exception) {

@@ -36,6 +36,7 @@ import vue.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
+import org.koin.core.qualifier.*
 import java.io.*
 import java.net.*
 import java.util.*
@@ -53,7 +54,7 @@ class HomeTimelineTest : KoinTest {
          val store = MastodonStore()
 
          assertFails {
-            store.action.fetchHomeTimeline()
+            store.action.fetchHomeTimeline(statusCountLimit = 20)
          }
       }
    }
@@ -70,7 +71,7 @@ class HomeTimelineTest : KoinTest {
             store.mutation.setCredential(
                Credential(URL("https://example.com"), "0123456789abcdef"))
 
-            store.action.fetchHomeTimeline()
+            store.action.fetchHomeTimeline(statusCountLimit = 20)
          }
 
          val message = exception.message
@@ -111,7 +112,7 @@ class HomeTimelineTest : KoinTest {
          store.mutation.setCredential(
             Credential(URL("https://example.com"), "0123456789abcdef"))
 
-         val statusIds = store.action.fetchHomeTimeline()
+         val statusIds = store.action.fetchHomeTimeline(statusCountLimit = 20)
          val expectedIds = listOf(Status.Id("0"), Status.Id("1"))
          assertEquals(expectedIds, statusIds)
       }
@@ -176,7 +177,7 @@ class HomeTimelineTest : KoinTest {
          store.mutation.setCredential(
             Credential(URL("https://example.com"), "0123456789abcdef"))
 
-         store.action.fetchHomeTimeline()
+         store.action.fetchHomeTimeline(statusCountLimit = 20)
 
          val expectedAccounts = mapOf(
             Account.Id("0") to account(id = "0", name = "Account 0"),
@@ -261,6 +262,8 @@ class HomeTimelineTest : KoinTest {
    private fun startMockJsonKoin(mockJson: suspend (HttpRequestData) -> String) {
       val module = module {
          single { TimeZone.getTimeZone("UTC") }
+
+         factory(named("fetchingTimelineStatusCountLimit")) { 20 }
 
          factory<StatusService> { (credential: Credential) ->
             StatusServiceImpl(

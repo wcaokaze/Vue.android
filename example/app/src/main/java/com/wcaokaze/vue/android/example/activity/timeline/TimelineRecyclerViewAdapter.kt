@@ -321,7 +321,7 @@ class TimelineRecyclerViewAdapter(context: Context,
 
                ImageView {
                   layout.gravity = CENTER_HORIZONTAL
-                  layout.margins = 8.dp
+                  layout.margins = 16.dp
                   view.image = drawable(R.drawable.timeline_missing_item)
                }
             }

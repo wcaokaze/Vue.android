@@ -38,7 +38,6 @@ import org.koin.core.context.*
 import org.koin.core.module.*
 import org.koin.core.qualifier.*
 import org.koin.dsl.*
-import vue.vuex.VuexState
 import vue.vuex.preference.*
 import java.util.*
 
@@ -88,6 +87,8 @@ class Application : Application() {
 
       private var _applicationModule = module {
          single { Store() }
+
+         factory(named("fetchingTimelineStatusCountLimit")) { 20 }
 
          single { PreferenceFile("Credential") }
 
