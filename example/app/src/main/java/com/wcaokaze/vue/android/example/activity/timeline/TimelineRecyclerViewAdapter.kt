@@ -40,16 +40,31 @@ class StatusItem(val statusId: Status.Id) : TimelineRecyclerViewItem() {
 
    override fun isItemsTheSameWith(item: Any)
          = item is StatusItem && item.statusId == statusId
+
+   override fun equals(other: Any?)
+         = other is StatusItem && other.statusId == statusId
+
+   override fun hashCode() = statusId.hashCode()
+
+   override fun toString() = "StatusItem(statusId = $statusId)"
 }
 
 object LoadingIndicatorItem : TimelineRecyclerViewItem() {
    override fun isContentsTheSameWith(item: Any) = item is LoadingIndicatorItem
    override fun isItemsTheSameWith(item: Any) = item is LoadingIndicatorItem
+
+   override fun equals(other: Any?) = other is LoadingIndicatorItem
+   override fun hashCode() = 0
+   override fun toString() = "LoadingIndicatorItem"
 }
 
 object MissingStatusItem : TimelineRecyclerViewItem() {
    override fun isContentsTheSameWith(item: Any) = item is MissingStatusItem
    override fun isItemsTheSameWith(item: Any) = item is MissingStatusItem
+
+   override fun equals(other: Any?) = other is MissingStatusItem
+   override fun hashCode() = 0
+   override fun toString() = "MissingStatusItem"
 }
 
 // =============================================================================

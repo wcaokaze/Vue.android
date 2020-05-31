@@ -23,11 +23,12 @@ import org.junit.runner.*
 import org.koin.core.qualifier.*
 import org.koin.dsl.*
 import org.koin.test.*
+import kotlin.test.*
 import kotlin.test.Test
 
 import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.mastodon.*
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.Status
+import com.wcaokaze.vue.android.example.mastodon.infrastructure.Status as IStatus
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.statuses.*
 import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines.*
 import io.ktor.client.*
@@ -42,6 +43,7 @@ import io.ktor.util.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
+import vue.*
 import vue.vuex.preference.*
 import java.util.*
 
@@ -62,13 +64,28 @@ class TimelineTest : KoinTest {
                maxId: String?,
                sinceId: String?,
                limit: Int?
-            ): List<Status> {
-               return emptyList()
+            ): List<IStatus> {
+               return listOf(
+                  iStatus(
+                     "0",
+                     iAccount(
+                        "0",
+                        "wcaokaze"
+                     ),
+                     "content"
+                  )
+               )
             }
          })
 
          activityRule.launchActivity(null)
-         delay(500L)
+
+         assertEquals(
+            listOf(
+               StatusItem(Status.Id("0"))
+            ),
+            activityRule.activity.recyclerViewItems()
+         )
       }
    }
 
