@@ -274,6 +274,110 @@ class TimelineTest : KoinTest {
       }
    }
 
+   @Test fun canFetchOlder_firstTime() {
+      runBlocking {
+         startMockedTimelineModule(object : TimelineService {
+            override suspend fun fetchHomeTimeline(
+               local: Boolean?, onlyMedia: Boolean?,
+               maxId: String?, sinceId: String?, limit: Int?
+            ): List<IStatus> {
+               return (20 downTo 0).map {
+                  iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+               }
+            }
+         })
+
+         activityRule.launchActivity(null)
+
+         delay(25L) // wait for the fetching coroutine
+
+         assertTrue(activityRule.activity.canFetchOlder())
+      }
+   }
+
+   @Test fun cannotFetchOlder_firstTime() {
+      runBlocking {
+         startMockedTimelineModule(object : TimelineService {
+            override suspend fun fetchHomeTimeline(
+               local: Boolean?, onlyMedia: Boolean?,
+               maxId: String?, sinceId: String?, limit: Int?
+            ): List<IStatus> {
+               return listOf(
+                  iStatus("0", iAccount("0", "wcaokaze"), "content0")
+               )
+            }
+         })
+
+         activityRule.launchActivity(null)
+
+         delay(25L) // wait for the fetching coroutine
+
+         assertFalse(activityRule.activity.canFetchOlder())
+      }
+   }
+
+   @Test fun canFetchOlder_afterFetchingOlder() {
+      runBlocking {
+         startMockedTimelineModule(object : TimelineService {
+            override suspend fun fetchHomeTimeline(
+               local: Boolean?, onlyMedia: Boolean?,
+               maxId: String?, sinceId: String?, limit: Int?
+            ): List<IStatus> {
+               return if (maxId == null) {
+                  (41 downTo 21).map {
+                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                  }
+               } else {
+                  (20 downTo 0).map {
+                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                  }
+               }
+            }
+         })
+
+         activityRule.launchActivity(null)
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchOlder()
+         }
+
+         delay(25L) // wait for the fetching coroutine
+
+         assertTrue(activityRule.activity.canFetchOlder())
+      }
+   }
+
+   @Test fun cannotFetchOlder_afterFetchingOlder() {
+      runBlocking {
+         startMockedTimelineModule(object : TimelineService {
+            override suspend fun fetchHomeTimeline(
+               local: Boolean?, onlyMedia: Boolean?,
+               maxId: String?, sinceId: String?, limit: Int?
+            ): List<IStatus> {
+               return if (maxId == null) {
+                  (41 downTo 21).map {
+                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                  }
+               } else {
+                  listOf(
+                     iStatus("0", iAccount("0", "wcaokaze"), "content0")
+                  )
+               }
+            }
+         })
+
+         activityRule.launchActivity(null)
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchOlder()
+         }
+
+         delay(25L) // wait for the fetching coroutine
+
+         assertFalse(activityRule.activity.canFetchOlder())
+      }
+   }
+
    private fun startMockedTimelineModule(timelineService: TimelineService) {
       Application.mastodonModule = module {
          single { TimeZone.getDefault() }
