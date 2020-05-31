@@ -66,22 +66,61 @@ class TimelineTest : KoinTest {
                limit: Int?
             ): List<IStatus> {
                return listOf(
-                  iStatus(
-                     "0",
-                     iAccount(
-                        "0",
-                        "wcaokaze"
-                     ),
-                     "content"
-                  )
+                  iStatus("0", iAccount("0", "wcaokaze"), "content0")
                )
             }
          })
 
          activityRule.launchActivity(null)
 
+         delay(10L) // wait for the fetching coroutine
+
          assertEquals(
             listOf(
+               StatusItem(Status.Id("0"))
+            ),
+            activityRule.activity.recyclerViewItems()
+         )
+      }
+   }
+
+   @Test fun fetchNewer() {
+      runBlocking {
+         startMockedTimelineModule(object : TimelineService {
+            private var count = 0
+
+            override suspend fun fetchHomeTimeline(
+               local: Boolean?,
+               onlyMedia: Boolean?,
+               maxId: String?,
+               sinceId: String?,
+               limit: Int?
+            ): List<IStatus> {
+               count++
+
+               return if (count <= 1) {
+                  listOf(
+                     iStatus("0", iAccount("0", "wcaokaze"), "content0")
+                  )
+               } else {
+                  listOf(
+                     iStatus("1", iAccount("0", "wcaokaze"), "content0")
+                  )
+               }
+            }
+         })
+
+         activityRule.launchActivity(null)
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchNewer()
+         }
+
+         delay(10L) // wait for the fetching coroutine
+
+         assertEquals(
+            listOf(
+               StatusItem(Status.Id("1")),
                StatusItem(Status.Id("0"))
             ),
             activityRule.activity.recyclerViewItems()

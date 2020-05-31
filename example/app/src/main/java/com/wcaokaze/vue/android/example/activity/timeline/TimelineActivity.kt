@@ -81,7 +81,7 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
       startActivity(intent)
    }
 
-   private fun fetchNewer() {
+   @VisibleForTesting fun fetchNewer() {
       fetchingNewerJob().cancel()
 
       fetchingNewerJob.value = launch {
