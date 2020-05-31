@@ -43,14 +43,16 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
    override val componentLifecycle = ComponentLifecycle(this)
 
    override lateinit var componentView: FrameLayout
+   private lateinit var layoutManager: LinearLayoutManager
 
    override val store: Store by inject()
    private val fetchingStatusCountLimit: Int by inject(named("fetchingTimelineStatusCountLimit"))
 
-   @VisibleForTesting
-   val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
+   @VisibleForTesting val recyclerViewItems = state<List<TimelineRecyclerViewItem>>(emptyList())
+   @VisibleForTesting val canFetchOlder = state(false)
 
    private val fetchingNewerJob = state(Job.completed())
+   private val fetchingOlderJob = state(Job.completed())
    private val isFetchingNewer = getter { fetchingNewerJob().toReactiveField()() }
 
    override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,8 +66,10 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
       }
 
       launch {
+         val statusCountLimit = fetchingStatusCountLimit
+
          val statusIds = try {
-            action[MASTODON].fetchHomeTimeline(statusCountLimit = fetchingStatusCountLimit)
+            action[MASTODON].fetchHomeTimeline(statusCountLimit = statusCountLimit)
          } catch (e: CancellationException) {
             throw e
          } catch (e: Exception) {
@@ -73,6 +77,7 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
          }
 
          recyclerViewItems.value = statusIds.map { StatusItem(it) }
+         canFetchOlder.value = statusIds.size >= statusCountLimit
       }
    }
 
@@ -89,6 +94,7 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
       fetchingNewerJob.value = launch {
          try {
             val sinceId = recyclerViewItems()
+               .asSequence()
                .filterIsInstance<StatusItem>()
                .firstOrNull()
                ?.statusId
@@ -118,6 +124,46 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
       }
    }
 
+   @VisibleForTesting fun fetchOlder() {
+      if (fetchingOlderJob().isActive) { return }
+
+      fetchingOlderJob.value = launch {
+         try {
+            recyclerViewItems.value =
+               recyclerViewItems().dropLastWhile {
+                  it is LoadingIndicatorItem || it is MissingStatusItem
+               } +
+               LoadingIndicatorItem
+
+            val maxId = recyclerViewItems()
+               .asReversed()
+               .asSequence()
+               .filterIsInstance<StatusItem>()
+               .firstOrNull()
+               ?.statusId
+               ?: throw CancellationException()
+
+            val statusCountLimit = fetchingStatusCountLimit
+
+            val olderItems = action[MASTODON]
+               .fetchHomeTimeline(
+                  maxId = maxId,
+                  statusCountLimit = statusCountLimit)
+               .map { StatusItem(it) }
+
+            val newerItems = recyclerViewItems()
+               .dropLastWhile { it is LoadingIndicatorItem || it is MissingStatusItem }
+
+            recyclerViewItems.value = newerItems + olderItems
+            canFetchOlder.value = olderItems.size >= statusCountLimit
+         } catch (e: CancellationException) {
+            throw e
+         } catch (e: Exception) {
+            Toast.makeText(this@TimelineActivity, "Something goes wrong", Toast.LENGTH_LONG).show()
+         }
+      }
+   }
+
    private fun buildContentView() {
       val recyclerViewAdapter: TimelineRecyclerViewAdapter
 
@@ -131,10 +177,17 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
                recyclerViewAdapter = Component[::TimelineRecyclerViewAdapter, MASTODON] {
                   component.itemsBinder(recyclerViewItems)
 
-                  component.onItemClick
-                     .map { _, item -> item }
-                     .filterIsInstance<StatusItem>()
-                     .invoke { startStatusActivity(it.statusId) }
+                  component.onItemClick { _, item ->
+                     if (item is StatusItem) {
+                        startStatusActivity(item.statusId)
+                     }
+                  }
+
+                  component.onScrolled
+                     .map { _, _ -> layoutManager.findLastVisibleItemPosition() }
+                     .filter { it >= recyclerViewItems().lastIndex }
+                     .filter { canFetchOlder() }
+                     .invoke { fetchOlder() }
                }
             }
          }
@@ -145,7 +198,7 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
             Component[recyclerViewAdapter] {
                layout.width  = MATCH_PARENT
                layout.height = MATCH_PARENT
-               val layoutManager = LinearLayoutManager(view.context)
+               layoutManager = LinearLayoutManager(view.context)
                view.layoutManager = layoutManager
                view.addItemDecoration(DividerItemDecoration(view.context, layoutManager.orientation))
             }
