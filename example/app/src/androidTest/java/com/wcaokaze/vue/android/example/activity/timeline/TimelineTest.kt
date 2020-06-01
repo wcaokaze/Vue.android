@@ -68,7 +68,7 @@ class TimelineTest : KoinTest {
 
          assertEquals(
             listOf(
-               StatusItem(Status.Id("0"))
+               statusItem(0)
             ),
             activityRule.activity.recyclerViewItems()
          )
@@ -95,8 +95,8 @@ class TimelineTest : KoinTest {
 
          assertEquals(
             listOf(
-               StatusItem(Status.Id("1")),
-               StatusItem(Status.Id("0"))
+               statusItem(1),
+               statusItem(0)
             ),
             activityRule.activity.recyclerViewItems()
          )
@@ -123,9 +123,9 @@ class TimelineTest : KoinTest {
 
          assertEquals(
             listOf(
-               *(20 downTo 1).map { StatusItem(Status.Id(it.toString())) }.toTypedArray(),
+               *statusItems(20 downTo 1),
                MissingStatusItem,
-               StatusItem(Status.Id("0"))
+               statusItem(0)
             ),
             activityRule.activity.recyclerViewItems()
          )
@@ -151,7 +151,9 @@ class TimelineTest : KoinTest {
          requestFetchOlder()
 
          assertEquals(
-            (20 downTo 0).map { StatusItem(Status.Id(it.toString())) },
+            listOf(
+               *statusItems(20 downTo 0)
+            ),
             activityRule.activity.recyclerViewItems()
          )
       }
@@ -319,7 +321,9 @@ class TimelineTest : KoinTest {
          requestFetchMissing(missingItemPosition)
 
          assertEquals(
-            (40 downTo 0).map { StatusItem(Status.Id(it.toString())) },
+            listOf(
+               *statusItems(40 downTo 0)
+            ),
             activityRule.activity.recyclerViewItems()
          )
       }
@@ -357,9 +361,9 @@ class TimelineTest : KoinTest {
 
          assertEquals(
             listOf(
-               *(59 downTo 20).map { StatusItem(Status.Id(it.toString())) }.toTypedArray(),
+               *statusItems(59 downTo 20),
                MissingStatusItem,
-               *(19 downTo  0).map { StatusItem(Status.Id(it.toString())) }.toTypedArray()
+               *statusItems(19 downTo  0)
             ),
             activityRule.activity.recyclerViewItems()
          )
@@ -450,10 +454,13 @@ class TimelineTest : KoinTest {
       }
    }
 
+   private fun statusItem(id: Int) = StatusItem(Status.Id(id.toString()))
+   private fun statusItems(range: IntProgression) = range.map { statusItem(it) } .toTypedArray()
+
    private fun createIStatus(id: Int)
          = iStatus(id.toString(), iAccount("0", "wcaokaze"), "content$id")
 
-   private fun createIStatuses(range: IntRange)
+   private fun createIStatuses(range: IntProgression)
          = range.map { createIStatus(it) } .reversed()
 
    private fun createIStatuses(vararg ids: Int)
