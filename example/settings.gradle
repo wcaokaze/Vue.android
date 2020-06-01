@@ -21,11 +21,14 @@ include ':mastodon'
 include 'vue-android-core'
 project(':vue-android-core').projectDir = file('../vue-android-core')
 
+include 'vue-android-stream'
+project(':vue-android-stream').projectDir = file('../vue-android-stream')
+
+include 'vue-android-androidx'
+project(':vue-android-androidx').projectDir = file('../vue-android-androidx')
+
 include 'vue-android-koshian'
 project(':vue-android-koshian').projectDir = file('../vue-android-koshian')
 
 include 'vue-android-koshian-recyclerview'
 project(':vue-android-koshian-recyclerview').projectDir = file('../vue-android-koshian-recyclerview')
-
-include 'vue-android-stream'
-project(':vue-android-stream').projectDir = file('../vue-android-stream')

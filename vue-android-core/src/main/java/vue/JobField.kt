@@ -19,6 +19,11 @@ package vue
 import kotlinx.coroutines.*
 
 /**
+ * create a new [Job] that is already completed.
+ */
+fun Job.Key.completed(): Job = Job().apply { complete() }
+
+/**
  * convert this Job to a ReactiveField.
  *
  * The ReactiveField indicates `true` while this Job is running,

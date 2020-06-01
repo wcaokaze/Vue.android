@@ -16,19 +16,24 @@
 
 package com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.apps
 
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
+import io.ktor.client.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import org.koin.core.context.*
 
-internal suspend fun MastodonInstance.postApp(
-      clientName: String,
-      redirectUris: String,
-      scopes: List<String>,
-      website: String?
+internal suspend fun postApp(
+   instanceUrl: String,
+   clientName: String,
+   redirectUris: String,
+   scopes: List<String>,
+   website: String?
 ): MastodonClient {
+   val httpClient: HttpClient = KoinContextHandler.get().get()
+   val urlWithoutSuffix = instanceUrl.removeSuffix("/")
+
    return httpClient.use {
       it.submitForm(
-         getApiUrl("api/v1/apps"),
+         "$urlWithoutSuffix/api/v1/apps",
          Parameters.build {
             append("client_name", clientName)
             append("redirect_uris", redirectUris)

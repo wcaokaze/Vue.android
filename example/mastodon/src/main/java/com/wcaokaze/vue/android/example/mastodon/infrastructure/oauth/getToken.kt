@@ -16,20 +16,25 @@
 
 package com.wcaokaze.vue.android.example.mastodon.infrastructure.oauth
 
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
+import io.ktor.client.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
+import org.koin.core.context.*
 
-internal suspend fun MastodonInstance.getToken(
-      clientId: String,
-      clientSecret: String,
-      redirectUri: String,
-      grantType: String,
-      code: String
+internal suspend fun getToken(
+   instanceUrl: String,
+   clientId: String,
+   clientSecret: String,
+   redirectUri: String,
+   grantType: String,
+   code: String
 ): Token {
+   val httpClient: HttpClient = KoinContextHandler.get().get()
+   val urlWithoutSuffix = instanceUrl.removeSuffix("/")
+
    return httpClient.use {
       it.submitForm(
-         getApiUrl("oauth/token"),
+         "$urlWithoutSuffix/oauth/token",
          Parameters.build {
             append("client_id", clientId)
             append("client_secret", clientSecret)

@@ -20,7 +20,7 @@ import android.content.*
 
 /**
  * [PreferenceState] for Set<String>.
- * @see PreferenceState
+ * @see [PreferenceState][PreferenceState.Companion.invoke]
  */
 fun stringSetPreferenceState(
       context: Context,
@@ -31,7 +31,7 @@ fun stringSetPreferenceState(
 
 /**
  * [PreferenceState] for Set<String>.
- * @see PreferenceState
+ * @see [PreferenceState][PreferenceState.Companion.invoke]
  */
 fun stringSetPreferenceState(
       context: Context,

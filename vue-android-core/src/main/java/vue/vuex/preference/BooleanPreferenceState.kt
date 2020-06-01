@@ -20,7 +20,7 @@ import android.content.*
 
 /**
  * [PreferenceState] for Boolean.
- * @see PreferenceState
+ * @see [PreferenceState][PreferenceState.Companion.invoke]
  */
 fun booleanPreferenceState(
       context: Context,
@@ -31,7 +31,7 @@ fun booleanPreferenceState(
 
 /**
  * [PreferenceState] for Boolean.
- * @see PreferenceState
+ * @see [PreferenceState][PreferenceState.Companion.invoke]
  */
 fun booleanPreferenceState(
       context: Context,

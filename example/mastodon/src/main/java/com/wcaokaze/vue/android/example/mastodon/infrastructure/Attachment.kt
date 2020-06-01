@@ -20,7 +20,7 @@ package com.wcaokaze.vue.android.example.mastodon.infrastructure
 import kotlinx.serialization.*
 
 @Serializable
-internal data class Attachment(
+data class Attachment(
    val id: String,
    val type: String,
    val url: String,

@@ -25,10 +25,6 @@ import vue.koshian.*
 import kotlin.contracts.*
 
 class FooterComponent(context: Context) : VComponent<Nothing>() {
-   companion object : KoshianNoStoreComponentConstructor<FooterComponent> {
-      override fun instantiate(context: Context) = FooterComponent(context)
-   }
-
    override val store: Nothing get() = throw UnsupportedOperationException()
 
    override val componentView: LinearLayout

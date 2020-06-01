@@ -28,11 +28,6 @@ import kotlin.contracts.*
 class AccountComponent(context: Context, override val store: MastodonStore)
    : VComponent<MastodonStore>()
 {
-   companion object : KoshianComponentConstructor<AccountComponent, MastodonStore> {
-      override fun instantiate(context: Context, store: MastodonStore)
-            = AccountComponent(context, store)
-   }
-
    override val componentView: LinearLayout
 
    private val iconView: ImageView
