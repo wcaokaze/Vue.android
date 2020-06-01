@@ -91,12 +91,7 @@ class TimelineTest : KoinTest {
          })
 
          launchActivity()
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchNewer()
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         requestFetchNewer()
 
          assertEquals(
             listOf(
@@ -124,12 +119,7 @@ class TimelineTest : KoinTest {
          })
 
          launchActivity()
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchNewer()
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         requestFetchNewer()
 
          assertEquals(
             listOf(
@@ -158,12 +148,7 @@ class TimelineTest : KoinTest {
          })
 
          launchActivity()
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         requestFetchOlder()
 
          assertEquals(
             (20 downTo 0).map { StatusItem(Status.Id(it.toString())) },
@@ -189,12 +174,7 @@ class TimelineTest : KoinTest {
          })
 
          launchActivity()
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
-         }
-
-         delay(25L) // wait for launching the coroutine
+         requestFetchOlder()
 
          assertTrue(
             activityRule.activity.recyclerViewItems().lastOrNull() is LoadingIndicatorItem
@@ -215,7 +195,7 @@ class TimelineTest : KoinTest {
                   0 -> createIStatuses(1 until 21)
 
                   1 -> {
-                     delay(50L)
+                     delay(3000L)
                      createIStatuses(0)
                   }
 
@@ -229,21 +209,8 @@ class TimelineTest : KoinTest {
          })
 
          launchActivity()
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
-         }
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
-         }
-
-         delay(75L) // wait for launching the coroutine
-
-         assertEquals(
-            (20 downTo 0).map { StatusItem(Status.Id(it.toString())) },
-            activityRule.activity.recyclerViewItems()
-         )
+         requestFetchOlder()
+         requestFetchOlder()
       }
    }
 
@@ -293,12 +260,7 @@ class TimelineTest : KoinTest {
          })
 
          launchActivity()
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         requestFetchOlder()
 
          assertTrue(activityRule.activity.canFetchOlder())
       }
@@ -320,12 +282,7 @@ class TimelineTest : KoinTest {
          })
 
          launchActivity()
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         requestFetchOlder()
 
          assertFalse(activityRule.activity.canFetchOlder())
       }
@@ -354,21 +311,12 @@ class TimelineTest : KoinTest {
          })
 
          launchActivity()
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchNewer()
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         requestFetchNewer()
 
          val missingItemPosition = activityRule.activity.recyclerViewItems()
             .indexOfFirst { it is MissingStatusItem }
 
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchMissing(missingItemPosition)
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         requestFetchMissing(missingItemPosition)
 
          assertEquals(
             (40 downTo 0).map { StatusItem(Status.Id(it.toString())) },
@@ -400,21 +348,12 @@ class TimelineTest : KoinTest {
          })
 
          launchActivity()
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchNewer()
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         requestFetchNewer()
 
          val missingItemPosition = activityRule.activity.recyclerViewItems()
             .indexOfFirst { it is MissingStatusItem }
 
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchMissing(missingItemPosition)
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         requestFetchMissing(missingItemPosition)
 
          assertEquals(
             listOf(
@@ -453,21 +392,12 @@ class TimelineTest : KoinTest {
          })
 
          launchActivity()
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchNewer()
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         requestFetchNewer()
 
          val missingItemPosition = activityRule.activity.recyclerViewItems()
             .indexOfFirst { it is MissingStatusItem }
 
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchMissing(missingItemPosition)
-         }
-
-         delay(25L) // wait for launching the coroutine
+         requestFetchMissing(missingItemPosition)
 
          assertTrue(
             activityRule.activity.recyclerViewItems()
@@ -520,11 +450,6 @@ class TimelineTest : KoinTest {
       }
    }
 
-   private suspend fun launchActivity() {
-      activityRule.launchActivity(null)
-      delay(50L)
-   }
-
    private fun createIStatus(id: Int)
          = iStatus(id.toString(), iAccount("0", "wcaokaze"), "content$id")
 
@@ -533,4 +458,33 @@ class TimelineTest : KoinTest {
 
    private fun createIStatuses(vararg ids: Int)
          = ids.map { createIStatus(it) }
+
+   private suspend fun launchActivity() {
+      activityRule.launchActivity(null)
+      delay(50L)
+   }
+
+   private suspend fun requestFetchNewer() {
+      withContext(Dispatchers.Main) {
+         activityRule.activity.fetchNewer()
+      }
+
+      delay(50L) // wait for the fetching coroutine
+   }
+
+   private suspend fun requestFetchMissing(position: Int) {
+      withContext(Dispatchers.Main) {
+         activityRule.activity.fetchMissing(position)
+      }
+
+      delay(50L) // wait for the fetching coroutine
+   }
+
+   private suspend fun requestFetchOlder() {
+      withContext(Dispatchers.Main) {
+         activityRule.activity.fetchOlder()
+      }
+
+      delay(50L) // wait for the fetching coroutine
+   }
 }
