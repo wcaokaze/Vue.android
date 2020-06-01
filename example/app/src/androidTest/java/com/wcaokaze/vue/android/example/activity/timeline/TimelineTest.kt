@@ -57,24 +57,13 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchFirstTime() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return listOf(
-                  iStatus("0", iAccount("0", "wcaokaze"), "content0")
-               )
-            }
-         })
+         startMockedTimelineModule { createIStatuses(0) }
 
-         activityRule.launchActivity(null)
-
-         delay(25L) // wait for the fetching coroutine
+         launchActivity()
 
          assertEquals(
             listOf(
-               StatusItem(Status.Id("0"))
+               statusItem(0)
             ),
             activityRule.activity.recyclerViewItems()
          )
@@ -83,35 +72,21 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchNewer() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (sinceId == null) {
-                  listOf(
-                     iStatus("0", iAccount("0", "wcaokaze"), "content0")
-                  )
-               } else {
-                  listOf(
-                     iStatus("1", iAccount("0", "wcaokaze"), "content1")
-                  )
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(0)
+            } else {
+               createIStatuses(1)
             }
-         })
-
-         activityRule.launchActivity(null)
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchNewer()
          }
 
-         delay(25L) // wait for the fetching coroutine
+         launchActivity()
+         requestFetchNewer()
 
          assertEquals(
             listOf(
-               StatusItem(Status.Id("1")),
-               StatusItem(Status.Id("0"))
+               statusItem(1),
+               statusItem(0)
             ),
             activityRule.activity.recyclerViewItems()
          )
@@ -120,36 +95,22 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchNewer_missing() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (sinceId == null) {
-                  listOf(
-                     iStatus("0", iAccount("0", "wcaokaze"), "content0")
-                  )
-               } else {
-                  (20 downTo 1).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(0)
+            } else {
+               createIStatuses(1 until 21)
             }
-         })
-
-         activityRule.launchActivity(null)
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchNewer()
          }
 
-         delay(25L) // wait for the fetching coroutine
+         launchActivity()
+         requestFetchNewer()
 
          assertEquals(
             listOf(
-               *(20 downTo 1).map { StatusItem(Status.Id(it.toString())) }.toTypedArray(),
+               *statusItems(20 downTo 1),
                MissingStatusItem,
-               StatusItem(Status.Id("0"))
+               statusItem(0)
             ),
             activityRule.activity.recyclerViewItems()
          )
@@ -158,33 +119,21 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchOlder() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (maxId == null) {
-                  (20 downTo 1).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-               } else {
-                  listOf(
-                     iStatus("0", iAccount("0", "wcaokaze"), "content0")
-                  )
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(1 until 21)
+            } else {
+               createIStatuses(0)
             }
-         })
-
-         activityRule.launchActivity(null)
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
          }
 
-         delay(25L) // wait for the fetching coroutine
+         launchActivity()
+         requestFetchOlder()
 
          assertEquals(
-            (20 downTo 0).map { StatusItem(Status.Id(it.toString())) },
+            listOf(
+               *statusItems(20 downTo 0)
+            ),
             activityRule.activity.recyclerViewItems()
          )
       }
@@ -192,29 +141,17 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchOlder_indicator() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (maxId == null) {
-                  (20 downTo 1).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-               } else {
-                  delay(3000L)
-                  emptyList()
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(1 until 21)
+            } else {
+               delay(3000L)
+               createIStatuses(0)
             }
-         })
-
-         activityRule.launchActivity(null)
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
          }
 
-         delay(25L) // wait for launching the coroutine
+         launchActivity()
+         requestFetchOlder()
 
          assertTrue(
             activityRule.activity.recyclerViewItems().lastOrNull() is LoadingIndicatorItem
@@ -224,72 +161,30 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchOlder_ignoreSecondTime() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            private var invocationCount = 0
+         startMockedTimelineModule { invocationCount ->
+            when (invocationCount) {
+               0 -> createIStatuses(1 until 21)
 
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               val statuses = when (invocationCount) {
-                  0 -> {
-                     (20 downTo 1).map {
-                        iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                     }
-                  }
-
-                  1 -> {
-                     delay(50L)
-
-                     listOf(
-                        iStatus("0", iAccount("0", "wcaokaze"), "content0")
-                     )
-                  }
-
-                  else -> fail("fetchOlder should ignore on the second time")
+               1 -> {
+                  delay(3000L)
+                  createIStatuses(0)
                }
 
-               invocationCount++
-
-               return statuses
+               else -> fail("fetchOlder should ignore on the second time")
             }
-         })
-
-         activityRule.launchActivity(null)
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
          }
 
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
-         }
-
-         delay(75L) // wait for launching the coroutine
-
-         assertEquals(
-            (20 downTo 0).map { StatusItem(Status.Id(it.toString())) },
-            activityRule.activity.recyclerViewItems()
-         )
+         launchActivity()
+         requestFetchOlder()
+         requestFetchOlder()
       }
    }
 
    @Test fun canFetchOlder_firstTime() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return (19 downTo 0).map {
-                  iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-               }
-            }
-         })
+         startMockedTimelineModule { createIStatuses(0 until 20) }
 
-         activityRule.launchActivity(null)
-
-         delay(25L) // wait for the fetching coroutine
+         launchActivity()
 
          assertTrue(activityRule.activity.canFetchOlder())
       }
@@ -297,20 +192,9 @@ class TimelineTest : KoinTest {
 
    @Test fun cannotFetchOlder_firstTime() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return listOf(
-                  iStatus("0", iAccount("0", "wcaokaze"), "content0")
-               )
-            }
-         })
+         startMockedTimelineModule { createIStatuses(0) }
 
-         activityRule.launchActivity(null)
-
-         delay(25L) // wait for the fetching coroutine
+         launchActivity()
 
          assertFalse(activityRule.activity.canFetchOlder())
       }
@@ -318,30 +202,16 @@ class TimelineTest : KoinTest {
 
    @Test fun canFetchOlder_afterFetchingOlder() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (maxId == null) {
-                  (39 downTo 20).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-               } else {
-                  (19 downTo 0).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(20 until 40)
+            } else {
+               createIStatuses( 0 until 20)
             }
-         })
-
-         activityRule.launchActivity(null)
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
          }
 
-         delay(25L) // wait for the fetching coroutine
+         launchActivity()
+         requestFetchOlder()
 
          assertTrue(activityRule.activity.canFetchOlder())
       }
@@ -349,30 +219,16 @@ class TimelineTest : KoinTest {
 
    @Test fun cannotFetchOlder_afterFetchingOlder() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (maxId == null) {
-                  (39 downTo 20).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-               } else {
-                  listOf(
-                     iStatus("0", iAccount("0", "wcaokaze"), "content0")
-                  )
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(1 until 21)
+            } else {
+               createIStatuses(0)
             }
-         })
-
-         activityRule.launchActivity(null)
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchOlder()
          }
 
-         delay(25L) // wait for the fetching coroutine
+         launchActivity()
+         requestFetchOlder()
 
          assertFalse(activityRule.activity.canFetchOlder())
       }
@@ -380,54 +236,23 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchMissing() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            private var invocationCount = 0
-
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               val statuses = when (invocationCount) {
-                  0 -> (19 downTo 0).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  1 -> (40 downTo 21).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  2 -> listOf(
-                     iStatus("20", iAccount("0", "wcaokaze"), "content20")
-                  )
-
-                  else -> emptyList()
-               }
-
-               invocationCount++
-
-               return statuses
+         startMockedTimelineModule { invocationCount ->
+            when (invocationCount) {
+               0 -> createIStatuses( 0 until 20)
+               1 -> createIStatuses(21 until 41)
+               2 -> createIStatuses(20)
+               else -> emptyList()
             }
-         })
-
-         activityRule.launchActivity(null)
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchNewer()
          }
 
-         delay(25L) // wait for the fetching coroutine
-
-         val missingItemPosition = activityRule.activity.recyclerViewItems()
-            .indexOfFirst { it is MissingStatusItem }
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchMissing(missingItemPosition)
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         launchActivity()
+         requestFetchNewer()
+         requestFetchMissing()
 
          assertEquals(
-            (40 downTo 0).map { StatusItem(Status.Id(it.toString())) },
+            listOf(
+               *statusItems(40 downTo 0)
+            ),
             activityRule.activity.recyclerViewItems()
          )
       }
@@ -435,57 +260,24 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchMissing_moreMissing() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            private var invocationCount = 0
-
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               val statuses = when (invocationCount) {
-                  0 -> (19 downTo 0).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  1 -> (59 downTo 40).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  2 -> (39 downTo 20).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  else -> emptyList()
-               }
-
-               invocationCount++
-
-               return statuses
+         startMockedTimelineModule { invocationCount ->
+            when (invocationCount) {
+               0 -> createIStatuses( 0 until 20)
+               1 -> createIStatuses(40 until 60)
+               2 -> createIStatuses(20 until 40)
+               else -> emptyList()
             }
-         })
-
-         activityRule.launchActivity(null)
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchNewer()
          }
 
-         delay(25L) // wait for the fetching coroutine
-
-         val missingItemPosition = activityRule.activity.recyclerViewItems()
-            .indexOfFirst { it is MissingStatusItem }
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchMissing(missingItemPosition)
-         }
-
-         delay(25L) // wait for the fetching coroutine
+         launchActivity()
+         requestFetchNewer()
+         requestFetchMissing()
 
          assertEquals(
             listOf(
-               *(59 downTo 20).map { StatusItem(Status.Id(it.toString())) }.toTypedArray(),
+               *statusItems(59 downTo 20),
                MissingStatusItem,
-               *(19 downTo  0).map { StatusItem(Status.Id(it.toString())) }.toTypedArray()
+               *statusItems(19 downTo  0)
             ),
             activityRule.activity.recyclerViewItems()
          )
@@ -494,50 +286,21 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchMissing_indicator() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            private var invocationCount = 0
+         startMockedTimelineModule { invocationCount ->
+            when (invocationCount) {
+               0 -> createIStatuses( 0 until 20)
+               1 -> createIStatuses(40 until 60)
 
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               val statuses = when (invocationCount) {
-                  0 -> (19 downTo 0).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  1 -> (59 downTo 40).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  else -> {
-                     delay(3000L)
-                     emptyList()
-                  }
+               else -> {
+                  delay(3000L)
+                  createIStatuses(20 until 40)
                }
-
-               invocationCount++
-
-               return statuses
             }
-         })
-
-         activityRule.launchActivity(null)
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchNewer()
          }
 
-         delay(25L) // wait for the fetching coroutine
-
-         val missingItemPosition = activityRule.activity.recyclerViewItems()
-            .indexOfFirst { it is MissingStatusItem }
-
-         withContext(Dispatchers.Main) {
-            activityRule.activity.fetchMissing(missingItemPosition)
-         }
-
-         delay(25L) // wait for launching the coroutine
+         launchActivity()
+         requestFetchNewer()
+         requestFetchMissing()
 
          assertTrue(
             activityRule.activity.recyclerViewItems()
@@ -546,7 +309,21 @@ class TimelineTest : KoinTest {
       }
    }
 
-   private fun startMockedTimelineModule(timelineService: TimelineService) {
+   private fun startMockedTimelineModule(
+      fetchHomeTimeline: suspend (invocationCount: Int) -> List<IStatus>
+   ) {
+      val timelineService = object : TimelineService {
+         private var invocationCount = 0
+
+         override suspend fun fetchHomeTimeline(
+            local: Boolean?, onlyMedia: Boolean?, maxId: String?, sinceId: String?, limit: Int?
+         ): List<IStatus> {
+            val statuses = fetchHomeTimeline(invocationCount)
+            invocationCount++
+            return statuses
+         }
+      }
+
       Application.mastodonModule = module {
          single { TimeZone.getDefault() }
 
@@ -556,7 +333,7 @@ class TimelineTest : KoinTest {
                credential.accessToken)
          }
 
-         factory { (_: Credential) -> timelineService }
+         factory<TimelineService> { (_: Credential) -> timelineService }
 
          factory {
             @OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
@@ -588,5 +365,49 @@ class TimelineTest : KoinTest {
             StubPreferenceState { "accessToken" }
          }
       }
+   }
+
+   private fun statusItem(id: Int) = StatusItem(Status.Id(id.toString()))
+   private fun statusItems(range: IntProgression) = range.map { statusItem(it) } .toTypedArray()
+
+   private fun createIStatus(id: Int)
+         = iStatus(id.toString(), iAccount("0", "wcaokaze"), "content$id")
+
+   private fun createIStatuses(range: IntProgression)
+         = range.map { createIStatus(it) } .reversed()
+
+   private fun createIStatuses(vararg ids: Int)
+         = ids.map { createIStatus(it) }
+
+   private suspend fun launchActivity() {
+      activityRule.launchActivity(null)
+      delay(50L)
+   }
+
+   private suspend fun requestFetchNewer() {
+      withContext(Dispatchers.Main) {
+         activityRule.activity.fetchNewer()
+      }
+
+      delay(50L) // wait for the fetching coroutine
+   }
+
+   private suspend fun requestFetchMissing() {
+      withContext(Dispatchers.Main) {
+         val missingItemPosition = activityRule.activity.recyclerViewItems()
+            .indexOfFirst { it is MissingStatusItem }
+
+         activityRule.activity.fetchMissing(missingItemPosition)
+      }
+
+      delay(50L) // wait for the fetching coroutine
+   }
+
+   private suspend fun requestFetchOlder() {
+      withContext(Dispatchers.Main) {
+         activityRule.activity.fetchOlder()
+      }
+
+      delay(50L) // wait for the fetching coroutine
    }
 }
