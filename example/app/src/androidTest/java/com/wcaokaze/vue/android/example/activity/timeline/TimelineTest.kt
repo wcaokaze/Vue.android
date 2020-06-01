@@ -130,7 +130,7 @@ class TimelineTest : KoinTest {
                      iStatus("0", iAccount("0", "wcaokaze"), "content0")
                   )
                } else {
-                  (21 downTo 1).map {
+                  (20 downTo 1).map {
                      iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
                   }
                }
@@ -147,7 +147,7 @@ class TimelineTest : KoinTest {
 
          assertEquals(
             listOf(
-               *(21 downTo 1).map { StatusItem(Status.Id(it.toString())) }.toTypedArray(),
+               *(20 downTo 1).map { StatusItem(Status.Id(it.toString())) }.toTypedArray(),
                MissingStatusItem,
                StatusItem(Status.Id("0"))
             ),
@@ -164,7 +164,7 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                return if (maxId == null) {
-                  (21 downTo 1).map {
+                  (20 downTo 1).map {
                      iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
                   }
                } else {
@@ -184,7 +184,7 @@ class TimelineTest : KoinTest {
          delay(25L) // wait for the fetching coroutine
 
          assertEquals(
-            (21 downTo 0).map { StatusItem(Status.Id(it.toString())) },
+            (20 downTo 0).map { StatusItem(Status.Id(it.toString())) },
             activityRule.activity.recyclerViewItems()
          )
       }
@@ -198,7 +198,7 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                return if (maxId == null) {
-                  (21 downTo 1).map {
+                  (20 downTo 1).map {
                      iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
                   }
                } else {
@@ -233,7 +233,7 @@ class TimelineTest : KoinTest {
             ): List<IStatus> {
                val statuses = when (invocationCount) {
                   0 -> {
-                     (21 downTo 1).map {
+                     (20 downTo 1).map {
                         iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
                      }
                   }
@@ -268,7 +268,7 @@ class TimelineTest : KoinTest {
          delay(75L) // wait for launching the coroutine
 
          assertEquals(
-            (21 downTo 0).map { StatusItem(Status.Id(it.toString())) },
+            (20 downTo 0).map { StatusItem(Status.Id(it.toString())) },
             activityRule.activity.recyclerViewItems()
          )
       }
@@ -281,7 +281,7 @@ class TimelineTest : KoinTest {
                local: Boolean?, onlyMedia: Boolean?,
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
-               return (20 downTo 0).map {
+               return (19 downTo 0).map {
                   iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
                }
             }
@@ -324,11 +324,11 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                return if (maxId == null) {
-                  (41 downTo 21).map {
+                  (39 downTo 20).map {
                      iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
                   }
                } else {
-                  (20 downTo 0).map {
+                  (19 downTo 0).map {
                      iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
                   }
                }
@@ -355,7 +355,7 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                return if (maxId == null) {
-                  (41 downTo 21).map {
+                  (39 downTo 20).map {
                      iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
                   }
                } else {
@@ -375,6 +375,174 @@ class TimelineTest : KoinTest {
          delay(25L) // wait for the fetching coroutine
 
          assertFalse(activityRule.activity.canFetchOlder())
+      }
+   }
+
+   @Test fun fetchMissing() {
+      runBlocking {
+         startMockedTimelineModule(object : TimelineService {
+            private var invocationCount = 0
+
+            override suspend fun fetchHomeTimeline(
+               local: Boolean?, onlyMedia: Boolean?,
+               maxId: String?, sinceId: String?, limit: Int?
+            ): List<IStatus> {
+               val statuses = when (invocationCount) {
+                  0 -> (19 downTo 0).map {
+                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                  }
+
+                  1 -> (40 downTo 21).map {
+                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                  }
+
+                  2 -> listOf(
+                     iStatus("20", iAccount("0", "wcaokaze"), "content20")
+                  )
+
+                  else -> emptyList()
+               }
+
+               invocationCount++
+
+               return statuses
+            }
+         })
+
+         activityRule.launchActivity(null)
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchNewer()
+         }
+
+         delay(25L) // wait for the fetching coroutine
+
+         val missingItemPosition = activityRule.activity.recyclerViewItems()
+            .indexOfFirst { it is MissingStatusItem }
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchMissing(missingItemPosition)
+         }
+
+         delay(25L) // wait for the fetching coroutine
+
+         assertEquals(
+            (40 downTo 0).map { StatusItem(Status.Id(it.toString())) },
+            activityRule.activity.recyclerViewItems()
+         )
+      }
+   }
+
+   @Test fun fetchMissing_moreMissing() {
+      runBlocking {
+         startMockedTimelineModule(object : TimelineService {
+            private var invocationCount = 0
+
+            override suspend fun fetchHomeTimeline(
+               local: Boolean?, onlyMedia: Boolean?,
+               maxId: String?, sinceId: String?, limit: Int?
+            ): List<IStatus> {
+               val statuses = when (invocationCount) {
+                  0 -> (19 downTo 0).map {
+                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                  }
+
+                  1 -> (59 downTo 40).map {
+                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                  }
+
+                  2 -> (39 downTo 20).map {
+                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                  }
+
+                  else -> emptyList()
+               }
+
+               invocationCount++
+
+               return statuses
+            }
+         })
+
+         activityRule.launchActivity(null)
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchNewer()
+         }
+
+         delay(25L) // wait for the fetching coroutine
+
+         val missingItemPosition = activityRule.activity.recyclerViewItems()
+            .indexOfFirst { it is MissingStatusItem }
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchMissing(missingItemPosition)
+         }
+
+         delay(25L) // wait for the fetching coroutine
+
+         assertEquals(
+            listOf(
+               *(59 downTo 20).map { StatusItem(Status.Id(it.toString())) }.toTypedArray(),
+               MissingStatusItem,
+               *(19 downTo  0).map { StatusItem(Status.Id(it.toString())) }.toTypedArray()
+            ),
+            activityRule.activity.recyclerViewItems()
+         )
+      }
+   }
+
+   @Test fun fetchMissing_indicator() {
+      runBlocking {
+         startMockedTimelineModule(object : TimelineService {
+            private var invocationCount = 0
+
+            override suspend fun fetchHomeTimeline(
+               local: Boolean?, onlyMedia: Boolean?,
+               maxId: String?, sinceId: String?, limit: Int?
+            ): List<IStatus> {
+               val statuses = when (invocationCount) {
+                  0 -> (19 downTo 0).map {
+                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                  }
+
+                  1 -> (59 downTo 40).map {
+                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
+                  }
+
+                  else -> {
+                     delay(3000L)
+                     emptyList()
+                  }
+               }
+
+               invocationCount++
+
+               return statuses
+            }
+         })
+
+         activityRule.launchActivity(null)
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchNewer()
+         }
+
+         delay(25L) // wait for the fetching coroutine
+
+         val missingItemPosition = activityRule.activity.recyclerViewItems()
+            .indexOfFirst { it is MissingStatusItem }
+
+         withContext(Dispatchers.Main) {
+            activityRule.activity.fetchMissing(missingItemPosition)
+         }
+
+         delay(25L) // wait for launching the coroutine
+
+         assertTrue(
+            activityRule.activity.recyclerViewItems()
+               .count { it is LoadingIndicatorItem } == 1
+         )
       }
    }
 

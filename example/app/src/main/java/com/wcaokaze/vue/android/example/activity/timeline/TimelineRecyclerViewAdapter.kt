@@ -49,12 +49,12 @@ class StatusItem(val statusId: Status.Id) : TimelineRecyclerViewItem() {
    override fun toString() = "StatusItem(statusId = $statusId)"
 }
 
-object LoadingIndicatorItem : TimelineRecyclerViewItem() {
+class LoadingIndicatorItem : TimelineRecyclerViewItem() {
    override fun isContentsTheSameWith(item: Any) = item is LoadingIndicatorItem
    override fun isItemsTheSameWith(item: Any) = item is LoadingIndicatorItem
 
-   override fun equals(other: Any?) = other is LoadingIndicatorItem
-   override fun hashCode() = 0
+   override fun equals(other: Any?) = other === this
+   override fun hashCode() = Objects.hashCode(this)
    override fun toString() = "LoadingIndicatorItem"
 }
 

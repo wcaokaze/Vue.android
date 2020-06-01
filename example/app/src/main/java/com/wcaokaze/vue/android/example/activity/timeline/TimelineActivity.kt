@@ -92,34 +92,103 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
       fetchingNewerJob().cancel()
 
       fetchingNewerJob.value = launch {
-         try {
-            val sinceId = recyclerViewItems()
-               .asSequence()
-               .filterIsInstance<StatusItem>()
-               .firstOrNull()
-               ?.statusId
-               ?: throw CancellationException()
+         val sinceId = recyclerViewItems()
+            .asSequence()
+            .filterIsInstance<StatusItem>()
+            .firstOrNull()
+            ?.statusId
+            ?: throw CancellationException()
 
-            val statusCountLimit = fetchingStatusCountLimit
+         val statusCountLimit = fetchingStatusCountLimit
 
-            val newerItems = action[MASTODON]
-               .fetchHomeTimeline(
-                  sinceId = sinceId,
-                  statusCountLimit = statusCountLimit)
-               .map { StatusItem(it) }
-
-            val olderItems = recyclerViewItems()
-               .dropWhile { it is LoadingIndicatorItem || it is MissingStatusItem }
-
-            recyclerViewItems.value = if (newerItems.size < statusCountLimit) {
-               newerItems + olderItems
-            } else {
-               newerItems + MissingStatusItem + olderItems
-            }
+         val fetchedStatuses = try {
+            action[MASTODON].fetchHomeTimeline(
+               sinceId = sinceId, statusCountLimit = statusCountLimit)
          } catch (e: CancellationException) {
             throw e
          } catch (e: Exception) {
             Toast.makeText(this@TimelineActivity, "Something goes wrong", Toast.LENGTH_LONG).show()
+            throw CancellationException()
+         }
+
+         val newerItems = fetchedStatuses.map { StatusItem(it) }
+
+         val olderItems = recyclerViewItems()
+            .dropWhile { it is LoadingIndicatorItem || it is MissingStatusItem }
+
+         recyclerViewItems.value = if (newerItems.size < statusCountLimit) {
+            newerItems + olderItems
+         } else {
+            newerItems + MissingStatusItem + olderItems
+         }
+      }
+   }
+
+   @VisibleForTesting fun fetchMissing(position: Int) {
+      val beforeFetchingItems = recyclerViewItems()
+
+      if (beforeFetchingItems.getOrNull(position) !is MissingStatusItem) { return }
+
+      // --------
+
+      val newerPartition = beforeFetchingItems
+         .subList(0, position)
+         .dropLastWhile { it is LoadingIndicatorItem || it is MissingStatusItem }
+
+      val olderPartition = beforeFetchingItems
+         .subList(position + 1, beforeFetchingItems.size)
+         .dropWhile { it is LoadingIndicatorItem || it is MissingStatusItem }
+
+      val loadingIndicatorPosition = newerPartition.lastIndex + 1
+      val loadingIndicatorItem = LoadingIndicatorItem()
+
+      val loadingItems = newerPartition + loadingIndicatorItem + olderPartition
+      recyclerViewItems.value = loadingItems
+
+      // --------
+
+      launch {
+         val maxId = loadingItems
+            .subList(0, loadingIndicatorPosition)
+            .asReversed()
+            .asSequence()
+            .filterIsInstance<StatusItem>()
+            .firstOrNull()
+            ?.statusId
+
+         val sinceId = loadingItems
+            .subList(loadingIndicatorPosition, loadingItems.size)
+            .asSequence()
+            .filterIsInstance<StatusItem>()
+            .firstOrNull()
+            ?.statusId
+
+         val statusCountLimit = fetchingStatusCountLimit
+
+         val fetchedStatuses = try {
+            action[MASTODON].fetchHomeTimeline(
+               maxId = maxId, sinceId = sinceId,
+               statusCountLimit = statusCountLimit)
+         } catch (e: CancellationException) {
+            throw e
+         } catch (e: Exception) {
+            Toast.makeText(this@TimelineActivity, "Something goes wrong", Toast.LENGTH_LONG).show()
+            throw CancellationException()
+         }
+
+         // --------
+
+         val insertingItems = fetchedStatuses.map { StatusItem(it) }
+
+         val afterFetchingItems = recyclerViewItems()
+         val insertPosition = afterFetchingItems.indexOf(loadingIndicatorItem)
+         val newerItems = afterFetchingItems.subList(0, insertPosition)
+         val olderItems = afterFetchingItems.subList(insertPosition + 1, afterFetchingItems.size)
+
+         recyclerViewItems.value = if (fetchedStatuses.size < statusCountLimit) {
+            newerItems + insertingItems + olderItems
+         } else {
+            newerItems + insertingItems + MissingStatusItem + olderItems
          }
       }
    }
@@ -128,39 +197,39 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
       if (fetchingOlderJob().isActive) { return }
 
       fetchingOlderJob.value = launch {
-         try {
-            recyclerViewItems.value =
-               recyclerViewItems().dropLastWhile {
-                  it is LoadingIndicatorItem || it is MissingStatusItem
-               } +
-               LoadingIndicatorItem
+         recyclerViewItems.value =
+            recyclerViewItems().dropLastWhile {
+               it is LoadingIndicatorItem || it is MissingStatusItem
+            } +
+            LoadingIndicatorItem()
 
-            val maxId = recyclerViewItems()
-               .asReversed()
-               .asSequence()
-               .filterIsInstance<StatusItem>()
-               .firstOrNull()
-               ?.statusId
-               ?: throw CancellationException()
+         val maxId = recyclerViewItems()
+            .asReversed()
+            .asSequence()
+            .filterIsInstance<StatusItem>()
+            .firstOrNull()
+            ?.statusId
+            ?: throw CancellationException()
 
-            val statusCountLimit = fetchingStatusCountLimit
+         val statusCountLimit = fetchingStatusCountLimit
 
-            val olderItems = action[MASTODON]
-               .fetchHomeTimeline(
-                  maxId = maxId,
-                  statusCountLimit = statusCountLimit)
-               .map { StatusItem(it) }
-
-            val newerItems = recyclerViewItems()
-               .dropLastWhile { it is LoadingIndicatorItem || it is MissingStatusItem }
-
-            recyclerViewItems.value = newerItems + olderItems
-            canFetchOlder.value = olderItems.size >= statusCountLimit
+         val fetchedStatuses = try {
+            action[MASTODON].fetchHomeTimeline(
+               maxId = maxId, statusCountLimit = statusCountLimit)
          } catch (e: CancellationException) {
             throw e
          } catch (e: Exception) {
             Toast.makeText(this@TimelineActivity, "Something goes wrong", Toast.LENGTH_LONG).show()
+            throw CancellationException()
          }
+
+         val olderItems = fetchedStatuses.map { StatusItem(it) }
+
+         val newerItems = recyclerViewItems()
+            .dropLastWhile { it is LoadingIndicatorItem || it is MissingStatusItem }
+
+         recyclerViewItems.value = newerItems + olderItems
+         canFetchOlder.value = olderItems.size >= statusCountLimit
       }
    }
 
