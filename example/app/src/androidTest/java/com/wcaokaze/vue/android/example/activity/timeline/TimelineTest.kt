@@ -68,7 +68,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          delay(25L) // wait for the fetching coroutine
 
@@ -100,7 +100,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          withContext(Dispatchers.Main) {
             activityRule.activity.fetchNewer()
@@ -137,7 +137,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          withContext(Dispatchers.Main) {
             activityRule.activity.fetchNewer()
@@ -175,7 +175,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          withContext(Dispatchers.Main) {
             activityRule.activity.fetchOlder()
@@ -208,7 +208,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          withContext(Dispatchers.Main) {
             activityRule.activity.fetchOlder()
@@ -255,7 +255,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          withContext(Dispatchers.Main) {
             activityRule.activity.fetchOlder()
@@ -287,7 +287,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          delay(25L) // wait for the fetching coroutine
 
@@ -308,7 +308,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          delay(25L) // wait for the fetching coroutine
 
@@ -335,7 +335,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          withContext(Dispatchers.Main) {
             activityRule.activity.fetchOlder()
@@ -366,7 +366,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          withContext(Dispatchers.Main) {
             activityRule.activity.fetchOlder()
@@ -409,7 +409,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          withContext(Dispatchers.Main) {
             activityRule.activity.fetchNewer()
@@ -464,7 +464,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          withContext(Dispatchers.Main) {
             activityRule.activity.fetchNewer()
@@ -522,7 +522,7 @@ class TimelineTest : KoinTest {
             }
          })
 
-         activityRule.launchActivity(null)
+         launchActivity()
 
          withContext(Dispatchers.Main) {
             activityRule.activity.fetchNewer()
@@ -588,5 +588,10 @@ class TimelineTest : KoinTest {
             StubPreferenceState { "accessToken" }
          }
       }
+   }
+
+   private suspend fun launchActivity() {
+      activityRule.launchActivity(null)
+      delay(50L)
    }
 }
