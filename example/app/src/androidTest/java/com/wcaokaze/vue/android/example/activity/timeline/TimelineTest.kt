@@ -57,12 +57,7 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchFirstTime() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> = createIStatuses(0)
-         })
+         startMockedTimelineModule { createIStatuses(0) }
 
          launchActivity()
 
@@ -77,18 +72,13 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchNewer() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (sinceId == null) {
-                  createIStatuses(0)
-               } else {
-                  createIStatuses(1)
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(0)
+            } else {
+               createIStatuses(1)
             }
-         })
+         }
 
          launchActivity()
          requestFetchNewer()
@@ -105,18 +95,13 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchNewer_missing() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (sinceId == null) {
-                  createIStatuses(0)
-               } else {
-                  createIStatuses(1 until 21)
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(0)
+            } else {
+               createIStatuses(1 until 21)
             }
-         })
+         }
 
          launchActivity()
          requestFetchNewer()
@@ -134,18 +119,13 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchOlder() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (maxId == null) {
-                  createIStatuses(1 until 21)
-               } else {
-                  createIStatuses(0)
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(1 until 21)
+            } else {
+               createIStatuses(0)
             }
-         })
+         }
 
          launchActivity()
          requestFetchOlder()
@@ -161,19 +141,14 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchOlder_indicator() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (maxId == null) {
-                  createIStatuses(1 until 21)
-               } else {
-                  delay(3000L)
-                  createIStatuses(0)
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(1 until 21)
+            } else {
+               delay(3000L)
+               createIStatuses(0)
             }
-         })
+         }
 
          launchActivity()
          requestFetchOlder()
@@ -186,29 +161,18 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchOlder_ignoreSecondTime() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            private var invocationCount = 0
+         startMockedTimelineModule { invocationCount ->
+            when (invocationCount) {
+               0 -> createIStatuses(1 until 21)
 
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               val statuses = when (invocationCount) {
-                  0 -> createIStatuses(1 until 21)
-
-                  1 -> {
-                     delay(3000L)
-                     createIStatuses(0)
-                  }
-
-                  else -> fail("fetchOlder should ignore on the second time")
+               1 -> {
+                  delay(3000L)
+                  createIStatuses(0)
                }
 
-               invocationCount++
-
-               return statuses
+               else -> fail("fetchOlder should ignore on the second time")
             }
-         })
+         }
 
          launchActivity()
          requestFetchOlder()
@@ -218,12 +182,7 @@ class TimelineTest : KoinTest {
 
    @Test fun canFetchOlder_firstTime() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> = createIStatuses(0 until 20)
-         })
+         startMockedTimelineModule { createIStatuses(0 until 20) }
 
          launchActivity()
 
@@ -233,12 +192,7 @@ class TimelineTest : KoinTest {
 
    @Test fun cannotFetchOlder_firstTime() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> = createIStatuses(0)
-         })
+         startMockedTimelineModule { createIStatuses(0) }
 
          launchActivity()
 
@@ -248,18 +202,13 @@ class TimelineTest : KoinTest {
 
    @Test fun canFetchOlder_afterFetchingOlder() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (maxId == null) {
-                  createIStatuses(20 until 40)
-               } else {
-                  createIStatuses( 0 until 20)
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(20 until 40)
+            } else {
+               createIStatuses( 0 until 20)
             }
-         })
+         }
 
          launchActivity()
          requestFetchOlder()
@@ -270,18 +219,13 @@ class TimelineTest : KoinTest {
 
    @Test fun cannotFetchOlder_afterFetchingOlder() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return if (maxId == null) {
-                  createIStatuses(1 until 21)
-               } else {
-                  createIStatuses(0)
-               }
+         startMockedTimelineModule { invocationCount ->
+            if (invocationCount == 0) {
+               createIStatuses(1 until 21)
+            } else {
+               createIStatuses(0)
             }
-         })
+         }
 
          launchActivity()
          requestFetchOlder()
@@ -292,25 +236,14 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchMissing() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            private var invocationCount = 0
-
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               val statuses = when (invocationCount) {
-                  0 -> createIStatuses( 0 until 20)
-                  1 -> createIStatuses(21 until 41)
-                  2 -> createIStatuses(20)
-                  else -> emptyList()
-               }
-
-               invocationCount++
-
-               return statuses
+         startMockedTimelineModule { invocationCount ->
+            when (invocationCount) {
+               0 -> createIStatuses( 0 until 20)
+               1 -> createIStatuses(21 until 41)
+               2 -> createIStatuses(20)
+               else -> emptyList()
             }
-         })
+         }
 
          launchActivity()
          requestFetchNewer()
@@ -331,25 +264,14 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchMissing_moreMissing() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            private var invocationCount = 0
-
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               val statuses = when (invocationCount) {
-                  0 -> createIStatuses( 0 until 20)
-                  1 -> createIStatuses(40 until 60)
-                  2 -> createIStatuses(20 until 40)
-                  else -> emptyList()
-               }
-
-               invocationCount++
-
-               return statuses
+         startMockedTimelineModule { invocationCount ->
+            when (invocationCount) {
+               0 -> createIStatuses( 0 until 20)
+               1 -> createIStatuses(40 until 60)
+               2 -> createIStatuses(20 until 40)
+               else -> emptyList()
             }
-         })
+         }
 
          launchActivity()
          requestFetchNewer()
@@ -372,28 +294,17 @@ class TimelineTest : KoinTest {
 
    @Test fun fetchMissing_indicator() {
       runBlocking {
-         startMockedTimelineModule(object : TimelineService {
-            private var invocationCount = 0
+         startMockedTimelineModule { invocationCount ->
+            when (invocationCount) {
+               0 -> createIStatuses( 0 until 20)
+               1 -> createIStatuses(40 until 60)
 
-            override suspend fun fetchHomeTimeline(
-               local: Boolean?, onlyMedia: Boolean?,
-               maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               val statuses = when (invocationCount) {
-                  0 -> createIStatuses( 0 until 20)
-                  1 -> createIStatuses(40 until 60)
-
-                  else -> {
-                     delay(3000L)
-                     createIStatuses(20 until 40)
-                  }
+               else -> {
+                  delay(3000L)
+                  createIStatuses(20 until 40)
                }
-
-               invocationCount++
-
-               return statuses
             }
-         })
+         }
 
          launchActivity()
          requestFetchNewer()
@@ -410,7 +321,21 @@ class TimelineTest : KoinTest {
       }
    }
 
-   private fun startMockedTimelineModule(timelineService: TimelineService) {
+   private fun startMockedTimelineModule(
+      fetchHomeTimeline: suspend (invocationCount: Int) -> List<IStatus>
+   ) {
+      val timelineService = object : TimelineService {
+         private var invocationCount = 0
+
+         override suspend fun fetchHomeTimeline(
+            local: Boolean?, onlyMedia: Boolean?, maxId: String?, sinceId: String?, limit: Int?
+         ): List<IStatus> {
+            val statuses = fetchHomeTimeline(invocationCount)
+            invocationCount++
+            return statuses
+         }
+      }
+
       Application.mastodonModule = module {
          single { TimeZone.getDefault() }
 
@@ -420,7 +345,7 @@ class TimelineTest : KoinTest {
                credential.accessToken)
          }
 
-         factory { (_: Credential) -> timelineService }
+         factory<TimelineService> { (_: Credential) -> timelineService }
 
          factory {
             @OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
