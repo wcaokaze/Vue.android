@@ -18,8 +18,12 @@
 package com.wcaokaze.vue.android.example
 
 import android.app.Application
+import androidx.annotation.*
+import com.wcaokaze.vue.android.example.mastodon.*
+import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.statuses.*
+import com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.timelines.*
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
+import io.ktor.client.engine.android.*
 import io.ktor.client.features.*
 import io.ktor.client.features.compression.*
 import io.ktor.client.features.json.*
@@ -29,34 +33,104 @@ import io.ktor.http.*
 import io.ktor.util.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
-import org.kodein.di.*
-import org.kodein.di.generic.*
+import org.koin.android.ext.koin.*
+import org.koin.core.context.*
+import org.koin.core.module.*
+import org.koin.core.qualifier.*
+import org.koin.dsl.*
+import vue.vuex.preference.*
 import java.util.*
 
-class Application : Application(), KodeinAware {
-   override val kodein = Kodein.lazy {
-      bind<TimeZone>() with provider { TimeZone.getDefault() }
+class Application : Application() {
+   companion object {
+      private fun getKoin() = KoinContextHandler.get()
 
-      bind<HttpClient>() with provider {
-         @OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
-         HttpClient(CIO) {
-            install(JsonFeature) {
-               val jsonConfiguration = JsonConfiguration(ignoreUnknownKeys = true)
-               serializer = KotlinxSerializer(Json(jsonConfiguration))
-            }
+      private var _mastodonModule = module {
+         single { TimeZone.getDefault() }
 
-            ContentEncoding()
+         factory<StatusService> { (credential: Credential) ->
+            StatusServiceImpl(
+               credential.instanceUrl.toExternalForm(),
+               credential.accessToken)
+         }
 
-            defaultRequest {
-               accept(ContentType.Application.Json)
+         factory<TimelineService> { (credential: Credential) ->
+            TimelineServiceImpl(
+               credential.instanceUrl.toExternalForm(),
+               credential.accessToken)
+         }
+
+         factory {
+            @OptIn(KtorExperimentalAPI::class, UnstableDefault::class)
+            HttpClient(Android) {
+               install(JsonFeature) {
+                  val jsonConfiguration = JsonConfiguration(ignoreUnknownKeys = true)
+                  serializer = KotlinxSerializer(Json(jsonConfiguration))
+               }
+
+               ContentEncoding()
+
+               defaultRequest {
+                  accept(ContentType.Application.Json)
+               }
             }
          }
       }
+
+      internal var mastodonModule: Module
+         get() = _mastodonModule
+         @VisibleForTesting set(value) {
+            getKoin().unloadModules(listOf(_mastodonModule))
+            _mastodonModule = value
+            getKoin().loadModules(listOf(value))
+         }
+
+      private var _applicationModule = module {
+         single { Store() }
+
+         factory(named("fetchingTimelineStatusCountLimit")) { 20 }
+
+         single { PreferenceFile("Credential") }
+
+         single(named("instanceUrlPreference")) {
+            PreferenceState(NullableStringPreferenceLoader,
+               context = get(),
+               file = get(),
+               key = "instanceUrl",
+               default = null
+            )
+         }
+
+         single(named("accessTokenPreference")) {
+            PreferenceState(NullableStringPreferenceLoader,
+               context = get(),
+               file = get(),
+               key = "accessToken",
+               default = null
+            )
+         }
+      }
+
+      internal var applicationModule: Module
+         get() = _applicationModule
+         @VisibleForTesting set(value) {
+            getKoin().unloadModules(listOf(_applicationModule))
+            _applicationModule = value
+            getKoin().loadModules(listOf(value))
+         }
    }
 
-   val store    by lazy { Store(kodein, this) }
-   val state    by lazy { store.state }
-   val mutation by lazy { store.mutation }
-   val action   by lazy { store.action }
-   val getter   by lazy { store.getter }
+   override fun onCreate() {
+      super.onCreate()
+
+      startKoin {
+         androidLogger()
+         androidContext(this@Application)
+
+         modules(
+            mastodonModule,
+            applicationModule
+         )
+      }
+   }
 }

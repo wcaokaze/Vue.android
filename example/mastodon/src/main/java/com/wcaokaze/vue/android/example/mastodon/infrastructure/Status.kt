@@ -20,7 +20,7 @@ package com.wcaokaze.vue.android.example.mastodon.infrastructure
 import kotlinx.serialization.*
 
 @Serializable
-internal data class Status(
+data class Status(
    val id: String,
    val account: Account,
    val reblog: Status? = null,

@@ -43,20 +43,11 @@ class Action : VuexAction<State, Mutation, Getter>()
 class Getter : VuexGetter<State>()
 
 class NoStoreComponent(context: Context) : VComponent<Nothing>() {
-   companion object : KoshianNoStoreComponentConstructor<NoStoreComponent> {
-      override fun instantiate(context: Context) = NoStoreComponent(context)
-   }
-
    override val componentView = View(context)
    override val store: Nothing get() = throw UnsupportedOperationException()
 }
 
 class StoreComponent(context: Context, override val store: Store) : VComponent<Store>() {
-   companion object : KoshianComponentConstructor<StoreComponent, Store> {
-      override fun instantiate(context: Context, store: Store)
-            = StoreComponent(context, store)
-   }
-
    override val componentView = View(context)
 }
 
@@ -73,7 +64,7 @@ class VComponentApplicableTest {
          @OptIn(ExperimentalContracts::class)
          val rootView = koshian(activity) {
             FrameLayout {
-               componentAsResult = Component[NoStoreComponent] {
+               componentAsResult = Component[::NoStoreComponent] {
                   componentInDsl = component
                }
             }
@@ -91,7 +82,7 @@ class VComponentApplicableTest {
          @OptIn(ExperimentalContracts::class)
          val rootView = koshian(activity) {
             FrameLayout {
-               componentAsResult = Component[NoStoreComponent] {
+               componentAsResult = Component[::NoStoreComponent] {
                }
             }
          }
@@ -113,7 +104,7 @@ class VComponentApplicableTest {
          @OptIn(ExperimentalContracts::class)
          koshian(activity) {
             FrameLayout {
-               componentAsResult = Component[StoreComponent, store] {
+               componentAsResult = Component[::StoreComponent, store] {
                }
             }
          }
@@ -133,15 +124,11 @@ class VComponentApplicableTest {
             @OptIn(ExperimentalContracts::class)
             koshian(context) {
                componentView = FrameLayout {
-                  childComponent = Component[StoreComponent] {
+                  childComponent = Component[::StoreComponent] {
                   }
                }
             }
          }
-      }
-
-      val inheritStoreComponentConstructor = KoshianComponentConstructor { context, store: Store ->
-         InheritStoreComponent(context, store)
       }
 
       val store = Store()
@@ -152,7 +139,7 @@ class VComponentApplicableTest {
          @OptIn(ExperimentalContracts::class)
          koshian(activity) {
             FrameLayout {
-               parentComponent = Component[inheritStoreComponentConstructor, store] {
+               parentComponent = Component[::InheritStoreComponent, store] {
                }
             }
          }
@@ -190,15 +177,11 @@ class VComponentApplicableTest {
             @OptIn(ExperimentalContracts::class)
             koshian(context) {
                componentView = FrameLayout {
-                  childComponent = Component[StoreComponent, moduleKey] {
+                  childComponent = Component[::StoreComponent, moduleKey] {
                   }
                }
             }
          }
-      }
-
-      val parentComponentConstructor = KoshianComponentConstructor { context, store: ParentStore ->
-         ParentComponent(context, store)
       }
 
       val parentStore = ParentStore()
@@ -210,7 +193,7 @@ class VComponentApplicableTest {
          @OptIn(ExperimentalContracts::class)
          koshian(activity) {
             FrameLayout {
-               parentComponent = Component[parentComponentConstructor, parentStore] {
+               parentComponent = Component[::ParentComponent, parentStore] {
                }
             }
          }
@@ -229,15 +212,11 @@ class VComponentApplicableTest {
             @OptIn(ExperimentalContracts::class)
             koshian(context) {
                componentView = FrameLayout {
-                  Component[NoStoreComponent] {
+                  Component[::NoStoreComponent] {
                   }
                }
             }
          }
-      }
-
-      val inheritStoreComponentConstructor = KoshianComponentConstructor { context, store: Store ->
-         InheritStoreComponent(context, store)
       }
 
       val store = Store()
@@ -246,7 +225,7 @@ class VComponentApplicableTest {
          @OptIn(ExperimentalContracts::class)
          koshian(activity) {
             FrameLayout {
-               Component[inheritStoreComponentConstructor, store] {
+               Component[::InheritStoreComponent, store] {
                }
             }
          }

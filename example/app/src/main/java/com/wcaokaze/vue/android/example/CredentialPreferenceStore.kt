@@ -16,32 +16,31 @@
 
 package com.wcaokaze.vue.android.example
 
-import android.content.*
 import com.wcaokaze.vue.android.example.mastodon.*
+import org.koin.core.*
+import org.koin.core.qualifier.*
 import vue.*
 import vue.vuex.*
 import vue.vuex.preference.*
 import java.net.MalformedURLException
 import java.net.URL
 
-class CredentialPreferenceStore(private val context: Context)
+class CredentialPreferenceStore
       : VuexStore<
             CredentialPreferenceState,
             CredentialPreferenceMutation,
             CredentialPreferenceAction,
             CredentialPreferenceGetter>()
 {
-   override fun createState()    = CredentialPreferenceState(context)
+   override fun createState()    = CredentialPreferenceState()
    override fun createMutation() = CredentialPreferenceMutation()
    override fun createAction()   = CredentialPreferenceAction()
    override fun createGetter()   = CredentialPreferenceGetter()
 }
 
-class CredentialPreferenceState(context: Context) : VuexState() {
-   private val file = PreferenceFile("Credential")
-
-   val instanceUrl by nullableStringPreferenceState(context, file, default = null)
-   val accessToken by nullableStringPreferenceState(context, file, default = null)
+class CredentialPreferenceState : VuexState(), KoinComponent {
+   val instanceUrl: PreferenceState<String?> = get(named("instanceUrlPreference"))
+   val accessToken: PreferenceState<String?> = get(named("accessTokenPreference"))
 }
 
 class CredentialPreferenceMutation : VuexMutation<CredentialPreferenceState>() {

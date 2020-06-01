@@ -23,42 +23,36 @@ import android.net.*
 import android.os.*
 import android.widget.*
 import com.wcaokaze.vue.android.example.*
-import com.wcaokaze.vue.android.example.Application
 import com.wcaokaze.vue.android.example.BuildConfig
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.CREDENTIAL_PREFERENCE
-import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
 import com.wcaokaze.vue.android.example.activity.timeline.*
-import com.wcaokaze.vue.android.example.mastodon.*
 import com.wcaokaze.vue.android.example.mastodon.auth.*
 import koshian.*
 import kotlinx.coroutines.*
-import org.kodein.di.*
-import org.kodein.di.android.*
+import org.koin.android.ext.android.*
 import vue.*
 import vue.koshian.*
 import java.net.*
 import kotlin.contracts.*
 
-class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
-   override val kodein by closestKodein()
+class AuthActivity : Activity(), VComponentInterface<Store> {
    override val componentLifecycle = ComponentLifecycle(this)
 
    override lateinit var componentView: FrameLayout
 
-   override val store: Store
-      get() = (application as Application).store
+   override val store: Store by inject()
 
-   private val authorizator by lazy { MastodonAuthorizator(kodein) }
+   private val authorizator by lazy { MastodonAuthorizator() }
 
    private val instanceUrl = state<CharSequence>("https://")
    private val errorMessage = state<String?>(null)
 
    private val client = state<Client?>(null)
 
-   private val clientRegistrationJob = state<Job>(Job().apply { complete() })
+   private val clientRegistrationJob = state(Job.completed())
    private val isRegisteringClient = getter { clientRegistrationJob().toReactiveField()() }
 
-   private val credentialPublishingJob = state<Job>(Job().apply { complete() })
+   private val credentialPublishingJob = state(Job.completed())
    private val isPublishingCredential = getter { credentialPublishingJob().toReactiveField()() }
 
    override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +61,7 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
 
       watcher(getter[CREDENTIAL_PREFERENCE].credential, immediate = true) {
          if (it != null) {
-            startTimelineActivity(it)
+            startTimelineActivity()
          }
       }
    }
@@ -81,9 +75,7 @@ class AuthActivity : Activity(), VComponentInterface<Store>, KodeinAware {
       publishCredential(authCode)
    }
 
-   private fun startTimelineActivity(credential: Credential) {
-      mutation[MASTODON].setCredential(credential)
-
+   private fun startTimelineActivity() {
       startActivity(
          Intent(this, TimelineActivity::class.java))
 

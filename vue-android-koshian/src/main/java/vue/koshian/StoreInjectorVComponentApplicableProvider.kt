@@ -22,50 +22,18 @@ import vue.*
 import vue.vuex.*
 
 /**
- * At first, declare a KoshianComponentConstructor.
- * ```kotlin
- * val FooComponent get() = KoshianComponentConstructor { context, store: FooStore ->
- *    FooComponent(context, store)
- * }
- * ```
- *
- * Or companion object is also a good way if you can.
- * ```kotlin
- * class FooComponent(context: Context, override val store: FooStore) : VComponent<FooStore>() {
- *    companion object : KoshianComponentConstructor<FooComponent, FooStore> {
- *       override fun instantiate(context: Context, store: FooStore)
- *             = FooComponent(context, store)
- *    }
- * }
- * ```
- *
  * We can create the component in Koshian DSL.
  * ```kotlin
  * koshian(context) {
  *    FrameLayout {
- *       Component[FooComponent, fooStore] {
+ *       Component[::FooComponent, fooStore] {
  *       }
  *    }
  * }
  * ```
  *
- * Note that `Component` can not match in applier.
- * We have to receive an Applicable to match it later.
- * ```kotlin
- * val componentApplicable: VComponentApplicable<FooComponent>
- *
- * val layout = koshian(context) {
- *    FrameLayout {
- *       componentApplicable = Component[FooComponent, fooStore] {
- *       }
- *    }
- * }
- *
- * layout.applyKoshian {
- *    componentApplicable {
- *    }
- * }
- * ```
+ * Note that the Component must have `constructor(Context, VuexStore)` or
+ * `constructor(Context)`.
  */
 val <S> VComponentInterface<S>.Component: StoreInjectorVComponentApplicableProvider<S>
       where S : VuexStore<*, *, *, *>
@@ -93,7 +61,7 @@ class StoreInjectorVComponentApplicableProvider<P>
          "Store type mismatch. Check the type of Store for the Component.",
          level = DeprecationLevel.ERROR)
    operator fun <C> get(
-         componentConstructor: KoshianComponentConstructor<C, *>,
+         componentConstructor: (Context, VuexStore<*, *, *, *>) -> C,
          store: VuexStore<*, *, *, *>
    ): VComponentApplicable<C>
          where C : VComponentInterface<*>
@@ -106,12 +74,12 @@ class StoreInjectorVComponentApplicableProvider<P>
          "The Component does not require any VuexStore. Remove the Store.",
          level = DeprecationLevel.ERROR)
    operator fun <C> get(
-         componentConstructor: KoshianNoStoreComponentConstructor<C>,
+         componentConstructor: (Context) -> C,
          @Suppress("UNUSED_PARAMETER") store: VuexStore<*, *, *, *>
    ): VComponentApplicable<C>
          where C : VComponentInterface<Nothing>
    {
-      val component = componentConstructor.instantiate(context)
+      val component = componentConstructor(context)
       return VComponentApplicable(component)
    }
 
@@ -120,49 +88,31 @@ class StoreInjectorVComponentApplicableProvider<P>
     * ```kotlin
     * koshian(context) {
     *    FrameLayout {
-    *       Component[FooComponent, fooStore] {
+    *       Component[::FooComponent, fooStore] {
     *       }
-    *    }
-    * }
-    * ```
-    *
-    * Note that `Component` can not match in applier.
-    * We have to receive an Applicable to match it later.
-    * ```kotlin
-    * val componentApplicable: VComponentApplicable<FooComponent>
-    *
-    * val layout = koshian(context) {
-    *    FrameLayout {
-    *       componentApplicable = Component[FooComponent, fooStore] {
-    *       }
-    *    }
-    * }
-    *
-    * layout.applyKoshian {
-    *    componentApplicable {
     *    }
     * }
     * ```
     */
    operator fun <C, S> get(
-         componentConstructor: KoshianComponentConstructor<C, S>,
+         componentConstructor: (Context, S) -> C,
          store: S
    ): VComponentApplicable<C>
          where C : VComponentInterface<S>,
                S : VuexStore<*, *, *, *>
    {
-      val component = componentConstructor.instantiate(context, store)
+      val component = componentConstructor(context, store)
       return VComponentApplicable(component)
    }
 
    @JvmName("getComponentApplicableMissingStore")
    @Deprecated(
          "This Component requires a VuexStore, and cannot inherit Store from parent Component. " +
-         "Specify a VuexStore like `[Component, store]` " +
-         "or inject a submodule from parent Component like `[Component, MODULE_KEY]`",
+         "Specify a VuexStore like `[::Component, store]` " +
+         "or inject a submodule from parent Component like `[::Component, MODULE_KEY]`",
          level = DeprecationLevel.ERROR)
    operator fun <C, S> get(
-         componentConstructor: KoshianComponentConstructor<C, S>
+         componentConstructor: (Context, S) -> C
    ): VComponentApplicable<C>
          where C : VComponentInterface<S>,
                S : VuexStore<*, *, *, *>
@@ -175,36 +125,18 @@ class StoreInjectorVComponentApplicableProvider<P>
     * ```kotlin
     * koshian(context) {
     *    FrameLayout {
-    *       Component[FooComponent] {
+    *       Component[::FooComponent] {
     *       }
-    *    }
-    * }
-    * ```
-    *
-    * Note that `Component` can not match in applier.
-    * We have to receive an Applicable to match it later.
-    * ```kotlin
-    * val componentApplicable: VComponentApplicable<FooComponent>
-    *
-    * val layout = koshian(context) {
-    *    FrameLayout {
-    *       componentApplicable = Component[FooComponent] {
-    *       }
-    *    }
-    * }
-    *
-    * layout.applyKoshian {
-    *    componentApplicable {
     *    }
     * }
     * ```
     */
    operator fun <C> get(
-         componentConstructor: KoshianNoStoreComponentConstructor<C>
+         componentConstructor: (Context) -> C
    ): VComponentApplicable<C>
          where C : VComponentInterface<Nothing>
    {
-      val component = componentConstructor.instantiate(context)
+      val component = componentConstructor(context)
       return VComponentApplicable(component)
    }
 
@@ -217,32 +149,8 @@ class StoreInjectorVComponentApplicableProvider<P>
     *    init {
     *       koshian(context) {
     *          componentView = FrameLayout {
-    *             Component[FooComponent] {
+    *             Component[::FooComponent] {
     *             }
-    *          }
-    *       }
-    *    }
-    * }
-    * ```
-    *
-    * Note that `Component` can not match in applier.
-    * We have to receive an Applicable to match it later.
-    * ```kotlin
-    * class ParentComponent(context: Context, override val store: FooStore) : VComponent<FooStore>() {
-    *    override val componentView: FrameLayout
-    *
-    *    init {
-    *       val componentApplicable: VComponentApplicable<FooComponent>
-    *
-    *       koshian(context) {
-    *          componentView = FrameLayout {
-    *             componentApplicable = Component[FooComponent] {
-    *             }
-    *          }
-    *       }
-    *
-    *       componentView.applyKoshian {
-    *          componentApplicable {
     *          }
     *       }
     *    }
@@ -250,11 +158,11 @@ class StoreInjectorVComponentApplicableProvider<P>
     * ```
     */
    operator fun <C> get(
-         componentConstructor: KoshianComponentConstructor<C, P>
+         componentConstructor: (Context, P) -> C
    ): VComponentApplicable<C>
          where C : VComponentInterface<P>
    {
-      val component = componentConstructor.instantiate(context, parent.store)
+      val component = componentConstructor(context, parent.store)
       return VComponentApplicable(component)
    }
 
@@ -264,7 +172,7 @@ class StoreInjectorVComponentApplicableProvider<P>
          "Check the type of Module Key and the type of Store for the Component.",
          level = DeprecationLevel.ERROR)
    operator fun <C, S, K> get(
-         componentConstructor: KoshianComponentConstructor<C, S>,
+         componentConstructor: (Context, S) -> C,
          moduleKey: K
    ): VComponentApplicable<C>
          where C : VComponentInterface<S>,
@@ -279,13 +187,13 @@ class StoreInjectorVComponentApplicableProvider<P>
          "The Component does not require any VuexStore. Remove the Module Key.",
          level = DeprecationLevel.ERROR)
    operator fun <C, K> get(
-         componentConstructor: KoshianNoStoreComponentConstructor<C>,
+         componentConstructor: (Context) -> C,
          @Suppress("UNUSED_PARAMETER") moduleKey: K
    ): VComponentApplicable<C>
          where C : VComponentInterface<Nothing>,
                K : VuexStore.Module.Key<*, *, *, *, *>
    {
-      val component = componentConstructor.instantiate(context)
+      val component = componentConstructor(context)
       return VComponentApplicable(component)
    }
 
@@ -298,32 +206,8 @@ class StoreInjectorVComponentApplicableProvider<P>
     *    init {
     *       koshian(context) {
     *          componentView = FrameLayout {
-    *             Component[FooComponent, ParentStore.ModuleKeys.FOO] {
+    *             Component[::FooComponent, ParentStore.ModuleKeys.FOO] {
     *             }
-    *          }
-    *       }
-    *    }
-    * }
-    * ```
-    *
-    * Note that `Component` can not match in applier.
-    * We have to receive an Applicable to match it later.
-    * ```kotlin
-    * class ParentComponent(context: Context, override val store: ParentStore) : VComponent<ParentStore>() {
-    *    override val componentView: FrameLayout
-    *
-    *    init {
-    *       val componentApplicable: VComponentApplicable<FooComponent>
-    *
-    *       koshian(context) {
-    *          componentView = FrameLayout {
-    *             componentApplicable = Component[FooComponent, ParentStore.ModuleKeys.FOO] {
-    *             }
-    *          }
-    *       }
-    *
-    *       componentView.applyKoshian {
-    *          componentApplicable {
     *          }
     *       }
     *    }
@@ -331,14 +215,14 @@ class StoreInjectorVComponentApplicableProvider<P>
     * ```
     */
    operator fun <C, S> get(
-         componentConstructor: KoshianComponentConstructor<C, S>,
+         componentConstructor: (Context, S) -> C,
          moduleKey: VuexStore.Module.Key<S, *, *, *, *>
    ): VComponentApplicable<C>
          where C : VComponentInterface<S>,
                S : VuexStore<*, *, *, *>
    {
       val store = parent.store.modules[moduleKey]
-      val component = componentConstructor.instantiate(context, store)
+      val component = componentConstructor(context, store)
       return VComponentApplicable(component)
    }
 }

@@ -20,7 +20,7 @@ package com.wcaokaze.vue.android.example.mastodon.infrastructure
 import kotlinx.serialization.*
 
 @Serializable
-internal data class Emoji(
+data class Emoji(
    val shortcode: String,
    val url: String
 )

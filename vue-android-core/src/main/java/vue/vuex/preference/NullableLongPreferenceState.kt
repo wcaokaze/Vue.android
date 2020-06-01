@@ -20,7 +20,7 @@ import android.content.*
 
 /**
  * [PreferenceState] for Long?.
- * @see PreferenceState
+ * @see [PreferenceState][PreferenceState.Companion.invoke]
  */
 fun nullableLongPreferenceState(
       context: Context,
@@ -31,7 +31,7 @@ fun nullableLongPreferenceState(
 
 /**
  * [PreferenceState] for Long?.
- * @see PreferenceState
+ * @see [PreferenceState][PreferenceState.Companion.invoke]
  */
 fun nullableLongPreferenceState(
       context: Context,

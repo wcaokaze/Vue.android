@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-package com.wcaokaze.vue.android.example.mastodon.infrastructure.v1.statuses
+rootProject.name = 'vue-android-androidx'
 
-import com.wcaokaze.vue.android.example.mastodon.infrastructure.*
-import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
+include 'vue-android-core'
+project(':vue-android-core').projectDir = file('../vue-android-core')
 
-internal suspend fun MastodonInstance.unreblogStatus(
-   accessToken: String,
-   statusId: String
-): Status {
-   return httpClient.use {
-      it.submitForm(getApiUrl("api/v1/statuses/$statusId/unreblog")) {
-         header("Authorization", "Bearer $accessToken")
-      }
-   }
-}

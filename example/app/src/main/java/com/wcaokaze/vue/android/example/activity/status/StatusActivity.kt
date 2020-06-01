@@ -21,28 +21,24 @@ import android.os.*
 import android.widget.*
 import com.wcaokaze.vue.android.example.*
 import com.wcaokaze.vue.android.example.Store.ModuleKeys.MASTODON
-import com.wcaokaze.vue.android.example.Application
 import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
 import kotlinx.coroutines.*
-import org.kodein.di.*
-import org.kodein.di.android.*
+import org.koin.android.ext.android.*
 import vue.*
 import vue.koshian.*
 import kotlin.contracts.*
 
-class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
+class StatusActivity : Activity(), VComponentInterface<Store> {
    companion object {
       const val INTENT_KEY_STATUS_ID = "STATUS_ID"
    }
 
-   override val kodein by closestKodein()
    override val componentLifecycle = ComponentLifecycle(this)
 
    override lateinit var componentView: LinearLayout
 
-   override val store: Store
-      get() = (application as Application).store
+   override val store: Store by inject()
 
    private val statusId = state<Status.Id?>(null)
 
@@ -103,12 +99,12 @@ class StatusActivity : Activity(), VComponentInterface<Store>, KodeinAware {
          componentView = LinearLayout {
             view.orientation = VERTICAL
 
-            Component[StatusComponent, MASTODON] {
+            Component[::StatusComponent, MASTODON] {
                layout.width  = MATCH_PARENT
                component.status(status)
             }
 
-            Component[FooterComponent] {
+            Component[::FooterComponent] {
                layout.width = MATCH_PARENT
                layout.verticalMargin = 8.dp
                component.isBoosted   { toot()?.isBoosted   }
