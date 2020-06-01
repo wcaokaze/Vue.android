@@ -247,11 +247,7 @@ class TimelineTest : KoinTest {
 
          launchActivity()
          requestFetchNewer()
-
-         val missingItemPosition = activityRule.activity.recyclerViewItems()
-            .indexOfFirst { it is MissingStatusItem }
-
-         requestFetchMissing(missingItemPosition)
+         requestFetchMissing()
 
          assertEquals(
             listOf(
@@ -275,11 +271,7 @@ class TimelineTest : KoinTest {
 
          launchActivity()
          requestFetchNewer()
-
-         val missingItemPosition = activityRule.activity.recyclerViewItems()
-            .indexOfFirst { it is MissingStatusItem }
-
-         requestFetchMissing(missingItemPosition)
+         requestFetchMissing()
 
          assertEquals(
             listOf(
@@ -308,11 +300,7 @@ class TimelineTest : KoinTest {
 
          launchActivity()
          requestFetchNewer()
-
-         val missingItemPosition = activityRule.activity.recyclerViewItems()
-            .indexOfFirst { it is MissingStatusItem }
-
-         requestFetchMissing(missingItemPosition)
+         requestFetchMissing()
 
          assertTrue(
             activityRule.activity.recyclerViewItems()
@@ -404,9 +392,12 @@ class TimelineTest : KoinTest {
       delay(50L) // wait for the fetching coroutine
    }
 
-   private suspend fun requestFetchMissing(position: Int) {
+   private suspend fun requestFetchMissing() {
       withContext(Dispatchers.Main) {
-         activityRule.activity.fetchMissing(position)
+         val missingItemPosition = activityRule.activity.recyclerViewItems()
+            .indexOfFirst { it is MissingStatusItem }
+
+         activityRule.activity.fetchMissing(missingItemPosition)
       }
 
       delay(50L) // wait for the fetching coroutine
