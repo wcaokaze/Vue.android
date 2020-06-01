@@ -61,16 +61,10 @@ class TimelineTest : KoinTest {
             override suspend fun fetchHomeTimeline(
                local: Boolean?, onlyMedia: Boolean?,
                maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return listOf(
-                  iStatus("0", iAccount("0", "wcaokaze"), "content0")
-               )
-            }
+            ): List<IStatus> = createIStatuses(0)
          })
 
          launchActivity()
-
-         delay(25L) // wait for the fetching coroutine
 
          assertEquals(
             listOf(
@@ -89,13 +83,9 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                return if (sinceId == null) {
-                  listOf(
-                     iStatus("0", iAccount("0", "wcaokaze"), "content0")
-                  )
+                  createIStatuses(0)
                } else {
-                  listOf(
-                     iStatus("1", iAccount("0", "wcaokaze"), "content1")
-                  )
+                  createIStatuses(1)
                }
             }
          })
@@ -126,13 +116,9 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                return if (sinceId == null) {
-                  listOf(
-                     iStatus("0", iAccount("0", "wcaokaze"), "content0")
-                  )
+                  createIStatuses(0)
                } else {
-                  (20 downTo 1).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
+                  createIStatuses(1 until 21)
                }
             }
          })
@@ -164,13 +150,9 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                return if (maxId == null) {
-                  (20 downTo 1).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
+                  createIStatuses(1 until 21)
                } else {
-                  listOf(
-                     iStatus("0", iAccount("0", "wcaokaze"), "content0")
-                  )
+                  createIStatuses(0)
                }
             }
          })
@@ -198,12 +180,10 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                return if (maxId == null) {
-                  (20 downTo 1).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
+                  createIStatuses(1 until 21)
                } else {
                   delay(3000L)
-                  emptyList()
+                  createIStatuses(0)
                }
             }
          })
@@ -232,18 +212,11 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                val statuses = when (invocationCount) {
-                  0 -> {
-                     (20 downTo 1).map {
-                        iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                     }
-                  }
+                  0 -> createIStatuses(1 until 21)
 
                   1 -> {
                      delay(50L)
-
-                     listOf(
-                        iStatus("0", iAccount("0", "wcaokaze"), "content0")
-                     )
+                     createIStatuses(0)
                   }
 
                   else -> fail("fetchOlder should ignore on the second time")
@@ -280,16 +253,10 @@ class TimelineTest : KoinTest {
             override suspend fun fetchHomeTimeline(
                local: Boolean?, onlyMedia: Boolean?,
                maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return (19 downTo 0).map {
-                  iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-               }
-            }
+            ): List<IStatus> = createIStatuses(0 until 20)
          })
 
          launchActivity()
-
-         delay(25L) // wait for the fetching coroutine
 
          assertTrue(activityRule.activity.canFetchOlder())
       }
@@ -301,16 +268,10 @@ class TimelineTest : KoinTest {
             override suspend fun fetchHomeTimeline(
                local: Boolean?, onlyMedia: Boolean?,
                maxId: String?, sinceId: String?, limit: Int?
-            ): List<IStatus> {
-               return listOf(
-                  iStatus("0", iAccount("0", "wcaokaze"), "content0")
-               )
-            }
+            ): List<IStatus> = createIStatuses(0)
          })
 
          launchActivity()
-
-         delay(25L) // wait for the fetching coroutine
 
          assertFalse(activityRule.activity.canFetchOlder())
       }
@@ -324,13 +285,9 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                return if (maxId == null) {
-                  (39 downTo 20).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
+                  createIStatuses(20 until 40)
                } else {
-                  (19 downTo 0).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
+                  createIStatuses( 0 until 20)
                }
             }
          })
@@ -355,13 +312,9 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                return if (maxId == null) {
-                  (39 downTo 20).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
+                  createIStatuses(1 until 21)
                } else {
-                  listOf(
-                     iStatus("0", iAccount("0", "wcaokaze"), "content0")
-                  )
+                  createIStatuses(0)
                }
             }
          })
@@ -388,18 +341,9 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                val statuses = when (invocationCount) {
-                  0 -> (19 downTo 0).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  1 -> (40 downTo 21).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  2 -> listOf(
-                     iStatus("20", iAccount("0", "wcaokaze"), "content20")
-                  )
-
+                  0 -> createIStatuses( 0 until 20)
+                  1 -> createIStatuses(21 until 41)
+                  2 -> createIStatuses(20)
                   else -> emptyList()
                }
 
@@ -443,18 +387,9 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                val statuses = when (invocationCount) {
-                  0 -> (19 downTo 0).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  1 -> (59 downTo 40).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  2 -> (39 downTo 20).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
+                  0 -> createIStatuses( 0 until 20)
+                  1 -> createIStatuses(40 until 60)
+                  2 -> createIStatuses(20 until 40)
                   else -> emptyList()
                }
 
@@ -502,17 +437,12 @@ class TimelineTest : KoinTest {
                maxId: String?, sinceId: String?, limit: Int?
             ): List<IStatus> {
                val statuses = when (invocationCount) {
-                  0 -> (19 downTo 0).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
-
-                  1 -> (59 downTo 40).map {
-                     iStatus(it.toString(), iAccount("0", "wcaokaze"), "content$it")
-                  }
+                  0 -> createIStatuses( 0 until 20)
+                  1 -> createIStatuses(40 until 60)
 
                   else -> {
                      delay(3000L)
-                     emptyList()
+                     createIStatuses(20 until 40)
                   }
                }
 
@@ -594,4 +524,13 @@ class TimelineTest : KoinTest {
       activityRule.launchActivity(null)
       delay(50L)
    }
+
+   private fun createIStatus(id: Int)
+         = iStatus(id.toString(), iAccount("0", "wcaokaze"), "content$id")
+
+   private fun createIStatuses(range: IntRange)
+         = range.map { createIStatus(it) } .reversed()
+
+   private fun createIStatuses(vararg ids: Int)
+         = ids.map { createIStatus(it) }
 }
