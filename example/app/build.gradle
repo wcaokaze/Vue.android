@@ -63,7 +63,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation 'com.wcaokaze.koshian:koshian-androidx:0.5.2'
+    implementation 'com.wcaokaze.koshian:koshian-androidx:0.6.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
     implementation "com.wcaokaze.vue.android:vue-android-stream:$VERSION"
