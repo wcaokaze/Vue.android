@@ -22,7 +22,6 @@ import com.wcaokaze.vue.android.example.*
 import koshian.*
 import vue.*
 import vue.koshian.*
-import kotlin.contracts.*
 
 class FooterComponent(context: Context) : VComponent<Nothing>() {
    override val store: Nothing get() = throw UnsupportedOperationException()
@@ -56,7 +55,6 @@ class FooterComponent(context: Context) : VComponent<Nothing>() {
    }
 
    init {
-      @OptIn(ExperimentalContracts::class)
       koshian(context) {
          componentView = LinearLayout {
             view.orientation = HORIZONTAL

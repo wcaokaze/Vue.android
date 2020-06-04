@@ -23,7 +23,6 @@ import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
 import vue.*
 import vue.koshian.*
-import kotlin.contracts.*
 
 class AccountComponent(context: Context, override val store: MastodonStore)
    : VComponent<MastodonStore>()
@@ -42,26 +41,37 @@ class AccountComponent(context: Context, override val store: MastodonStore)
    }
 
    init {
-      @OptIn(ExperimentalContracts::class)
       koshian(context) {
          componentView = LinearLayout {
             view.orientation = HORIZONTAL
 
             iconView = ImageView {
-               vBind.imageBitmap(icon)
+               if (view.isInEditMode) {
+                  vBind.backgroundColor(0x000000.opaque)
+               } else {
+                  vBind.imageBitmap(icon)
+               }
             }
 
             LinearLayout {
                view.orientation = VERTICAL
 
                usernameView = TextView {
-                  vBind.text { account()?.name }
+                  if (view.isInEditMode) {
+                     vBind.text("username")
+                  } else {
+                     vBind.text { account()?.name }
+                  }
                }
 
                acctView = TextView {
-                  vBind.text {
-                     val acct = account()?.acct
-                     if (acct != null) { "@$acct" } else { null }
+                  if (view.isInEditMode) {
+                     vBind.text("@acct")
+                  } else {
+                     vBind.text {
+                        val acct = account()?.acct
+                        if (acct != null) { "@$acct" } else { null }
+                     }
                   }
                }
             }

@@ -84,7 +84,7 @@ class StubPreferenceState<T>
    constructor(loader: () -> T, saver: (T) -> Unit)
          : this(saver, StateImpl(loader()))
 
-   override operator fun getValue(thisRef: VuexState, property: KProperty<*>) = this
+   override operator fun getValue(thisRef: Any?, property: KProperty<*>) = this
 
    override var value: T
       get() = delegate.value

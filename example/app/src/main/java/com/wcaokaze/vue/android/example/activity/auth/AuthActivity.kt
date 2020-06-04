@@ -33,7 +33,6 @@ import org.koin.android.ext.android.*
 import vue.*
 import vue.koshian.*
 import java.net.*
-import kotlin.contracts.*
 
 class AuthActivity : Activity(), VComponentInterface<Store> {
    override val componentLifecycle = ComponentLifecycle(this)
@@ -134,7 +133,6 @@ class AuthActivity : Activity(), VComponentInterface<Store> {
    }
 
    @SuppressLint("SetTextI18n")
-   @OptIn(ExperimentalContracts::class)
    private fun buildContentView() {
       val instanceUrlView: EditText
       val errorMessageView: TextView
