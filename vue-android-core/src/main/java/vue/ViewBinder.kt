@@ -28,11 +28,11 @@ class ViewBinder<V : View, T>(view: V, private val binder: (Result<T>) -> Unit) 
 
    private val onAttachStateChange = object : View.OnAttachStateChangeListener {
       override fun onViewAttachedToWindow(v: View?) {
-         bind()
+         bindToReactiveField()
       }
 
       override fun onViewDetachedFromWindow(v: View?) {
-         unbind()
+         unbindFromReactiveField()
       }
    }
 
@@ -40,23 +40,23 @@ class ViewBinder<V : View, T>(view: V, private val binder: (Result<T>) -> Unit) 
       view.addOnAttachStateChangeListener(onAttachStateChange)
    }
 
-   override fun invoke(reactiveField: ReactiveField<T>) {
+   override fun bind(reactiveField: ReactiveField<T>) {
       if (isBinding) {
-         unbind()
+         unbindFromReactiveField()
          boundReactiveField = reactiveField
-         bind()
+         bindToReactiveField()
       } else {
          boundReactiveField = reactiveField
       }
    }
 
-   override fun invoke(nonReactiveValue: T) {
-      unbind()
+   override fun bind(nonReactiveValue: T) {
+      unbindFromReactiveField()
       binder(Result.success(nonReactiveValue))
    }
 
    @UiThread
-   private fun bind() {
+   private fun bindToReactiveField() {
       val boundReactiveField = boundReactiveField ?: return
 
       if (isBinding) { return }
@@ -74,7 +74,7 @@ class ViewBinder<V : View, T>(view: V, private val binder: (Result<T>) -> Unit) 
    }
 
    @UiThread
-   private fun unbind() {
+   private fun unbindFromReactiveField() {
       if (!isBinding) { return }
       isBinding = false
 

@@ -19,12 +19,20 @@ package vue
 import androidx.annotation.*
 
 interface VBinder<in T> {
-   @UiThread operator fun invoke(reactiveField: ReactiveField<T>)
-   @UiThread operator fun invoke(nonReactiveValue: T)
+   @UiThread fun bind(reactiveField: ReactiveField<T>)
+   @UiThread fun bind(nonReactiveValue: T)
+
+   @UiThread operator fun invoke(reactiveField: ReactiveField<T>) = bind(reactiveField)
+   @UiThread operator fun invoke(nonReactiveValue: T)             = bind(nonReactiveValue)
 }
 
 @UiThread
 operator fun <T> VBinder<T>.invoke(reactivatee: Reactivatee<T>) {
+   bind(reactivatee)
+}
+
+@UiThread
+fun <T> VBinder<T>.bind(reactivatee: Reactivatee<T>) {
    val reactiveField = GetterField(reactivatee)
    invoke(reactiveField)
 }

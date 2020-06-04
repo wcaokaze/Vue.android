@@ -239,19 +239,19 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
                .onFailure { field.setFailure(it) }
       }
 
-      override fun invoke(reactiveField: ReactiveField<T>) {
-         unbind()
+      override fun bind(reactiveField: ReactiveField<T>) {
+         unbindFromReactiveField()
          boundReactiveField = reactiveField
-         bind()
+         bindToReactiveField()
       }
 
-      override fun invoke(nonReactiveValue: T) {
-         unbind()
+      override fun bind(nonReactiveValue: T) {
+         unbindFromReactiveField()
          observer(Result.success(nonReactiveValue))
       }
 
       @UiThread
-      private fun bind() {
+      private fun bindToReactiveField() {
          val boundReactiveField = boundReactiveField ?: return
 
          boundReactiveField.addObserver(observer)
@@ -264,7 +264,7 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
       }
 
       @UiThread
-      private fun unbind() {
+      private fun unbindFromReactiveField() {
          boundReactiveField?.removeObserver(observer)
       }
    }
