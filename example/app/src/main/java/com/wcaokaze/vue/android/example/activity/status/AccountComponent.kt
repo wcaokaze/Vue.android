@@ -23,7 +23,6 @@ import com.wcaokaze.vue.android.example.mastodon.*
 import koshian.*
 import vue.*
 import vue.koshian.*
-import kotlin.contracts.*
 
 class AccountComponent(context: Context, override val store: MastodonStore)
    : VComponent<MastodonStore>()
@@ -42,7 +41,6 @@ class AccountComponent(context: Context, override val store: MastodonStore)
    }
 
    init {
-      @OptIn(ExperimentalContracts::class)
       koshian(context) {
          componentView = LinearLayout {
             view.orientation = HORIZONTAL

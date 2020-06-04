@@ -37,7 +37,6 @@ import vue.androidx.*
 import vue.koshian.recyclerview.*
 import vue.koshian.*
 import vue.stream.*
-import kotlin.contracts.*
 
 class TimelineActivity : Activity(), VComponentInterface<Store> {
    override val componentLifecycle = ComponentLifecycle(this)
@@ -236,7 +235,6 @@ class TimelineActivity : Activity(), VComponentInterface<Store> {
    private fun buildContentView() {
       val recyclerViewAdapter: TimelineRecyclerViewAdapter
 
-      @OptIn(ExperimentalContracts::class)
       koshian(this) {
          componentView = FrameLayout {
             SwipeRefreshLayout {

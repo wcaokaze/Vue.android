@@ -26,7 +26,6 @@ import vue.*
 import vue.koshian.*
 import java.text.*
 import java.util.*
-import kotlin.contracts.*
 
 class StatusComponent(context: Context, override val store: MastodonStore)
    : VComponent<MastodonStore>()
@@ -82,7 +81,6 @@ class StatusComponent(context: Context, override val store: MastodonStore)
    init {
       val accountComponent: AccountComponent
 
-      @OptIn(ExperimentalContracts::class)
       koshian(context) {
          componentView = LinearLayout {
             view.orientation = VERTICAL
