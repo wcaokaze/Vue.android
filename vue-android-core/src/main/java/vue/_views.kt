@@ -16,6 +16,7 @@
 
 package vue
 
+import android.graphics.drawable.*
 import android.view.*
 
 /**
@@ -44,6 +45,16 @@ val VBindProvider<View>.isOccupiable: VBinder<Boolean>
       } else {
          View.GONE
       }
+   }
+
+val VBindProvider<View>.background: VBinder<Drawable>
+   get() = createVBinder(::background) { view, value ->
+      view.background = value
+   }
+
+val VBindProvider<View>.backgroundColor: VBinder<Int>
+   get() = createVBinder(::backgroundColor) { view, value ->
+      view.setBackgroundColor(value)
    }
 
 val VOnProvider<View>.click: VEvent0

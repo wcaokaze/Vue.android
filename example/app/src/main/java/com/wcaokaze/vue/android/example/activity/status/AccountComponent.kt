@@ -48,20 +48,32 @@ class AccountComponent(context: Context, override val store: MastodonStore)
             view.orientation = HORIZONTAL
 
             iconView = ImageView {
-               vBind.imageBitmap(icon)
+               if (view.isInEditMode) {
+                  vBind.backgroundColor(0x000000.opaque)
+               } else {
+                  vBind.imageBitmap(icon)
+               }
             }
 
             LinearLayout {
                view.orientation = VERTICAL
 
                usernameView = TextView {
-                  vBind.text { account()?.name }
+                  if (view.isInEditMode) {
+                     vBind.text("username")
+                  } else {
+                     vBind.text { account()?.name }
+                  }
                }
 
                acctView = TextView {
-                  vBind.text {
-                     val acct = account()?.acct
-                     if (acct != null) { "@$acct" } else { null }
+                  if (view.isInEditMode) {
+                     vBind.text("@acct")
+                  } else {
+                     vBind.text {
+                        val acct = account()?.acct
+                        if (acct != null) { "@$acct" } else { null }
+                     }
                   }
                }
             }

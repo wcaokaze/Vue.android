@@ -92,11 +92,19 @@ class StatusComponent(context: Context, override val store: MastodonStore)
             }
 
             contentView = TextView {
-               vBind.text(tootContent)
+               if (view.isInEditMode) {
+                  vBind.text("content")
+               } else {
+                  vBind.text(tootContent)
+               }
             }
 
             createdDateView = TextView {
-               vBind.text(tootedDateStr)
+               if (view.isInEditMode) {
+                  vBind.text("00:00 Jan 1 2000")
+               } else {
+                  vBind.text(tootedDateStr)
+               }
             }
          }
       }
