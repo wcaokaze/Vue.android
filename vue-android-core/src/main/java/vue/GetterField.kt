@@ -237,24 +237,20 @@ class GetterField<out T>
  * ```kotlin
  * val user = state<User?>(null)
  *
- * val username: V<String?>
- *    = getter { // this lambda is a Reactivatee.
+ * //                    This lambda is a Reactivatee.
+ * //                      v~~~~~~~~~~~~~~~
+ * usernameView.vBind.text { user()?.name }
+ * //                        ^~~~~~
+ * //                Getting the value.
+ * //                And now this Reactivatee depends on a ReactiveField 'user'.
+ * //                This Reactivatee will be re-invoked when 'user' is updated.
  *
- *       user()?.toString()
- *       //  ^
- *       //  Getting the value.
- *       //  And now this Reactivatee depends on a ReactiveField 'user'.
- *       //  This Reactivatee will be re-invoked when 'user' is updated.
- *    }
  *
- * val usernameLength = getter { username()?.length ?: 0 }
+ * user.value = User(name = "wcaokaze")
+ * assertEquals("wcaokaze", usernameView.text.toString())
  *
- * fun someFunction() {
- *    user.value = User(name = "wcaokaze")
- *
- *    assert(username() == "wcaokaze")
- *    assert(usernameLength() == 8)
- * }
+ * user.value = User(name = "Vue.android")
+ * assertEquals("Vue.android", usernameView.text.toString())
  * ```
  */
 typealias Reactivatee<T> = ReactivateeScope.() -> T
