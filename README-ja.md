@@ -1,11 +1,8 @@
 
-[日本語](README-ja.md)
-
-
 Vue.android
 ================================================================================
 
-Immitates Vue.js on Android
+Vue.jsをAndroid上で模倣するライブラリです
 
 <img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/counter_example.gif" width="405px">
 
@@ -46,24 +43,25 @@ koshian(context) {
 ```
 
 
-Code Style Recommendation
+コードスタイル
 --------------------------------------------------------------------------------
 
-Vue.android has too many top level functions. Compiler can resolve them surely,
-but it's too hard for us. So it is recommended to import them with `*`.
+Vue.androidは大量のトップレベル関数から成り立っています。
+コンパイラはそれらを完璧に解決できますが、我々には難しいです。
+ですのでVue.androidの関数は `*` でimportすることをおすすめします。
 
 ```kotlin
 import vue.*
 ```
 
-### IntelliJ IDEA, Android Studio Settings
+### IntelliJ IDEA, Android Studioの設定
 
 Settings > Editor > Code Style > Kotlin > Imports > Packages to Use Import with `*`
 
-Add `vue` and check `With Subpackages`
+`vue` を追加して `With Subpackages` にチェックを入れましょう
 
 
-Install
+インストール
 --------------------------------------------------------------------------------
 
 Gradle
