@@ -61,3 +61,21 @@ Settings > Editor > Code Style > Kotlin > Imports > Packages to Use Import with 
 
 Add `vue` and check `With Subpackages`
 
+
+Install
+--------------------------------------------------------------------------------
+
+Gradle
+```groovy
+dependencies {
+   implementation 'com.wcaokaze.vue.android:vue-android-core:0.6.0'
+}
+```
+
+Gradle (Kotlin)
+```kotlin
+dependencies {
+   implementation("com.wcaokaze.vue.android:vue-android-core:0.6.0")
+}
+```
+
