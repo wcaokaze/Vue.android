@@ -4,7 +4,8 @@ Vue.android
 
 Immitates Vue.js on Android
 
-![](https://raw.github.com/wcaokaze/Vue.android/master/imgs/counter_example.gif)
+<img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/counter_example.gif" width="405px">
+
 ```kotlin
 val count = state(0)
 
