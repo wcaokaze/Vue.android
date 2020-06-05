@@ -44,3 +44,20 @@ koshian(context) {
 }
 ```
 
+
+Code Style Recommendation
+--------------------------------------------------------------------------------
+
+Vue.android has too many top level functions. Compiler can resolve them surely,
+but it's too hard for us. So it is recommended to import them with `*`.
+
+```kotlin
+import vue.*
+```
+
+### IntelliJ IDEA, Android Studio Settings
+
+Settings > Editor > Code Style > Kotlin > Imports > Packages to Use Import with `*`
+
+Add `vue` and check `With Subpackages`
+
