@@ -1,5 +1,5 @@
 
-Vue.android (WIP)
+Vue.android
 ================================================================================
 
 Immitates Vue.js on Android
