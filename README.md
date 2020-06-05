@@ -1,20 +1,15 @@
 
-Vue.android (WIP)
+Vue.android
 ================================================================================
 
 Immitates Vue.js on Android
 
-Wait for me to create an example app.
-
+![](https://raw.github.com/wcaokaze/Vue.android/master/imgs/counter_example.gif)
 ```kotlin
 val count = state(0)
 
 val countText = getter {
-   if (count() == 0) {
-      "-"
-   } else {
-      count().toString()
-   }
+   if (count() == 0) { "-" } else { count().toString() }
 }
 
 fun increment() {
@@ -27,6 +22,8 @@ fun decrement() {
 
 koshian(context) {
    LinearLayout {
+      view.orientation = HORIZONTAL
+
       TextView {
          vBind.text { countText() }
       }
@@ -41,6 +38,41 @@ koshian(context) {
          vOn.click { decrement() }
       }
    }
+}
+```
+
+
+Code Style Recommendation
+--------------------------------------------------------------------------------
+
+Vue.android has too many top level functions. Compiler can resolve them surely,
+but it's too hard for us. So it is recommended to import them with `*`.
+
+```kotlin
+import vue.*
+```
+
+### IntelliJ IDEA, Android Studio Settings
+
+Settings > Editor > Code Style > Kotlin > Imports > Packages to Use Import with `*`
+
+Add `vue` and check `With Subpackages`
+
+
+Install
+--------------------------------------------------------------------------------
+
+Gradle
+```groovy
+dependencies {
+   implementation 'com.wcaokaze.vue.android:vue-android-core:0.1.0'
+}
+```
+
+Gradle (Kotlin)
+```kotlin
+dependencies {
+   implementation("com.wcaokaze.vue.android:vue-android-core:0.1.0")
 }
 ```
 
