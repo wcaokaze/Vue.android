@@ -65,14 +65,14 @@ Install
 Gradle
 ```groovy
 dependencies {
-   implementation 'com.wcaokaze.vue.android:vue-android-core:0.6.0'
+   implementation 'com.wcaokaze.vue.android:vue-android-core:0.1.0'
 }
 ```
 
 Gradle (Kotlin)
 ```kotlin
 dependencies {
-   implementation("com.wcaokaze.vue.android:vue-android-core:0.6.0")
+   implementation("com.wcaokaze.vue.android:vue-android-core:0.1.0")
 }
 ```
 
