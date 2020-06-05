@@ -56,14 +56,18 @@ android {
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = '1.8'
-        freeCompilerArgs = ["-Xuse-experimental=kotlin.Experimental"]
+
+        freeCompilerArgs = [
+                "-Xuse-experimental=kotlin.Experimental",
+                "-Xuse-experimental=kotlin.contracts.ExperimentalContracts"
+        ]
     }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation 'com.wcaokaze.koshian:koshian-androidx:0.5.2'
+    implementation 'com.wcaokaze.koshian:koshian-androidx:0.6.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
     implementation "com.wcaokaze.vue.android:vue-android-stream:$VERSION"

@@ -30,7 +30,6 @@ import vue.koshian.*
 import vue.koshian.recyclerview.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.contracts.*
 
 sealed class TimelineRecyclerViewItem : DiffUtilItem
 
@@ -75,7 +74,6 @@ class TimelineRecyclerViewAdapter(context: Context,
 {
    val onItemClick = vEvent2<Int, TimelineRecyclerViewItem>()
 
-   @OptIn(ExperimentalContracts::class)
    override fun selectViewHolderProvider(
       position: Int, item: TimelineRecyclerViewItem): ViewHolderProvider<*>
    = when (item) {

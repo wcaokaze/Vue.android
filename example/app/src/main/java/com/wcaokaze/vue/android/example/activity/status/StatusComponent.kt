@@ -26,7 +26,6 @@ import vue.*
 import vue.koshian.*
 import java.text.*
 import java.util.*
-import kotlin.contracts.*
 
 class StatusComponent(context: Context, override val store: MastodonStore)
    : VComponent<MastodonStore>()
@@ -82,7 +81,6 @@ class StatusComponent(context: Context, override val store: MastodonStore)
    init {
       val accountComponent: AccountComponent
 
-      @OptIn(ExperimentalContracts::class)
       koshian(context) {
          componentView = LinearLayout {
             view.orientation = VERTICAL
@@ -92,11 +90,19 @@ class StatusComponent(context: Context, override val store: MastodonStore)
             }
 
             contentView = TextView {
-               vBind.text(tootContent)
+               if (view.isInEditMode) {
+                  vBind.text("content")
+               } else {
+                  vBind.text(tootContent)
+               }
             }
 
             createdDateView = TextView {
-               vBind.text(tootedDateStr)
+               if (view.isInEditMode) {
+                  vBind.text("00:00 Jan 1 2000")
+               } else {
+                  vBind.text(tootedDateStr)
+               }
             }
          }
       }

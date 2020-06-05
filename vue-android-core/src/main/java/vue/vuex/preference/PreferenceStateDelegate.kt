@@ -17,7 +17,6 @@
 package vue.vuex.preference
 
 import android.content.*
-import vue.vuex.*
 import kotlin.reflect.*
 
 interface PreferenceStateDelegate<T> {
@@ -39,7 +38,7 @@ interface PreferenceStateDelegate<T> {
       }
    }
 
-   operator fun getValue(thisRef: VuexState, property: KProperty<*>): PreferenceState<T>
+   operator fun getValue(thisRef: Any?, property: KProperty<*>): PreferenceState<T>
 }
 
 private class PreferenceStateDelegateImpl<T>(
@@ -51,7 +50,7 @@ private class PreferenceStateDelegateImpl<T>(
 ) : PreferenceStateDelegate<T> {
    private var preferenceState: PreferenceState<T>? = null
 
-   override operator fun getValue(thisRef: VuexState,
+   override operator fun getValue(thisRef: Any?,
                                   property: KProperty<*>): PreferenceState<T>
    {
       if (preferenceState != null) { return preferenceState!! }

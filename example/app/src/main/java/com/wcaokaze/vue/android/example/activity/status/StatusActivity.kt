@@ -27,7 +27,6 @@ import kotlinx.coroutines.*
 import org.koin.android.ext.android.*
 import vue.*
 import vue.koshian.*
-import kotlin.contracts.*
 
 class StatusActivity : Activity(), VComponentInterface<Store> {
    companion object {
@@ -87,7 +86,6 @@ class StatusActivity : Activity(), VComponentInterface<Store> {
       }
    }
 
-   @OptIn(ExperimentalContracts::class)
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
 
