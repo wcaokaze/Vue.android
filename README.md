@@ -4,17 +4,12 @@ Vue.android
 
 Immitates Vue.js on Android
 
-Wait for me to create an example app.
-
+![](https://raw.github.com/wcaokaze/Vue.android/master/imgs/counter_example.gif)
 ```kotlin
 val count = state(0)
 
 val countText = getter {
-   if (count() == 0) {
-      "-"
-   } else {
-      count().toString()
-   }
+   if (count() == 0) { "-" } else { count().toString() }
 }
 
 fun increment() {
@@ -27,6 +22,8 @@ fun decrement() {
 
 koshian(context) {
    LinearLayout {
+      view.orientation = HORIZONTAL
+
       TextView {
          vBind.text { countText() }
       }
