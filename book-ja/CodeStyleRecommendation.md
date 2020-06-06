@@ -173,3 +173,8 @@ Koshianを使う場合は
 [vue-android-koshian](https://github.com/wcaokaze/Vue.android/tree/master/vue-android-koshian)
 を見てみてください。
 
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+← [ReactiveFieldとReactivatee](ReactiveFields-and-Reactivatees.md)  |  [Getter](Getters.md) →
+
