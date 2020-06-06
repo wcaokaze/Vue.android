@@ -46,7 +46,8 @@ koshian(context) {
 チュートリアル
 --------------------------------------------------------------------------------
 
-[ReactiveFieldとReactivatee](doc-ja/ReactiveFields-and-Reactivatees.md)
+[ReactiveFieldとReactivatee](doc-ja/ReactiveFields-and-Reactivatees.md)  
+[コードスタイル](doc-ja/CodeStyleRecommendation.md)  
 
 
 コードスタイル
