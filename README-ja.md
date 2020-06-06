@@ -49,6 +49,7 @@ koshian(context) {
 [ReactiveFieldとReactivatee](book-ja/ReactiveFields-and-Reactivatees.md)  
 [コードスタイル](book-ja/CodeStyleRecommendation.md)  
 [Getter](book-ja/Getters.md)  
+[VBindとVOnとVModel](book-ja/VBind-and-VOn-and-VModel.md)  
 
 
 コードスタイル
