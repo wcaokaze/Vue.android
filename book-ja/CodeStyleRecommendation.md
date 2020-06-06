@@ -26,7 +26,7 @@ Android標準のLayoutInflaterによるxmlや、
 すでに非推奨ですが[Anko](https://github.com/Kotlin/anko)など)も使用できますが、
 KoshianとVue.androidはきっと相性がいいはずです。
 
-**LayoutInflater**
+#### LayoutInflater
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -95,7 +95,7 @@ class MainActivity : Activity() {
 }
 ```
 
-**Koshian**
+#### Koshian
 ```kotlin
 class MainActivity : Activity() {
    private val count = state(0)
