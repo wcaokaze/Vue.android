@@ -56,6 +56,7 @@ koshian(context) {
 #### Component
 
 [VComponent](book-ja/VComponents.md)  
+[ComponentLifecycle](book-ja/ComponentLifecycle.md)  
 
 
 コードスタイル

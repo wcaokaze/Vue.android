@@ -110,3 +110,8 @@ class CounterComponent(context: Context) : VComponentInterface<Nothing> {
 ```
 `componentLifecycle` を実装する手間だけが増えますが、他はVComponentと全く同じです。
 
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+[ComponentLifecycle](ComponentLifecycle.md) →
+
