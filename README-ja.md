@@ -46,10 +46,16 @@ koshian(context) {
 チュートリアル
 --------------------------------------------------------------------------------
 
+#### 基本
+
 [ReactiveFieldとReactivatee](book-ja/ReactiveFields-and-Reactivatees.md)  
 [コードスタイル](book-ja/CodeStyleRecommendation.md)  
 [Getter](book-ja/Getters.md)  
 [VBindとVOnとVModel](book-ja/VBind-and-VOn-and-VModel.md)  
+
+#### Component
+
+[VComponent](book-ja/VComponents.md)  
 
 
 コードスタイル
