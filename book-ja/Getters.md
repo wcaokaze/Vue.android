@@ -23,7 +23,7 @@ koshian(this) {
       view.orientation = HORIZONTAL
 
       TextView {
-         vBind.text { count() }
+         vBind.text { count().toString() }
       }
 
       Button {
@@ -43,8 +43,10 @@ koshian(this) {
 
 0のときだけ特別に `"-"` と表示することにしましょう。
 ```kotlin
-vBind.text {
-   if (count() == 0) { "-" } else { count().toString() }
+TextView {
+   vBind.text {
+      if (count() == 0) { "-" } else { count().toString() }
+   }
 }
 ```
 これでも期待通りの動作をするのですが、Viewレイアウトを記述する部分に
@@ -65,7 +67,9 @@ val countText = getter {
 
 koshian(context) {
    ...
+      TextView {
          vBind.text { countText() }
+      }
    ...
 }
 ```
