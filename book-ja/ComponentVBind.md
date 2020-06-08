@@ -53,7 +53,10 @@ vBind.account { toot()?.tooter }
 component.account { toot()?.tooter }
 ```
 
-値の渡し方はわかりました。では値を受け取る側、つまり `AccountComponent` は
+vBindのときと同じように、tootに新しい値がセットされると、 `{ toot()?.tooter }`
+が再実行され、AccountComponentに新しい値が渡されます。
+
+さて、値の渡し方はわかりました。では値を受け取る側、つまり `AccountComponent` は
 どのように実装すればよいのでしょう？
 
 `ComponentVBind` を使います。
@@ -100,11 +103,11 @@ class AccountComponent(context: Context) : VComponent<Nothing>() {
 これでvBindのように振る舞い、
 `account { toot()?.tooter }` というバインドの記述ができるようになります。
 
-その代わり、 `account.value = tooter` という `state` のときには使えていた
-新しい値を手動でセットする方法は使えなくなっています。
+その代わり、 `state` では使えていた手動で新しい値をセットする方法、つまり
+`account.value = tooter` は使えなくなっています。
 
-少しややこしいですから、今はよくわからないという人は、
-基本的な `state` の使い方に慣れてから、もしあなたが今疲れているのであれば、
+少しややこしいですから、今はよくわからないという人は、基本的な
+`state`の使い方に慣れてから、あるいはもしあなたが今疲れているのであれば、
 一旦寝て頭を休めてから明日もう一度読んでみてください。
 
 #### state
