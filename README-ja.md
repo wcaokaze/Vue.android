@@ -60,6 +60,10 @@ koshian(context) {
 [ComponentVBind](book-ja/ComponentVBind.md)  
 [ComponentVEvent](book-ja/ComponentVEvent.md)  
 
+#### Vuex
+
+[Vuexとは？](book-ja/What-is-Vuex.md)  
+
 
 コードスタイル
 --------------------------------------------------------------------------------
