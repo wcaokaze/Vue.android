@@ -58,6 +58,7 @@ koshian(context) {
 [VComponent](book-ja/VComponents.md)  
 [ComponentLifecycle](book-ja/ComponentLifecycle.md)  
 [ComponentVBind](book-ja/ComponentVBind.md)  
+[ComponentVEvent](book-ja/ComponentVEvent.md)  
 
 
 コードスタイル
