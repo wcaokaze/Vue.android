@@ -14,7 +14,7 @@ ViewからvOnでイベントを受け取るのと同じように、VComponentか
 class TootComponent(context: Context) : VComponent<Nothing>() {
    override val componentView: View
 
-   val toot = state<Toot?>(null)
+   val toot = vBinder<Toot>()
 
    private fun showTooterDetail() {
       ...
