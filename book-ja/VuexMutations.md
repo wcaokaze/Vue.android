@@ -22,6 +22,9 @@ class CartMutation : VuexMutation<CartState>() {
 }
 ```
 
+
+### VuexStateはVuexMutation以外から変更不能
+
 > VuexStateとVuexGetterにはstateを変更する処理を書いてはいけないと説明しましたが、
 > 実は書けないようにできています。  
 > そんな馬鹿なと思った人は試してみてください。

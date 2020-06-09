@@ -17,7 +17,7 @@ class CartState : VuexState() {
 `getter` を書いたり、 `state` を変更する処理を書いたりしてはいけません。
 
 使い方は今まで使ってきた `state` と全く同じですから、
-特に追加で説明することはありません。
+追加で説明することは特にありません。
 
 
 VuexGetter
@@ -31,7 +31,7 @@ class CartGetter : VuexGetter<CartState>() {
 }
 ```
 こちらも今までの `getter` と同じです。
-`state` にアクセスするために `state.products` と書いている点に注意してください。
+`state` にアクセスするために `state.products` と書いている点には注意してください。
 
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
