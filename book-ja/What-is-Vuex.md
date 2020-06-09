@@ -26,13 +26,18 @@ Vuexとは？
 いいかもしれません。
 
 ```
-    ┌──────────→  Actions ─────────────┐
-    │                                  ↓
-VComponent                         Mutations
-    ↑                                  │
-    └────────────  State  ←────────────┘
+    ┌──────────→ Action ───────────┐
+    │                              ↓
+VComponent                     Mutation
+    ↑                              │
+    └─────────── State  ←──────────┘
 ```
 Vuexでは `Action`、 `Mutation`、 `State` という3つの概念を新たに加え、
 これらの間を一方通行でデータをやり取りし、決して逆流させないことで、
 困難になりがちな状態管理をシンプルに保ちます。
+
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+[VuexStateとVuexGetter](VuexStates-and-VuexGetters.md) →
 
