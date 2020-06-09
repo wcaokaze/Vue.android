@@ -36,5 +36,5 @@ class CartGetter : VuexGetter<CartState>() {
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [Vuexとは？](What-is-Vuex.md)
+← [Vuexとは？](What-is-Vuex.md)  |  [VuexMutation](VuexMutations.md) →
 
