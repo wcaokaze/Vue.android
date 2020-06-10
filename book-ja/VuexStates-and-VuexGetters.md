@@ -5,7 +5,7 @@ VuexStateとVuexGetter
 VuexState
 --------------------------------------------------------------------------------
 
-まず `VuexState` ですが、 `state` しか持っていないクラスです。
+まず `VuexState` ですが、stateしか持っていないクラスです。
 
 ```kotlin
 class CartState : VuexState() {
@@ -14,24 +14,24 @@ class CartState : VuexState() {
 ```
 
 これだけです。
-`getter` を書いたり、 `state` を変更する処理を書いたりしてはいけません。
+getterを書いたり、stateを変更する処理を書いたりしてはいけません。
 
-使い方は今まで使ってきた `state` と全く同じですから、
+使い方は今まで使ってきたstateと全く同じですから、
 追加で説明することは特にありません。
 
 
 VuexGetter
 --------------------------------------------------------------------------------
 
-`VuexGetter` は `getter` しか持っていないクラスです。
+`VuexGetter` はgetterしか持っていないクラスです。
 
 ```kotlin
 class CartGetter : VuexGetter<CartState>() {
    val productCount = getter { state.products().size }
 }
 ```
-こちらも今までの `getter` と同じです。
-`state` にアクセスするために `state.products` と書いている点には注意してください。
+こちらも今までのgetterと同じです。
+stateにアクセスするために `state.products` と書いている点には注意してください。
 
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
