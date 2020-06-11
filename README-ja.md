@@ -63,9 +63,9 @@ koshian(context) {
 #### Vuex
 
 [Vuexとは？](book-ja/What-is-Vuex.md)  
-[VuexStateとVuexGetter](VuexStates-and-VuexGetters.md)  
-[VuexMutation](VuexMutations.md)  
-[VuexAction](VuexActions.md)  
+[VuexStateとVuexGetter](book-ja/VuexStates-and-VuexGetters.md)  
+[VuexMutation](book-ja/VuexMutations.md)  
+[VuexAction](book-ja/VuexActions.md)  
 
 
 コードスタイル
