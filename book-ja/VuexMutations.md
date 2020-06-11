@@ -43,5 +43,5 @@ class CartMutation : VuexMutation<CartState>() {
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [VuexStateとVuexGetter](VuexStates-and-VuexGetters.md)
+← [VuexStateとVuexGetter](VuexStates-and-VuexGetters.md)  |  [VuexAction](VuexActions.md) →
 
