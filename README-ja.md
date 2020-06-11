@@ -66,6 +66,7 @@ koshian(context) {
 [VuexStateとVuexGetter](book-ja/VuexStates-and-VuexGetters.md)  
 [VuexMutation](book-ja/VuexMutations.md)  
 [VuexAction](book-ja/VuexActions.md)  
+[VuexStore](book-ja/VuexStores.md)  
 
 
 コードスタイル
