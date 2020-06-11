@@ -67,6 +67,7 @@ koshian(context) {
 [VuexMutation](book-ja/VuexMutations.md)  
 [VuexAction](book-ja/VuexActions.md)  
 [VuexStore](book-ja/VuexStores.md)  
+[VComponentでVuexを使う](book-ja/Use-Vuex-in-VComponent.md)  
 
 
 コードスタイル
