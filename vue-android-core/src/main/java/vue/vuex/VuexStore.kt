@@ -18,6 +18,7 @@ package vue.vuex
 
 import java.util.*
 import kotlin.NoSuchElementException
+import kotlin.reflect.KClass
 
 internal val storeStack = object : ThreadLocal<LinkedList<VuexStore<*, *, *, *>>>() {
    override fun initialValue() = LinkedList<VuexStore<*, *, *, *>>()
@@ -88,6 +89,17 @@ abstract class VuexStore<S, M, A, G>
                      G : VuexGetter<S>
          {
             return Module(key, store)
+         }
+
+         @Suppress("FunctionName", "UNUSED_PARAMETER")
+         fun <Store, S, M, A, G> Key(kClass: KClass<Store>): Key<Store, S, M, A, G>
+               where Store : VuexStore<S, M, A, G>,
+                     S : VuexState,
+                     M : VuexMutation<S>,
+                     A : VuexAction<S, M, G>,
+                     G : VuexGetter<S>
+         {
+            return Key()
          }
       }
 
