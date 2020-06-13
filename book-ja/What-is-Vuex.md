@@ -7,7 +7,7 @@ Vuexとは？
 
 例えば、ショッピングアプリを開発していたとしましょう。
 
-<img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/example_status.png" width="405px">
+<img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/shopping_app_header.png" width="405px">
 
 「カートに入っている商品の一覧」という状態は、どのVComponentの持ち物でもなく
 いわばグローバルな状態です。  
