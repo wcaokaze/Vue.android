@@ -32,7 +32,7 @@ Android Studioで開く
 
 ### 基本
 
-認証画面
+認証画面<br />
 <img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/example_auth.png" width="405px">
 
 [AuthActivity](https://github.com/wcaokaze/Vue.android/blob/master/example/app/src/main/java/com/wcaokaze/vue/android/example/activity/auth/AuthActivity.kt)  
@@ -40,7 +40,7 @@ Android Studioで開く
 
 ### RecyclerView
 
-タイムライン画面
+タイムライン画面<br />
 <img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/example_timeline.png" width="405px">
 
 [TimelineActivity](https://github.com/wcaokaze/Vue.android/blob/master/example/app/src/main/java/com/wcaokaze/vue/android/example/activity/timeline/TimelineActivity.kt)  
@@ -49,7 +49,7 @@ Android Studioで開く
 
 ### VComponent
 
-トゥート画面
+トゥート画面<br />
 <img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/example_status.png" width="405px">
 
 [StatusActivity](https://github.com/wcaokaze/Vue.android/blob/master/example/app/src/main/java/com/wcaokaze/vue/android/example/activity/status/StatusActivity.kt)  
