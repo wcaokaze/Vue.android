@@ -24,15 +24,17 @@ Web APIに接続してデータをダウンロードすることもあるでし�
 その結果をStateに反映するといった処理もVuexActionが担当することになります。
 
 ```kotlin
-class CartAction : VuexAction<CartState, CartMutation, CartGetter>() {
-   suspend fun fetchProducts() {
-      val products = try {
-         WebApiService.fetchProducts()
+class ApplicationAction
+   : VuexAction<ApplicationState, ApplicationMutation, ApplicationGetter>()
+{
+   suspend fun fetchProductsInCart() {
+      val productsInCart = try {
+         WebApiService.fetchProductsInCart()
       } catch (e: IOException) {
          throw CancellationException()
       }
 
-      mutation.setProducts(products)
+      mutation.setProductsInCart(productsInCart)
    }
 }
 ```
@@ -47,25 +49,27 @@ VuexAction内では、VuexMutation、VuexState、VuexGetterのすべてにアク
 ただし、Stateを直接変更することはここでも禁止されますから、
 状態の更新には必ずVuexMutationを経由する必要があります。
 ```kotlin
-class CartAction : VuexAction<CartState, CartMutation, CartGetter>() {
-   suspend fun saveProducts() {
+class ApplicationAction
+   : VuexAction<ApplicationState, ApplicationMutation, ApplicationGetter>()
+{
+   suspend fun saveProductsInCart() {
       try {
-         WebApiService.postProducts(state.products())
+         WebApiService.postProductsInCart(state.productsInCart())
       } catch (e: IOException) {
          throw CancellationException()
       }
    }
 
    suspend fun fetchProducts() {
-      val products = try {
-         WebApiService.fetchProducts()
+      val productsInCart = try {
+         WebApiService.fetchProductsInCart()
       } catch (e: IOException) {
          throw CancellationException()
       }
 
-      state.products.value = products
-      //             ^~~~~
-      //             VuexState can be written only via VuexMutation
+      state.productsInCart.value = productsInCart
+      //                   ^~~~~
+      //                   VuexState can be written only via VuexMutation
    }
 }
 ```

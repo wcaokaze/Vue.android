@@ -13,24 +13,24 @@ class CartButtonComponent(context: Context) : VComponent<Nothing>() {
 
 ついにここにNothingではない型を書く時が来たのです。
 
-1. まずは `Nothing` の代わりに `CartStore` を指定します
+1. まずは `Nothing` の代わりに `ApplicationStore` を指定します
     ```kotlin
-    class CartButtonComponent(context: Context) : VComponent<CartStore>() {
-       override val store: CartStore get() = throw UnsupportedOperationException()
+    class CartButtonComponent(context: Context) : VComponent<ApplicationStore>() {
+       override val store: ApplicationStore get() = throw UnsupportedOperationException()
     }
     ```
 1. コンストラクタにstoreを追加します
     ```kotlin
-    class CartButtonComponent(context: Context, store: CartStore)
-       : VComponent<CartStore>()
+    class CartButtonComponent(context: Context, store: ApplicationStore)
+       : VComponent<ApplicationStore>()
     {
-       override val store: CartStore = store
+       override val store: ApplicationStore = store
     }
     ```
 1. override宣言もコンストラクタに移動できます
     ```kotlin
-    class CartButtonComponent(context: Context, override val store: CartStore)
-       : VComponent<CartStore>()
+    class CartButtonComponent(context: Context, override val store: ApplicationStore)
+       : VComponent<ApplicationStore>()
     {
     }
     ```
@@ -43,8 +43,8 @@ VComponent内では `state`, `mutation`, `action`, `getter` というプロパ�
 使うことができます。
 
 ```kotlin
-class CartButtonComponent(context: Context, override val store: CartStore)
-   : VComponent<CartStore>()
+class CartButtonComponent(context: Context, override val store: ApplicationStore)
+   : VComponent<ApplicationStore>()
 {
    override val componentView: View
 
@@ -61,7 +61,7 @@ class CartButtonComponent(context: Context, override val store: CartStore)
 
             TextView {
                view.background = drawable(R.drawable.red_circle)
-               vBind.text { getter.productCount() }
+               vBind.text { getter.cartProductCount() }
                //           ^~~~~~
             }
          }
@@ -84,7 +84,7 @@ VComponentを使うときにはApplicationに持たせているVuexStoreを取�
 Koshianなしではもう自力でインスタンス化して自力でaddViewするしかありませんから
 すみませんがそうしてください
 ```kotlin
-val store = (application as Application).cartStore
+val store = (application as Application).store
 val cartButtonComponent = CartButtonComponent(context, store)
 
 contentView.addView(cartButtonComponent.componentView,
@@ -100,7 +100,7 @@ contentView.addView(cartButtonComponent.componentView,
 
 ```kotlin
 class ShoppingActivity : Activity() {
-   private val store: CartStore by lazy { (application as Application).cartStore }
+   private val store: ApplicationStore by lazy { (application as Application).store }
 
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
@@ -127,8 +127,8 @@ VComponent内でVComponentを使う場合に、親Componentのstoreの型と
 子Componentに注入されます。
 
 ```kotlin
-class ToolbarComponent(context: Context, override val store: CartStore)
-   : VComponent<CartStore>()
+class ToolbarComponent(context: Context, override val store: ApplicationStore)
+   : VComponent<ApplicationStore>()
 {
    override val componentView: View
 
@@ -200,5 +200,5 @@ class FooComponent(context: Context, override val store: FooStore)
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [VuexStore](VuexStores.md)
+← [VuexStore](VuexStores.md)  |  [モジュール](VuexModules.md) →
 

@@ -8,8 +8,8 @@ VuexState
 まず `VuexState` ですが、stateしか持っていないクラスです。
 
 ```kotlin
-class CartState : VuexState() {
-   val products = state<List<Product>>(emptyList())
+class ApplicationState : VuexState() {
+   val productsInCart = state<List<Product>>(emptyList())
 }
 ```
 
@@ -26,12 +26,12 @@ VuexGetter
 `VuexGetter` はgetterしか持っていないクラスです。
 
 ```kotlin
-class CartGetter : VuexGetter<CartState>() {
-   val productCount = getter { state.products().size }
+class ApplicationGetter : VuexGetter<ApplicationState>() {
+   val cartProductCount = getter { state.productsInCart().size }
 }
 ```
 こちらも今までのgetterと同じです。
-stateにアクセスするために `state.products` と書いている点には注意してください。
+stateにアクセスするために `state.productsInCart` と書いている点には注意してください。
 
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

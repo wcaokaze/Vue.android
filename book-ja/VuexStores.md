@@ -7,11 +7,16 @@ VuexState、VuexGetter、VuexMutation、VuexActionの4つをまとめるクラ�
 このクラスはほとんど全てボイラープレートですから正直めんどうなのですが、
 用意しましょう。
 ```kotlin
-class CartStore : VuexStore<CartState, CartMutation, CartAction, CartGetter>() {
-   override fun createState()    = CartState()
-   override fun createMutation() = CartMutation()
-   override fun createAction()   = CartAction()
-   override fun createGetter()   = CartGetter()
+class ApplicationStore
+   : VuexStore<ApplicationState,
+               ApplicationMutation,
+               ApplicationAction,
+               ApplicationGetter>()
+{
+   override fun createState()    = ApplicationState()
+   override fun createMutation() = ApplicationMutation()
+   override fun createAction()   = ApplicationAction()
+   override fun createGetter()   = ApplicationGetter()
 }
 ```
 
@@ -26,7 +31,7 @@ VuexStoreはApplicationに持たせておくことを推奨します。
 特に理由がなければApplicationに置きましょう。
 ```kotlin
 class Application : android.app.Application() {
-   val cartStore by lazy { CartStore() }
+   val store by lazy { ApplicationStore() }
 }
 ```
 

@@ -68,6 +68,13 @@ koshian(context) {
 [VuexAction](book-ja/VuexActions.md)  
 [VuexStore](book-ja/VuexStores.md)  
 [VComponentでVuexを使う](book-ja/Use-Vuex-in-VComponent.md)  
+[モジュール](book-ja/VuexModules.md)  
+
+
+サンプル
+--------------------------------------------------------------------------------
+
+[example](https://github.com/wcaokaze/Vue.android/tree/master/example)
 
 
 コードスタイル
