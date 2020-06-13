@@ -149,7 +149,7 @@ class VComponentApplicableTest {
    }
 
    @Test fun injectSubmodule() {
-      val moduleKey = VuexStore.Module.Key<Store, State, Mutation, Action, Getter>()
+      val moduleKey = VuexStore.Module.Key(Store::class)
 
       class ParentState : VuexState()
       class ParentMutation : VuexMutation<ParentState>()

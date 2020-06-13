@@ -21,8 +21,8 @@ import vue.vuex.*
 
 class Store : VuexStore<State, Mutation, Action, Getter>() {
    object ModuleKeys {
-      val MASTODON = Module.Key<MastodonStore, MastodonState, MastodonMutation, MastodonAction, MastodonGetter>()
-      val CREDENTIAL_PREFERENCE = Module.Key<CredentialPreferenceStore, CredentialPreferenceState, CredentialPreferenceMutation, CredentialPreferenceAction, CredentialPreferenceGetter>()
+      val MASTODON = Module.Key(MastodonStore::class)
+      val CREDENTIAL_PREFERENCE = Module.Key(CredentialPreferenceStore::class)
    }
 
    override fun createState()    = State()
