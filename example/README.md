@@ -1,12 +1,12 @@
 
-サンプル
+Example
 ================================================================================
 
-このサンプルアプリはVue.androidを使ったマストドンクライアントです。
+This sample app is a mastodon client that uses Vue.android.
 
 <img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/vue-android-example.gif" width="405px">
 
-下記のオープンソースライブラリを使用しています。
+This app uses the follow OSS libraries.
 
 [Koin](https://github.com/InsertKoinIO/koin)  
 [Koshian](https://github.com/wcaokaze/Koshian)  
@@ -14,25 +14,25 @@
 [Material design icons](https://github.com/google/material-design-icons)  
 
 
-Android Studioで開く
+Open in Android Studio
 --------------------------------------------------------------------------------
 
-1. このリポジトリをcloneします  
-   ```sh
-   git clone https://github.com/wcaokaze/Vue.android
-   ```
+1. Clone this repo  
+    ```sh
+    git clone https://github.com/wcaokaze/Vue.android
+    ```
 
-1. Android Studioで開きます  
-    リポジトリのルート(Vue.android)ではなく、
-    exampleアプリのディレクトリ(Vue.android/example)を開いてください
+1. Open in Android Studio  
+    Open the directory of this example app (Vue.android/example),
+    not the repo root (Vue.android).
 
 
-目次
+Index
 --------------------------------------------------------------------------------
 
-### 基本
+### Basic
 
-認証画面<br />
+Auth screen<br />
 <img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/example_auth.png" width="405px">
 
 [AuthActivity](https://github.com/wcaokaze/Vue.android/blob/master/example/app/src/main/java/com/wcaokaze/vue/android/example/activity/auth/AuthActivity.kt)  
@@ -40,7 +40,7 @@ Android Studioで開く
 
 ### RecyclerView
 
-タイムライン画面<br />
+Timeline screen<br />
 <img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/example_timeline.png" width="405px">
 
 [TimelineActivity](https://github.com/wcaokaze/Vue.android/blob/master/example/app/src/main/java/com/wcaokaze/vue/android/example/activity/timeline/TimelineActivity.kt)  
@@ -49,7 +49,7 @@ Android Studioで開く
 
 ### VComponent
 
-トゥート画面<br />
+Toot screen<br />
 <img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/example_status.png" width="405px">
 
 [StatusActivity](https://github.com/wcaokaze/Vue.android/blob/master/example/app/src/main/java/com/wcaokaze/vue/android/example/activity/status/StatusActivity.kt)  
@@ -63,4 +63,5 @@ Android Studioで開く
 [Store](https://github.com/wcaokaze/Vue.android/blob/master/example/app/src/main/java/com/wcaokaze/vue/android/example/Store.kt)  
 [MastodonStore](https://github.com/wcaokaze/Vue.android/blob/master/example/mastodon/src/main/java/com/wcaokaze/vue/android/example/mastodon/MastodonStore.kt)  
 [CredentialPreferenceStore](https://github.com/wcaokaze/Vue.android/blob/master/example/app/src/main/java/com/wcaokaze/vue/android/example/CredentialPreferenceStore.kt)  
+
 

@@ -268,7 +268,7 @@ Component[::CartButtonComponent, CART] {}
 Vue.androidの長いチュートリアルがようやく終わりました。
 
 実際に動いているVue.androidのソースコードを見たいのであれば
-[サンプルアプリ](https://github.com/wcaokaze/Vue.android/tree/master/example)
+[サンプルアプリ](https://github.com/wcaokaze/Vue.android/blob/master/example/README-ja.md)
 をご覧ください。
 
 

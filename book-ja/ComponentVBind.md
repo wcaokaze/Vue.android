@@ -5,8 +5,8 @@ ComponentVBind
 ViewにvBindで値を渡すのと同じように、VComponentに値を渡したいことがあります。
 
 例えば
-[サンプルアプリ](https://github.com/wcaokaze/Vue.android/tree/master/example)内の
-トゥートを表示しているところですが、次のようになっていきます。
+[サンプルアプリ](https://github.com/wcaokaze/Vue.android/blob/master/example/README-ja.md)
+内のトゥートを表示しているところですが、次のようになっていきます。
 (実際はもう少し複雑ですが、説明のために簡単にしています)
 
 <img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/example_status.png" width="405px">
