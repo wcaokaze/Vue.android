@@ -45,9 +45,6 @@ class ApplicationAction
 
 VuexAction内では、VuexMutation、VuexState、VuexGetterのすべてにアクセスできます。
 現在の状態を元にして新しい状態を決めるような処理も可能ということです。  
-
-ただし、Stateを直接変更することはここでも禁止されますから、
-状態の更新には必ずVuexMutationを経由する必要があります。
 ```kotlin
 class ApplicationAction
    : VuexAction<ApplicationState, ApplicationMutation, ApplicationGetter>()
@@ -59,7 +56,15 @@ class ApplicationAction
          throw CancellationException()
       }
    }
+}
+```
 
+ただし、Stateを直接変更することはここでも禁止されますから、
+状態の更新には必ずVuexMutationを経由する必要があります。
+```kotlin
+class ApplicationAction
+   : VuexAction<ApplicationState, ApplicationMutation, ApplicationGetter>()
+{
    suspend fun fetchProducts() {
       val productsInCart = try {
          WebApiService.fetchProductsInCart()
