@@ -97,21 +97,21 @@ fun doAfterTextChanged(action: (Editable) -> Unit)
 
 すべて挙げると、下記の8通りになります。
 ```kotlin
-val inputText = state<CharSequence>("")
-val inputText = state<CharSequence?>("")
-val inputText = state<Spanned>("")
-val inputText = state<Spanned?>("")
-val inputText = state<Spannable>("")
-val inputText = state<Spannable?>("")
-val inputText = state<Editable>("")
-val inputText = state<Editable?>("")
+val inputText = state<CharSequence>(...)
+val inputText = state<CharSequence?>(...)
+val inputText = state<Spanned>(...)
+val inputText = state<Spanned?>(...)
+val inputText = state<Spannable>(...)
+val inputText = state<Spannable?>(...)
+val inputText = state<Editable>(...)
+val inputText = state<Editable?>(...)
 ```
 
 そしてダメな例は下記です。
 ```kotlin
-state<String>("") // setTextに渡せるがEditableを格納できない
-state<Any>("") // Editableを格納できるけどsetTextに渡せない
-state<Int>("") // なにもかもダメ
+state<String>(...) // setTextに渡せるがEditableを格納できない
+state<Any>(...) // Editableを格納できるけどsetTextに渡せない
+state<Int>(...) // なにもかもダメ
 ```
 
 わかりましたね？
