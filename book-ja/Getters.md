@@ -117,7 +117,8 @@ val url = getter { URL(urlString()) }
 ```kotlin
 urlString.value = "This is not a valid URL"
 ```
-この場合、やはり `url` は再計算されるのですが、この時点では例外はスローされません。
+この場合、やはり `urlString` を使っているgetter `url` は再計算されるのですが、
+再計算中に発生する例外はこの時点ではまだスローされません。
 `url` を使おうとした際にスローされるのです。
 ```kotlin
 fun fetchSomething() {
