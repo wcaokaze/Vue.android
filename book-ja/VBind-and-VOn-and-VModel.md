@@ -93,7 +93,7 @@ fun doAfterTextChanged(action: (Editable) -> Unit)
     ここがダメなわけです。
 
 ではどうすればよいのか、もうお分かりですね？  
-`Editable` を格納可能で、なおかつ `setText` に渡すことができる型を使えばよいのです。
+`setText` に渡すことができて、 `Editable` を格納可能な型を使えばよいのです。
 
 すべて挙げると、下記の8通りになります。
 ```kotlin
@@ -109,8 +109,8 @@ val inputText = state<Editable?>("")
 
 そしてダメな例は下記です。
 ```kotlin
-state<String>("") // Editableを格納できない
-state<Any>("") // Editableは格納できるけどsetTextに渡せない
+state<String>("") // setTextに渡せるがEditableを格納できない
+state<Any>("") // Editableを格納できるけどsetTextに渡せない
 state<Int>("") // なにもかもダメ
 ```
 
