@@ -38,7 +38,7 @@ koshian(this) {
    }
 }
 ```
-[トップページ](https://github.com/wcaokaze/Vue.android/blob/master/README.md)の
+[トップページ](https://github.com/wcaokaze/Vue.android/blob/master/README-ja.md)の
 サンプルにあったカウンターを実装しようとしているところです。
 
 0のときだけ特別に `"-"` と表示することにしましょう。
