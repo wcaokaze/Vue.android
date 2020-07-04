@@ -106,13 +106,13 @@ getter内で例外がスローされるケースがあります。
 例えばこう書いたとしましょう。
 ```kotlin
 val urlString = state("https://example.com")
-val url = getter { URL(urlString) }
+val url = getter { URL(urlString()) }
 ```
 [URLのコンストラクタ](https://docs.oracle.com/javase/jp/8/docs/api/java/net/URL.html#URL-java.lang.String-)
 はURLのパースに失敗した場合に例外をスローしますから、
 このgetterは計算中に例外をスローしてしまうかもしれません。
 
-`try { URL(urlString) } catch (e: MalformedURLException) { null }` のように
+`try { URL(urlString()) } catch (e: MalformedURLException) { null }` のように
 書いておくべきだという話は今は置いておいて、仮に例外がスローされたとします。
 ```kotlin
 urlString.value = "This is not a valid URL"
