@@ -54,7 +54,7 @@ editText.doAfterTextChanged { inputText.value = it }
 
 もちろん実際にはもっと複雑ですが、極端に単純化すれば、2つの動作から成り立っています。
 
-1. state'inputText'の新しい値をeditTextにセットする
+1. state 'inputText' の新しい値をeditTextにセットする
 1. editTextの新しい値をstate'inputText'にセットする
 
 ここで問題になるのは、EditTextから受け取る値の型とEditTextに渡せる値の型が
@@ -73,27 +73,27 @@ fun doAfterTextChanged(action: (Editable) -> Unit)
 ```
 
 普通にいままで通りの感覚で `state("")` と書いてしまうと
-型は `StateField<String>` になってしまいます。
+型は `state<String>("")` になってしまいます。
 
 先程挙げたVModelの動作をひとつずつ見てみましょう。
 
-1. state'inputText'の新しい値をeditTextにセットする  
+1. state 'inputText' の新しい値をeditTextにセットする  
     ```kotlin
     inputText.addObserver { newValue: String -> editText.setText(newValue) }
     ```
-    `setText` は `CharSequence?` を受け取るので
+    `EditText.setText` は `CharSequence?` を受け取るので
     そのサブタイプである `String` を渡すことは可能です。  
     これは問題ありません。
-1. editTextの新しい値をstate'inputText'にセットする  
+1. editTextの新しい値をstate 'inputText' にセットする  
     ```kotlin
     editText.doAfterTextChanged { text: Editable -> inputText.value = text }
     ```
     `Editable` は `String` のサブタイプではありませんので
-    `inputText` へ格納することはできません。  
+    state 'inputText' へ格納することはできません。  
     ここがダメなわけです。
 
 ではどうすればよいのか、もうお分かりですね？  
-`setText` に渡すことができて、 `Editable` を格納可能な型を使えばよいのです。
+`EditText.setText` に渡すことができて、 `Editable` を格納可能な型を使えばよいのです。
 
 すべて挙げると、下記の8通りになります。
 ```kotlin
