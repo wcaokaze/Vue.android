@@ -6,6 +6,7 @@ ReactiveFieldとReactivateeはVue.androidの最も便利で最も重要な概念
 
 次のコードを見てください。
 ```kotlin
+val textView = ... // findViewByIdなどでViewを取得
 val textState = state("Hello, World!")
 
 textView.vBind.text { textState() }
