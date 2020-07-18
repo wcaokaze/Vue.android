@@ -3,6 +3,7 @@ Getter
 ================================================================================
 
 ```kotlin
+val textView = ...
 val textState = state("Hello, World!")
 
 textView.vBind.text { textState() }
@@ -18,7 +19,7 @@ textView.vBind.isVisible { textState().isNotEmpty() }
 ```kotlin
 val count = state(0)
 
-koshian(this) {
+koshian(context) {
    LinearLayout {
       view.orientation = HORIZONTAL
 
@@ -43,9 +44,13 @@ koshian(this) {
 
 0のときだけ特別に `"-"` と表示することにしましょう。
 ```kotlin
-TextView {
-   vBind.text {
-      if (count() == 0) { "-" } else { count().toString() }
+LinearLayout {
+   view.orientation = HORIZONTAL
+
+   TextView {
+      vBind.text {
+         if (count() == 0) { "-" } else { count().toString() }
+      }
    }
 }
 ```
@@ -66,11 +71,15 @@ val countText = getter {
 }
 
 koshian(context) {
-   ...
+   LinearLayout {
+      view.orientation = HORIZONTAL
+
       TextView {
          vBind.text { countText() }
       }
-   ...
+
+      ...
+   }
 }
 ```
 ロジックは `countText` に移動し、バインドの記述はシンプルになりました。
