@@ -121,14 +121,29 @@ val url = getter { URL(urlString()) }
 はURLのパースに失敗した場合に例外をスローしますから、
 このgetterは計算中に例外をスローしてしまうかもしれません。
 
-`try { URL(urlString()) } catch (e: MalformedURLException) { null }` のように
-書いておくべきだという話は今は置いておいて、仮に例外がスローされたとします。
 ```kotlin
+val url = getter {
+   try {
+      URL(urlString())
+   } catch (e: MalformedURLException) {
+      null
+   }
+}
+```
+のように書いておくべきだという話は今は置いておいて、
+仮にgetter内で例外がスローされたとします。
+
+```kotlin
+val urlString = state("https://example.com")
+val url = getter { URL(urlString()) }
+
 urlString.value = "This is not a valid URL"
 ```
-この場合、やはり `urlString` を使っているgetter `url` は再計算されるのですが、
-再計算中に発生する例外はこの時点ではまだスローされません。
-`url` を使おうとした際にスローされるのです。
+この場合、やはり `urlString` を使っているgetter `url` は再計算され、
+getter内でMalformedURLExceptionがスローされますが、
+この時点ではまだアプリケーションはクラッシュしません。
+
+getter内で発生した例外は、getterを使おうとした際に改めてスローされるのです。
 ```kotlin
 fun fetchSomething() {
    val url = try {
