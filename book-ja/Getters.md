@@ -121,6 +121,7 @@ val url = getter { URL(urlString()) }
 はURLのパースに失敗した場合に例外をスローしますから、
 このgetterは計算中に例外をスローしてしまうかもしれません。
 
+getterが例外をスローしないように、
 ```kotlin
 val url = getter {
    try {
