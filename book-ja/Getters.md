@@ -121,7 +121,8 @@ val url = getter { URL(urlString()) }
 はURLのパースに失敗した場合に例外をスローしますから、
 このgetterは計算中に例外をスローしてしまうかもしれません。
 
-getterが例外をスローしないように、
+getterが例外をスローしないように、下記のようにtryで
+囲っておくべきだという話になるのですが、
 ```kotlin
 val url = getter {
    try {
@@ -131,8 +132,7 @@ val url = getter {
    }
 }
 ```
-のように書いておくべきだという話は今は置いておいて、
-仮にgetter内で例外がスローされたとします。
+それは今は置いておいて、仮にgetter内で例外がスローされたとします。
 
 ```kotlin
 val urlString = state("https://example.com")
