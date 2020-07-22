@@ -146,6 +146,9 @@ getter内でMalformedURLExceptionがスローされますが、
 
 getter内で発生した例外は、getterを使おうとした際に改めてスローされるのです。
 ```kotlin
+val urlString = state("https://example.com")
+val url = getter { URL(urlString()) }
+
 fun fetchSomething() {
    val url = try {
       url()
