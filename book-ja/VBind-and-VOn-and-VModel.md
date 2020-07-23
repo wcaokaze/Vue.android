@@ -49,15 +49,15 @@ editTextContentに新しい値がセットされるとそれがeditTextにも反
 
 VModelは言わば下記コードの糖衣構文のようなものです。
 ```kotlin
-val inputText = state<CharSequence>("")
-inputText.addObserver { editText.setText(it) }
-editText.doAfterTextChanged { inputText.value = it }
+val editTextContent = state<CharSequence>("")
+editTextContent.addObserver { editText.setText(it) }
+editText.doAfterTextChanged { editTextContent.value = it }
 ```
 
 もちろん実際にはもっと複雑ですが、極端に単純化すれば、2つの動作から成り立っています。
 
-1. state 'inputText' の新しい値をeditTextにセットする
-1. editTextの新しい値をstate'inputText'にセットする
+1. editTextContentの新しい値をeditTextにセットする
+1. editTextの新しい値をeditTextContentにセットする
 
 ここで問題になるのは、EditTextから受け取る値の型とEditTextに渡せる値の型が
 実は一致していないということです。
@@ -79,19 +79,21 @@ fun doAfterTextChanged(action: (Editable) -> Unit)
 
 先程挙げたVModelの動作をひとつずつ見てみましょう。
 
-1. state 'inputText' の新しい値をeditTextにセットする  
+1. editTextContentの新しい値をeditTextにセットする  
     ```kotlin
-    inputText.addObserver { newValue: String -> editText.setText(newValue) }
+    val editTextContent = state<String>("")
+    editTextContent.addObserver { newValue: String -> editText.setText(newValue) }
     ```
     `EditText.setText` は `CharSequence?` を受け取るので
     そのサブタイプである `String` を渡すことは可能です。  
     これは問題ありません。
-1. editTextの新しい値をstate 'inputText' にセットする  
+1. editTextの新しい値をeditTextContentにセットする  
     ```kotlin
-    editText.doAfterTextChanged { text: Editable -> inputText.value = text }
+    val editTextContent = state<String>("")
+    editText.doAfterTextChanged { text: Editable -> editTextContent.value = text }
     ```
     `Editable` は `String` のサブタイプではありませんので
-    state 'inputText' へ格納することはできません。  
+    editTextContentへ格納することはできません。  
     ここがダメなわけです。
 
 ではどうすればよいのか、もうお分かりですね？  
@@ -99,14 +101,14 @@ fun doAfterTextChanged(action: (Editable) -> Unit)
 
 すべて挙げると、下記の8通りになります。
 ```kotlin
-val inputText = state<CharSequence>(...)
-val inputText = state<CharSequence?>(...)
-val inputText = state<Spanned>(...)
-val inputText = state<Spanned?>(...)
-val inputText = state<Spannable>(...)
-val inputText = state<Spannable?>(...)
-val inputText = state<Editable>(...)
-val inputText = state<Editable?>(...)
+val editTextContent = state<CharSequence>(...)
+val editTextContent = state<CharSequence?>(...)
+val editTextContent = state<Spanned>(...)
+val editTextContent = state<Spanned?>(...)
+val editTextContent = state<Spannable>(...)
+val editTextContent = state<Spannable?>(...)
+val editTextContent = state<Editable>(...)
+val editTextContent = state<Editable?>(...)
 ```
 
 そしてダメな例は下記です。
@@ -116,7 +118,7 @@ state<Any>(...) // Editableを格納できるけどsetTextに渡せない
 state<Int>(...) // なにもかもダメ
 ```
 
-わかりましたね？
+もちろん間違った型を指定するとコンパイラがエラーを出しますので安心してください。
 
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
