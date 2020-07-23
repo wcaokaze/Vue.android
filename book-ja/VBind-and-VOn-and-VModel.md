@@ -34,9 +34,11 @@ VModel
 VModelは双方向バインディングです。ReactiveFieldの更新をViewに反映し、
 ユーザーの操作によるViewの更新をReactiveFieldに反映します。
 ```kotlin
-val inputText = state<CharSequence>("")
-editText.vModel.text(inputText)
+val editTextContent = state<CharSequence>("")
+editText.vModel.text(editTextContent)
 ```
+editTextに新しい文字が入力されるとそれがeditTextContentにも反映され、
+editTextContentに新しい値がセットされるとそれがeditTextにも反映されるという具合です。
 
 ここで `<CharSequence>` の記述が必須であることに気をつけてください。
 これには少し複雑な理由があります。
