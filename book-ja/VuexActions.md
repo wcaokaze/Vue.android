@@ -129,5 +129,5 @@ class FooComponent : VComponent<Nothing>() {
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [VuexMutation](VuexMutations.md)  |  [VuexStore](VuexStores.md) →
+← [VuexMutation](VuexMutations.md)  |  [目次](../README-ja.md#チュートリアル)  |  [VuexStore](VuexStores.md) →
 

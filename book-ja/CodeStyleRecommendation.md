@@ -169,5 +169,5 @@ Koshianを使う場合は
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [ReactiveFieldとReactivatee](ReactiveFields-and-Reactivatees.md)  |  [Getter](Getters.md) →
+← [ReactiveFieldとReactivatee](ReactiveFields-and-Reactivatees.md)  |  [目次](../README-ja.md#チュートリアル)  |  [Getter](Getters.md) →
 

@@ -165,5 +165,5 @@ fun fetchSomething() {
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [コードスタイル](CodeStyleRecommendation.md)  |  [VBindとVOnとVModel](VBind-and-VOn-and-VModel.md) →
+← [コードスタイル](CodeStyleRecommendation.md)  |  [目次](../README-ja.md#チュートリアル)  |  [VBindとVOnとVModel](VBind-and-VOn-and-VModel.md) →
 

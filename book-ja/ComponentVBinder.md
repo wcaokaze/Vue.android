@@ -133,5 +133,5 @@ textView.vBind.text { account()?.name } // OK
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [ComponentLifecycle](ComponentLifecycle.md)  |  [ComponentVEvent](ComponentVEvent.md) →
+← [ComponentLifecycle](ComponentLifecycle.md)  |  [目次](../README-ja.md#チュートリアル)  |  [ComponentVEvent](ComponentVEvent.md) →
 

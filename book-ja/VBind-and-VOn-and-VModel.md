@@ -123,5 +123,5 @@ state<Int>(...) // なにもかもダメ
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [Getter](Getters.md)
+← [Getter](Getters.md)  |  [目次](../README-ja.md#チュートリアル)  |  →
 

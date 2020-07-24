@@ -40,5 +40,5 @@ Vuexでは `Action`、 `Mutation`、 `State` という3つの概念を新たに�
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-[VuexStateとVuexGetter](VuexStates-and-VuexGetters.md) →
+←  |  [目次](../README-ja.md#チュートリアル)  |  [VuexStateとVuexGetter](VuexStates-and-VuexGetters.md) →
 
