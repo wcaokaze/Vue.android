@@ -198,8 +198,8 @@ class CartButtonComponent(context: Context, override val store: CartStore)
    }
 }
 ```
-カートの状態がCartStoreに移動したことでCartButtonComponentに必要なVuexStoreは
-ApplicationStoreではなくCartStoreになりました。
+カートの状態がApplicationStoreからCartStoreに移動したことで
+CartButtonComponentに必要なVuexStoreはApplicationStoreではなくCartStoreになりました。
 
 仮にここでApplicationStoreを受け取って `getter[CART].productCount()`
 と記述しても結果は同じですが、やはりCartButtonComponentである以上
@@ -274,5 +274,5 @@ Vue.androidの長いチュートリアルがようやく終わりました。
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [VComponentでVuexを使う](Use-Vuex-in-VComponent.md)
+← [VComponentでVuexを使う](Use-Vuex-in-VComponent.md)  |  [目次](../README-ja.md#チュートリアル)  |
 

@@ -7,7 +7,7 @@ Vuexとは？
 
 例えば、ショッピングアプリを開発していたとしましょう。
 
-<img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/example_status.png" width="405px">
+<img src="https://raw.github.com/wcaokaze/Vue.android/master/imgs/shopping_app_header.png" width="405px">
 
 「カートに入っている商品の一覧」という状態は、どのVComponentの持ち物でもなく
 いわばグローバルな状態です。  
@@ -40,5 +40,5 @@ Vuexでは `Action`、 `Mutation`、 `State` という3つの概念を新たに�
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-[VuexStateとVuexGetter](VuexStates-and-VuexGetters.md) →
+|  [目次](../README-ja.md#チュートリアル)  |  [VuexStateとVuexGetter](VuexStates-and-VuexGetters.md) →
 

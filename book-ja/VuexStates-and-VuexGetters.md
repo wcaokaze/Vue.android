@@ -36,5 +36,5 @@ stateにアクセスするために `state.productsInCart` と書いている点
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [Vuexとは？](What-is-Vuex.md)  |  [VuexMutation](VuexMutations.md) →
+← [Vuexとは？](What-is-Vuex.md)  |  [目次](../README-ja.md#チュートリアル)  |  [VuexMutation](VuexMutations.md) →
 

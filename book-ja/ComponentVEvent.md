@@ -142,5 +142,5 @@ init {
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [ComponentVBind](ComponentVBind.md)
+← [ComponentVBind](ComponentVBinder.md)  |  [目次](../README-ja.md#チュートリアル)  |
 
