@@ -57,7 +57,7 @@ koshian(context) {
 
 [VComponent](book-ja/VComponents.md)  
 [ComponentLifecycle](book-ja/ComponentLifecycle.md)  
-[ComponentVBind](book-ja/ComponentVBind.md)  
+[ComponentVBind](book-ja/ComponentVBinder.md)  
 [ComponentVEvent](book-ja/ComponentVEvent.md)  
 
 #### Vuex

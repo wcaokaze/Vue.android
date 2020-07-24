@@ -1,5 +1,5 @@
 
-ComponentVBind
+ComponentVBinder
 ================================================================================
 
 ViewにvBindで値を渡すのと同じように、VComponentに値を渡したいことがあります。
@@ -59,7 +59,7 @@ vBindのときと同じように、tootに新しい値がセットされると�
 さて、値の渡し方はわかりました。では値を受け取る側、つまり `AccountComponent` は
 どのように実装すればよいのでしょう？
 
-`ComponentVBind` を使います。
+`ComponentVBinder` を使います。
 
 ```kotlin
 class AccountComponent(context: Context) : VComponent<Nothing>() {

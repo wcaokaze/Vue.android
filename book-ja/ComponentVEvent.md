@@ -142,5 +142,5 @@ init {
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [ComponentVBind](ComponentVBind.md)
+← [ComponentVBind](ComponentVBinder.md)
 
