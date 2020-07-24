@@ -57,5 +57,5 @@ textState.value = ""
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-←  |  [目次](../README-ja.md#チュートリアル)  |  [コードスタイル](CodeStyleRecommendation.md) →
+| [目次](../README-ja.md#チュートリアル) | [コードスタイル](CodeStyleRecommendation.md) →
 

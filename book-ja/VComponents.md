@@ -113,5 +113,5 @@ class CounterComponent(context: Context) : VComponentInterface<Nothing> {
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-←  |  [目次](../README-ja.md#チュートリアル)  |  [ComponentLifecycle](ComponentLifecycle.md) →
+| [目次](../README-ja.md#チュートリアル) | [ComponentLifecycle](ComponentLifecycle.md) →
 

@@ -274,5 +274,5 @@ Vue.androidの長いチュートリアルがようやく終わりました。
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [VComponentでVuexを使う](Use-Vuex-in-VComponent.md)  |  [目次](../README-ja.md#チュートリアル)  |  →
+← [VComponentでVuexを使う](Use-Vuex-in-VComponent.md)  |  [目次](../README-ja.md#チュートリアル)  |
 
