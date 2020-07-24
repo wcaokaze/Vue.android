@@ -3,6 +3,7 @@
 ================================================================================
 
 Vue.androidは大量のトップレベル関数から成り立っています。
+また、技術的な理由により、いくつかの関数はわざと同じ名前を付けられています。
 コンパイラはそれらを完璧に解決できますが、我々には難しいです。
 ですのでVue.androidの関数は `*` でimportすることをおすすめします。
 
@@ -64,10 +65,6 @@ KoshianとVue.androidはきっと相性がいいはずです。
 class MainActivity : Activity() {
    private val count = state(0)
 
-   private val countText = getter {
-      if (count() == 0) { "-" } else { count().toString() }
-   }
-
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       prepareVue()
@@ -78,14 +75,14 @@ class MainActivity : Activity() {
    }
 
    private fun decrement() {
-      count.value = (count.value - 1).coerceAtLeast(0)
+      count.value--
    }
 
    private fun prepareVue() {
       setContentView(R.layout.activity_main)
 
       val counterTextView: TextView = findViewById(R.id.counter_text)
-      counterTextView.vBind.text { countText() }
+      counterTextView.vBind.text { count().toString() }
 
       val incrementButton: Button = findViewById(R.id.btn_increment)
       val decrementButton: Button = findViewById(R.id.btn_decrement)
@@ -100,10 +97,6 @@ class MainActivity : Activity() {
 class MainActivity : Activity() {
    private val count = state(0)
 
-   private val countText = getter {
-      if (count() == 0) { "-" } else { count().toString() }
-   }
-
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       prepareVue()
@@ -114,7 +107,7 @@ class MainActivity : Activity() {
    }
 
    private fun decrement() {
-      count.value = (count.value - 1).coerceAtLeast(0)
+      count.value--
    }
 
    private fun prepareVue() {
@@ -123,7 +116,7 @@ class MainActivity : Activity() {
             view.orientation = HORIZONTAL
 
             TextView {
-               vBind.text { countText() }
+               vBind.text { count().toString() }
             }
 
             Button {
@@ -176,5 +169,5 @@ Koshianを使う場合は
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [ReactiveFieldとReactivatee](ReactiveFields-and-Reactivatees.md)  |  [Getter](Getters.md) →
+← [ReactiveFieldとReactivatee](ReactiveFields-and-Reactivatees.md)  |  [目次](../README-ja.md#チュートリアル)  |  [Getter](Getters.md) →
 

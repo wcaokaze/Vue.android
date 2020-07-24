@@ -43,5 +43,5 @@ class ApplicationMutation : VuexMutation<ApplicationState>() {
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [VuexStateとVuexGetter](VuexStates-and-VuexGetters.md)  |  [VuexAction](VuexActions.md) →
+← [VuexStateとVuexGetter](VuexStates-and-VuexGetters.md)  |  [目次](../README-ja.md#チュートリアル)  |  [VuexAction](VuexActions.md) →
 

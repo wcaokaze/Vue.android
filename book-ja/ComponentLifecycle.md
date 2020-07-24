@@ -70,5 +70,5 @@ VComponentが非アクティブになったとき、watcherは自動的に監視
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [VComponent](VComponents.md)  |  [ComponentVBind](ComponentVBind.md) →
+← [VComponent](VComponents.md)  |  [目次](../README-ja.md#チュートリアル)  |  [ComponentVBind](ComponentVBinder.md) →
 

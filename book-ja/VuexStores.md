@@ -38,5 +38,5 @@ class Application : android.app.Application() {
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [VuexAction](VuexActions.md)  |  [VComponentでVuexを使う](Use-Vuex-in-VComponent.md) →
+← [VuexAction](VuexActions.md)  |  [目次](../README-ja.md#チュートリアル)  |  [VComponentでVuexを使う](Use-Vuex-in-VComponent.md) →
 

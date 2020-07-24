@@ -95,7 +95,7 @@ koshian(context) {
 VComponentInterface
 --------------------------------------------------------------------------------
 
-VComponentを使いたいけど、すでに他のクラスを継承していてVComponentを
+VComponentを継承したいけど、すでに他のクラスを継承していてVComponentを
 継承できない場合があります。
 
 VComponentInterfaceを使ってください。
@@ -113,5 +113,5 @@ class CounterComponent(context: Context) : VComponentInterface<Nothing> {
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-[ComponentLifecycle](ComponentLifecycle.md) →
+| [目次](../README-ja.md#チュートリアル) | [ComponentLifecycle](ComponentLifecycle.md) →
 

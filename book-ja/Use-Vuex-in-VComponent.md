@@ -200,5 +200,5 @@ class FooComponent(context: Context, override val store: FooStore)
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [VuexStore](VuexStores.md)  |  [モジュール](VuexModules.md) →
+← [VuexStore](VuexStores.md)  |  [目次](../README-ja.md#チュートリアル)  |  [モジュール](VuexModules.md) →
 

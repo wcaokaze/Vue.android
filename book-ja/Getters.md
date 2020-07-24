@@ -3,6 +3,7 @@ Getter
 ================================================================================
 
 ```kotlin
+val textView = ...
 val textState = state("Hello, World!")
 
 textView.vBind.text { textState() }
@@ -18,7 +19,7 @@ textView.vBind.isVisible { textState().isNotEmpty() }
 ```kotlin
 val count = state(0)
 
-koshian(this) {
+koshian(context) {
    LinearLayout {
       view.orientation = HORIZONTAL
 
@@ -38,14 +39,18 @@ koshian(this) {
    }
 }
 ```
-[トップページ](https://github.com/wcaokaze/Vue.android/blob/master/README.md)の
+[トップページ](https://github.com/wcaokaze/Vue.android/blob/master/README-ja.md)の
 サンプルにあったカウンターを実装しようとしているところです。
 
 0のときだけ特別に `"-"` と表示することにしましょう。
 ```kotlin
-TextView {
-   vBind.text {
-      if (count() == 0) { "-" } else { count().toString() }
+LinearLayout {
+   view.orientation = HORIZONTAL
+
+   TextView {
+      vBind.text {
+         if (count() == 0) { "-" } else { count().toString() }
+      }
    }
 }
 ```
@@ -66,11 +71,15 @@ val countText = getter {
 }
 
 koshian(context) {
-   ...
+   LinearLayout {
+      view.orientation = HORIZONTAL
+
       TextView {
          vBind.text { countText() }
       }
-   ...
+
+      ...
+   }
 }
 ```
 ロジックは `countText` に移動し、バインドの記述はシンプルになりました。
@@ -106,20 +115,40 @@ getter内で例外がスローされるケースがあります。
 例えばこう書いたとしましょう。
 ```kotlin
 val urlString = state("https://example.com")
-val url = getter { URL(urlString) }
+val url = getter { URL(urlString()) }
 ```
 [URLのコンストラクタ](https://docs.oracle.com/javase/jp/8/docs/api/java/net/URL.html#URL-java.lang.String-)
 はURLのパースに失敗した場合に例外をスローしますから、
 このgetterは計算中に例外をスローしてしまうかもしれません。
 
-`try { URL(urlString) } catch (e: MalformedURLException) { null }` のように
-書いておくべきだという話は今は置いておいて、仮に例外がスローされたとします。
+getterが例外をスローしないように、下記のようにtryで
+囲っておくべきだという話になるのですが、
 ```kotlin
+val url = getter {
+   try {
+      URL(urlString())
+   } catch (e: MalformedURLException) {
+      null
+   }
+}
+```
+それは今は置いておいて、仮にgetter内で例外がスローされたとします。
+
+```kotlin
+val urlString = state("https://example.com")
+val url = getter { URL(urlString()) }
+
 urlString.value = "This is not a valid URL"
 ```
-この場合、やはり `url` は再計算されるのですが、この時点では例外はスローされません。
-`url` を使おうとした際にスローされるのです。
+この場合、やはり `urlString` を使っているgetter `url` は再計算され、
+getter内でMalformedURLExceptionがスローされますが、
+この時点ではまだアプリケーションはクラッシュしません。
+
+getter内で発生した例外は、getterを使おうとした際に改めてスローされるのです。
 ```kotlin
+val urlString = state("https://example.com")
+val url = getter { URL(urlString()) }
+
 fun fetchSomething() {
    val url = try {
       url()
@@ -136,5 +165,5 @@ fun fetchSomething() {
 
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-← [コードスタイル](CodeStyleRecommendation.md)  |  [VBindとVOnとVModel](VBind-and-VOn-and-VModel.md) →
+← [コードスタイル](CodeStyleRecommendation.md)  |  [目次](../README-ja.md#チュートリアル)  |  [VBindとVOnとVModel](VBind-and-VOn-and-VModel.md) →
 
