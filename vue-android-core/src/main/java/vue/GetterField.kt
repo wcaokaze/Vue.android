@@ -18,8 +18,32 @@ package vue
 
 import androidx.annotation.*
 
+/**
+ * computes a value from other [ReactiveField]s. This is also a [ReactiveField].
+ * ```kotlin
+ * val user = state<User?>(null)
+ * val username = getter { user()?.name }
+ * ```
+ * ```kotlin
+ * assertEquals(null, username.value)
+ * user.value = User(name = "wcaokaze")
+ * assertEquals("wcaokaze", username.value)
+ * ```
+ */
 fun <T> getter(reactivatee: ReactivateeScope.() -> T) = GetterField(reactivatee)
 
+/**
+ * computes a value from other [ReactiveField]s. This is also a [ReactiveField].
+ * ```kotlin
+ * val user = state<User?>(null)
+ * val username = getter { user()?.name }
+ * ```
+ * ```kotlin
+ * assertEquals(null, username.value)
+ * user.value = User(name = "wcaokaze")
+ * assertEquals("wcaokaze", username.value)
+ * ```
+ */
 class GetterField<out T>
       internal constructor(
             @UiThread internal val reactivatee: ReactivateeScopeImpl.() -> T
