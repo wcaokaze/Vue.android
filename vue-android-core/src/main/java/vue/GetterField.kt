@@ -29,6 +29,31 @@ import androidx.annotation.*
  * user.value = User(name = "wcaokaze")
  * assertEquals("wcaokaze", username.value)
  * ```
+ *
+ * ## Poisoned
+ *
+ * A GetterField gets "poisoned" if an exception was thrown while its computing.
+ * ```kotlin
+ * val urlString = state("https://example.com")
+ * val url = getter { URL(urlString()) }
+ *
+ * urlString.value = "This is not a url"
+ * ```
+ * The GetterField computes `URL("This is not a url")` and
+ * a [java.net.MalformedURLException] is thrown.
+ * But the application does not crash on this time. GetterField 'url' gets
+ * poisoned and the MalformedURLException will be re-thrown by [GetterField.value].
+ * ```kotlin
+ * val urlString = state("https://example.com")
+ * val url = getter { URL(urlString()) }
+ *
+ * urlString.value = "This is not a url"
+ *
+ * try {
+ *    url.value
+ * } catch (e: MalformedURLException) {
+ * }
+ * ```
  */
 fun <T> getter(reactivatee: ReactivateeScope.() -> T) = GetterField(reactivatee)
 
@@ -42,6 +67,31 @@ fun <T> getter(reactivatee: ReactivateeScope.() -> T) = GetterField(reactivatee)
  * assertEquals(null, username.value)
  * user.value = User(name = "wcaokaze")
  * assertEquals("wcaokaze", username.value)
+ * ```
+ *
+ * ## Poisoned
+ *
+ * A GetterField gets "poisoned" if an exception was thrown while its computing.
+ * ```kotlin
+ * val urlString = state("https://example.com")
+ * val url = getter { URL(urlString()) }
+ *
+ * urlString.value = "This is not a url"
+ * ```
+ * The GetterField computes `URL("This is not a url")` and
+ * a [java.net.MalformedURLException] is thrown.
+ * But the application does not crash on this time. GetterField 'url' gets
+ * poisoned and the MalformedURLException will be re-thrown by [GetterField.value].
+ * ```kotlin
+ * val urlString = state("https://example.com")
+ * val url = getter { URL(urlString()) }
+ *
+ * urlString.value = "This is not a url"
+ *
+ * try {
+ *    url.value
+ * } catch (e: MalformedURLException) {
+ * }
  * ```
  */
 class GetterField<out T>
