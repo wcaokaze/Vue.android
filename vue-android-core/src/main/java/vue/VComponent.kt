@@ -200,16 +200,21 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     *
     *    val count = state(0)
     *    val buttonText = vBinder<String>()
+    *    //               ^~~~~~~~~~~~~~~
+    *    //               Create a new VBinder
     *
     *    init {
     *       view = koshian(context) {
-    *          linearLayout {
-    *             textView {
+    *          LinearLayout {
+    *             TextView {
     *                vBind.text { count().toString() }
     *             }
     *
-    *             button {
+    *             Button {
     *                vBind.text { buttonText() }
+    *                //           ^~~~~~~~~~~~
+    *                //           Usage like a ReactiveField
+    *
     *                vOn.click { count.value++ }
     *             }
     *          }
@@ -222,7 +227,10 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     * ```kotlin
     * val componentButtonText = state("+")
     * val component = CounterComponent()
+    *
     * component.buttonText { componentButtonText() }
+    * //        ^~~~~~~~~~
+    * //        Usage like a VBinder
     *
     * // of course this is reactive.
     * componentButtonText.value = "increment"

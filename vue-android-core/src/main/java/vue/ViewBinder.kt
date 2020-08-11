@@ -21,6 +21,12 @@ import androidx.annotation.*
 
 /**
  * [VBinder] for [View]s
+ *
+ * ```kotlin
+ * val user = state<User?>(null)
+ *
+ * usernameView.vBind.text { user()?.name }
+ * ```
  */
 class ViewBinder<V : View, T>(view: V, private val binder: (Result<T>) -> Unit) : VBinder<T> {
    private var isBinding = false
