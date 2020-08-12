@@ -22,6 +22,17 @@ import com.wcaokaze.vue.android.*
 
 import kotlin.reflect.*
 
+/**
+ * provides [VBinder]s.
+ *
+ * ```kotlin
+ * //                 VBinder
+ * //                 v~~~
+ * usernameView.vBind.text { user()?.name }
+ * //           ^~~~~
+ * //           VBindProvider
+ * ```
+ */
 class VBindProvider<out V : View>(val substance: V) {
    private var binders = emptyArray<Pair<Any, VBinder<*>>>()
 

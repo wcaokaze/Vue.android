@@ -21,6 +21,17 @@ import androidx.annotation.*
 import com.wcaokaze.vue.android.*
 import kotlin.reflect.*
 
+/**
+ * provides [VModel]s.
+ *
+ * ```kotlin
+ * //                      VModel
+ * //                      v~~~
+ * commentInputView.vModel.text(inputComment)
+ * //               ^~~~~~
+ * //               VModelProvider
+ * ```
+ */
 class VModelProvider<out V : View>(val substance: V) {
    private var binders = emptyArray<Pair<Any, VModel<*, *>>>()
 
