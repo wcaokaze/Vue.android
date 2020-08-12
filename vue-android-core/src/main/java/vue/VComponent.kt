@@ -334,21 +334,24 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     * ```kotlin
     * class SearchComponent(context: Context) : VComponent {
     *    override val view: LinearLayout
+    *    private val queryText = state<CharSequence>("")
     *
     *    val onSubmit = vEvent1<String>()
+    *    //             ^~~~~~~~~~~~~~~
+    *    //             Create a new VEvent
     *
     *    init {
     *       view = koshian(context) {
-    *          linearLayout {
-    *             val editText = editText {
+    *          LinearLayout {
+    *             EditText {
+    *                vModel.text(queryText)
     *             }
     *
-    *             button {
+    *             Button {
     *                view.text = "Search"
     *
     *                vOn.click {
-    *                   val text = editText.text.toString()
-    *                   onSubmit(text)
+    *                   onSubmit.emit(queryText.value.toString())
     *                }
     *             }
     *          }
@@ -398,21 +401,24 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     * ```kotlin
     * class SearchComponent(context: Context) : VComponent {
     *    override val view: LinearLayout
+    *    private val queryText = state<CharSequence>("")
     *
     *    val onSubmit = vEvent1<String>()
+    *    //             ^~~~~~~~~~~~~~~
+    *    //             Create a new VEvent
     *
     *    init {
     *       view = koshian(context) {
-    *          linearLayout {
-    *             val editText = editText {
+    *          LinearLayout {
+    *             EditText {
+    *                vModel.text(queryText)
     *             }
     *
-    *             button {
+    *             Button {
     *                view.text = "Search"
     *
     *                vOn.click {
-    *                   val text = editText.text.toString()
-    *                   onSubmit(text)
+    *                   onSubmit.emit(queryText.value.toString())
     *                }
     *             }
     *          }
@@ -464,21 +470,24 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     * ```kotlin
     * class SearchComponent(context: Context) : VComponent {
     *    override val view: LinearLayout
+    *    private val queryText = state<CharSequence>("")
     *
     *    val onSubmit = vEvent1<String>()
+    *    //             ^~~~~~~~~~~~~~~
+    *    //             Create a new VEvent
     *
     *    init {
     *       view = koshian(context) {
-    *          linearLayout {
-    *             val editText = editText {
+    *          LinearLayout {
+    *             EditText {
+    *                vModel.text(queryText)
     *             }
     *
-    *             button {
+    *             Button {
     *                view.text = "Search"
     *
     *                vOn.click {
-    *                   val text = editText.text.toString()
-    *                   onSubmit(text)
+    *                   onSubmit.emit(queryText.value.toString())
     *                }
     *             }
     *          }
@@ -530,21 +539,24 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     * ```kotlin
     * class SearchComponent(context: Context) : VComponent {
     *    override val view: LinearLayout
+    *    private val queryText = state<CharSequence>("")
     *
     *    val onSubmit = vEvent1<String>()
+    *    //             ^~~~~~~~~~~~~~~
+    *    //             Create a new VEvent
     *
     *    init {
     *       view = koshian(context) {
-    *          linearLayout {
-    *             val editText = editText {
+    *          LinearLayout {
+    *             EditText {
+    *                vModel.text(queryText)
     *             }
     *
-    *             button {
+    *             Button {
     *                view.text = "Search"
     *
     *                vOn.click {
-    *                   val text = editText.text.toString()
-    *                   onSubmit(text)
+    *                   onSubmit.emit(queryText.value.toString())
     *                }
     *             }
     *          }
@@ -596,21 +608,24 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     * ```kotlin
     * class SearchComponent(context: Context) : VComponent {
     *    override val view: LinearLayout
+    *    private val queryText = state<CharSequence>("")
     *
     *    val onSubmit = vEvent1<String>()
+    *    //             ^~~~~~~~~~~~~~~
+    *    //             Create a new VEvent
     *
     *    init {
     *       view = koshian(context) {
-    *          linearLayout {
-    *             val editText = editText {
+    *          LinearLayout {
+    *             EditText {
+    *                vModel.text(queryText)
     *             }
     *
-    *             button {
+    *             Button {
     *                view.text = "Search"
     *
     *                vOn.click {
-    *                   val text = editText.text.toString()
-    *                   onSubmit(text)
+    *                   onSubmit.emit(queryText.value.toString())
     *                }
     *             }
     *          }
@@ -662,21 +677,24 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     * ```kotlin
     * class SearchComponent(context: Context) : VComponent {
     *    override val view: LinearLayout
+    *    private val queryText = state<CharSequence>("")
     *
     *    val onSubmit = vEvent1<String>()
+    *    //             ^~~~~~~~~~~~~~~
+    *    //             Create a new VEvent
     *
     *    init {
     *       view = koshian(context) {
-    *          linearLayout {
-    *             val editText = editText {
+    *          LinearLayout {
+    *             EditText {
+    *                vModel.text(queryText)
     *             }
     *
-    *             button {
+    *             Button {
     *                view.text = "Search"
     *
     *                vOn.click {
-    *                   val text = editText.text.toString()
-    *                   onSubmit(text)
+    *                   onSubmit.emit(queryText.value.toString())
     *                }
     *             }
     *          }
@@ -728,21 +746,24 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     * ```kotlin
     * class SearchComponent(context: Context) : VComponent {
     *    override val view: LinearLayout
+    *    private val queryText = state<CharSequence>("")
     *
     *    val onSubmit = vEvent1<String>()
+    *    //             ^~~~~~~~~~~~~~~
+    *    //             Create a new VEvent
     *
     *    init {
     *       view = koshian(context) {
-    *          linearLayout {
-    *             val editText = editText {
+    *          LinearLayout {
+    *             EditText {
+    *                vModel.text(queryText)
     *             }
     *
-    *             button {
+    *             Button {
     *                view.text = "Search"
     *
     *                vOn.click {
-    *                   val text = editText.text.toString()
-    *                   onSubmit(text)
+    *                   onSubmit.emit(queryText.value.toString())
     *                }
     *             }
     *          }
@@ -794,21 +815,24 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     * ```kotlin
     * class SearchComponent(context: Context) : VComponent {
     *    override val view: LinearLayout
+    *    private val queryText = state<CharSequence>("")
     *
     *    val onSubmit = vEvent1<String>()
+    *    //             ^~~~~~~~~~~~~~~
+    *    //             Create a new VEvent
     *
     *    init {
     *       view = koshian(context) {
-    *          linearLayout {
-    *             val editText = editText {
+    *          LinearLayout {
+    *             EditText {
+    *                vModel.text(queryText)
     *             }
     *
-    *             button {
+    *             Button {
     *                view.text = "Search"
     *
     *                vOn.click {
-    *                   val text = editText.text.toString()
-    *                   onSubmit(text)
+    *                   onSubmit.emit(queryText.value.toString())
     *                }
     *             }
     *          }
@@ -860,21 +884,24 @@ interface VComponentInterface<S : VuexStore<*, *, *, *>> : CoroutineScope {
     * ```kotlin
     * class SearchComponent(context: Context) : VComponent {
     *    override val view: LinearLayout
+    *    private val queryText = state<CharSequence>("")
     *
     *    val onSubmit = vEvent1<String>()
+    *    //             ^~~~~~~~~~~~~~~
+    *    //             Create a new VEvent
     *
     *    init {
     *       view = koshian(context) {
-    *          linearLayout {
-    *             val editText = editText {
+    *          LinearLayout {
+    *             EditText {
+    *                vModel.text(queryText)
     *             }
     *
-    *             button {
+    *             Button {
     *                view.text = "Search"
     *
     *                vOn.click {
-    *                   val text = editText.text.toString()
-    *                   onSubmit(text)
+    *                   onSubmit.emit(queryText.value.toString())
     *                }
     *             }
     *          }
