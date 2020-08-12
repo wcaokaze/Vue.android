@@ -21,6 +21,17 @@ import androidx.annotation.*
 import kotlin.coroutines.*
 import kotlinx.coroutines.*
 
+/**
+ * provides [VEvent][VEvent0]s.
+ *
+ * ```kotlin
+ * //               VEvent
+ * //               v~~~~
+ * submitButton.vOn.click { submit() }
+ * //           ^~~
+ * //           VOnProvider
+ * ```
+ */
 class VOnProvider<out V : View>(val coroutineScope: CoroutineScope,
                                 val substance: V)
 {

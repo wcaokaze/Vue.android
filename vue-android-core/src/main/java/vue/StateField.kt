@@ -18,8 +18,50 @@ package vue
 
 import androidx.annotation.*
 
+/**
+ * The most basic [ReactiveField] which stores one value.
+ *
+ * ### Initialization
+ * ```kotlin
+ * val user = state<User?>(null)
+ * ```
+ *
+ * ### Getting the Value
+ * ```kotlin
+ * user.value
+ *
+ * // or shorter
+ * user()
+ * ```
+ *
+ * ### Reassignment
+ * ```kotlin
+ * user.value = User(...)
+ * ```
+ */
 fun <T> state(initialValue: T) = StateField(StateImpl(initialValue))
 
+/**
+ * The most basic [ReactiveField] which stores one value.
+ *
+ * ### Initialization
+ * ```kotlin
+ * val user = state<User?>(null)
+ * ```
+ *
+ * ### Getting the Value
+ * ```kotlin
+ * user.value
+ *
+ * // or shorter
+ * user()
+ * ```
+ *
+ * ### Reassignment
+ * ```kotlin
+ * user.value = User(...)
+ * ```
+ */
 class StateField<T>
       internal constructor(private val delegate: StateImpl<T>)
       : ReactiveField<T> by delegate

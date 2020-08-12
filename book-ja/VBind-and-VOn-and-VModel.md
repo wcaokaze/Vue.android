@@ -77,7 +77,7 @@ fun doAfterTextChanged(action: (Editable) -> Unit)
 普通にいままで通りの感覚で `state("")` と書いてしまうと
 型は `state<String>("")` になってしまいます。
 
-先程挙げたVModelの動作をひとつずつ見てみましょう。
+`state<String>("")` を使った場合の、先程挙げたVModelの動作をひとつずつ見てみましょう。
 
 1. editTextContentの新しい値をeditTextにセットする  
     ```kotlin
