@@ -44,7 +44,7 @@ object NullableBooleanPreferenceLoader : PreferenceState.Loader<Boolean?> {
                     key: String,
                     default: Boolean?): Boolean?
    {
-      return when (val str = sharedPreferences.getString(key, null)) {
+      return when (sharedPreferences.getString(key, null)) {
          null    -> default
          "null"  -> null
          "true"  -> true
