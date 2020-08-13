@@ -1,0 +1,43 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>getter - Vue.android</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="index.html">vue</a>&nbsp;/&nbsp;<a href="./getter.html">getter</a><br/>
+<br/>
+<h1>getter</h1>
+<a name="vue$getter(kotlin.Function1((vue.ReactivateeScope, vue.getter.T)))"></a>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">getter</span><span class="symbol">(</span><span class="identifier" id="vue$getter(kotlin.Function1((vue.ReactivateeScope, vue.getter.T)))/reactivatee">reactivatee</span><span class="symbol">:</span>&nbsp;<a href="-reactivatee-scope/index.html"><span class="identifier">ReactivateeScope</span></a><span class="symbol">.</span><span class="symbol">(</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<span class="identifier">T</span><span class="symbol">)</span><span class="symbol">: </span><a href="-getter-field/index.html"><span class="identifier">GetterField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code>
+<p>computes a value from other <a href="-reactive-field/index.html">ReactiveField</a>s. This is also a <a href="-reactive-field/index.html">ReactiveField</a>.</p>
+<pre><code class="lang-kotlin">val user = state&lt;User?&gt;(null)
+val username = getter { user()?.name }
+</code></pre><pre><code class="lang-kotlin">assertEquals(null, username.value)
+user.value = User(name = "wcaokaze")
+assertEquals("wcaokaze", username.value)
+</code></pre>
+<h2>Poisoned</h2>
+<p>A GetterField gets "poisoned" if an exception was thrown while its computing.</p>
+<pre><code class="lang-kotlin">val urlString = state("https://example.com")
+val url = getter { URL(urlString()) }
+
+urlString.value = "This is not a url"
+</code></pre>
+<p>The GetterField computes <code>URL("This is not a url")</code> and
+a <a href="https://docs.oracle.com/javase/6/docs/api/java/net/MalformedURLException.html">java.net.MalformedURLException</a> is thrown.
+But the application does not crash on this time. GetterField 'url' gets
+poisoned and the MalformedURLException will be re-thrown by <a href="value.html">GetterField.value</a>.</p>
+<pre><code class="lang-kotlin">val urlString = state("https://example.com")
+val url = getter { URL(urlString()) }
+
+urlString.value = "This is not a url"
+
+try {
+   url.value
+} catch (e: MalformedURLException) {
+}
+</code></pre><a name="vue$getter#vue.VComponentInterface((vue.getter.Store))"></a>
+<code><span class="keyword">val </span><span class="symbol">&lt;</span><span class="identifier">Store</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../vue.vuex/-vuex-store/index.html"><span class="identifier">VuexStore</span></a><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">G</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier">G</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../vue.vuex/-vuex-getter/index.html"><span class="identifier">VuexGetter</span></a><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span> <a href="-v-component-interface/index.html"><span class="identifier">VComponentInterface</span></a><span class="symbol">&lt;</span><span class="identifier">Store</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">getter</span><span class="symbol">: </span><span class="identifier">G</span></code>
+</BODY>
+</HTML>

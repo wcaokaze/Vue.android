@@ -92,7 +92,7 @@ internal class StateImpl<T>(initialValue: T) : ReactiveField<T> {
       val observerCount = observerCount
 
       for (i in 0 until observerCount) {
-         observers[i]?.invoke(value)
+         observers[i].invoke(value)
       }
    }
 

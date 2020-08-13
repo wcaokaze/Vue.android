@@ -1,0 +1,41 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VComponentInterface.ComponentReactivateeScope - Vue.android</title>
+<link rel="stylesheet" href="../../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../../index.html">vue</a>&nbsp;/&nbsp;<a href="../index.html">VComponentInterface</a>&nbsp;/&nbsp;<a href="./index.html">ComponentReactivateeScope</a><br/>
+<br/>
+<h1>ComponentReactivateeScope</h1>
+<code><span class="keyword">interface </span><span class="identifier">ComponentReactivateeScope</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../-reactivatee-scope/index.html"><span class="identifier">ReactivateeScope</span></a></code>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="value.html">value</a></h4>
+</td>
+<td>
+<p><a href="../../-reactive-field/add-observer.html">adds</a> the current <a href="../../-component-reactivatee.html">ComponentReactivatee</a>
+as an observer for this ComponentVBinder, and returns the current value
+of this ComponentVBinder.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">ComponentVBinder</span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">value</span><span class="symbol">: </span><span class="identifier">T</span><span class="symbol">?</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="invoke.html">invoke</a></h4>
+</td>
+<td>
+<p>A shorthand for <a href="value.html">value</a>.</p>
+<code><span class="keyword">open</span> <span class="keyword">operator</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">ComponentVBinder</span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">invoke</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">T</span><span class="symbol">?</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

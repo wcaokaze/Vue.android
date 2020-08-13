@@ -1,0 +1,47 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VComponentInterface.vEvent4 - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="index.html">VComponentInterface</a>&nbsp;/&nbsp;<a href="./v-event4.html">vEvent4</a><br/>
+<br/>
+<h1>vEvent4</h1>
+<a name="vue.VComponentInterface$vEvent4()"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">B</span><span class="symbol">, </span><span class="identifier">C</span><span class="symbol">, </span><span class="identifier">D</span><span class="symbol">&gt;</span> <span class="identifier">vEvent4</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">ComponentVEvent4</span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">&gt;</span></code>
+<p><a href="../-v-event4/index.html">VEvent4</a> for a VComponent.</p>
+<p>Here is an example for VComponent.</p>
+<pre><code class="lang-kotlin">class SearchComponent(context: Context) : VComponent {
+   override val view: LinearLayout
+   private val queryText = state&lt;CharSequence&gt;("")
+
+   val onSubmit = vEvent1&lt;String&gt;()
+   //             ^~~~~~~~~~~~~~~
+   //             Create a new VEvent
+
+   init {
+      view = koshian(context) {
+         LinearLayout {
+            EditText {
+               vModel.text(queryText)
+            }
+
+            Button {
+               view.text = "Search"
+
+               vOn.click {
+                  onSubmit.emit(queryText.value.toString())
+               }
+            }
+         }
+      }
+   }
+}
+</code></pre>
+<p>And this is an example for the use site:</p>
+<pre><code class="lang-kotlin">val component = SearchComponent()
+component.onSubmit { text -&gt; search(text) }
+</code></pre>
+</BODY>
+</HTML>

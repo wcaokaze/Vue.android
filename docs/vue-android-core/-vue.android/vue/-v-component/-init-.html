@@ -1,0 +1,30 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VComponent.<init> - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="index.html">VComponent</a>&nbsp;/&nbsp;<a href="./-init-.html">&lt;init&gt;</a><br/>
+<br/>
+<h1>&lt;init&gt;</h1>
+<a name="vue.VComponent$&lt;init&gt;()"></a>
+<code><span class="identifier">VComponent</span><span class="symbol">(</span><span class="symbol">)</span></code>
+<h3>Parameters</h3>
+<p><a name="S"></a>
+<code>S</code> - 
+<p><a href="../../vue.vuex/-vuex-store/index.html">VuexStore</a> which this Component uses.</p>
+
+
+<p>Basically this should be received on the constructor.</p>
+
+<pre><code class="lang-kotlin">class ComponentImpl(override val store: Store) : VComponent&lt;Store&gt;()
+</code></pre>
+<p>Or specify <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing/index.html">Nothing</a> if this Component does not require any <a href="../../vue.vuex/-vuex-store/index.html">VuexStore</a>.</p>
+
+<pre><code class="lang-kotlin">class ComponentImpl : VComponent&lt;Nothing&gt;() {
+   override val store: Nothing get() = throw UnsupportedOperationException()
+}
+</code></pre></p>
+</BODY>
+</HTML>

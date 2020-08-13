@@ -1,0 +1,6 @@
+$dokka.format:html
+$dokka.linkExtension:html
+$dokka.location:vue.androidx$isRefreshing#vue.VBindProvider((androidx.swiperefreshlayout.widget.SwipeRefreshLayout))vue.androidx/vue.-v-bind-provider/is-refreshing.html
+$dokka.location:vue.androidx$isRefreshing#vue.VModelProvider((androidx.swiperefreshlayout.widget.SwipeRefreshLayout))vue.androidx/vue.-v-model-provider/is-refreshing.html
+$dokka.location:vue.androidx$refresh#vue.VOnProvider((androidx.swiperefreshlayout.widget.SwipeRefreshLayout))vue.androidx/vue.-v-on-provider/refresh.html
+vue.androidx

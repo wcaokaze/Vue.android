@@ -20,6 +20,39 @@ import androidx.annotation.*
 
 typealias V<T> = ReactiveField<T>
 
+/**
+ * An observable value.
+ *
+ * When the [value] of this ReactiveField is updated, observers are invoked.
+ *
+ * ```kotlin
+ * val reactiveField: ReactiveField<Int> = state(0)
+ *
+ * var i = 0
+ *
+ * reactiveField.addObserver(fun (newValue: Int) {
+ *    i = newValue
+ * })
+ *
+ * reactiveField.value = 1
+ *
+ * assertEquals(1, i)
+ * ```
+ * Yes, this is a simple Observer-pattern.
+ *
+ * But wait, in Vue.android, we don't have to [add Observer][addObserver].
+ * Vue.android provides a more elegant feature called [Reactivatee].
+ * ```kotlin
+ * val user = state<User?>(null)
+ *
+ * usernameTextView.vBind.text { user()?.name }
+ * //                                ^
+ * // Here, () means "getting the current value of a ReactiveField 'user',
+ * // and adding THIS LAMBDA ITSELF into a ReactiveField 'user' as an observer."
+ * ```
+ *
+ * @see Reactivatee
+ */
 interface ReactiveField<out T> {
    /**
     * The current value of this ReactiveField.

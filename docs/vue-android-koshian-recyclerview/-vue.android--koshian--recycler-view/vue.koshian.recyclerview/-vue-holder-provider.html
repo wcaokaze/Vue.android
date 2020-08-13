@@ -1,0 +1,64 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VueHolderProvider - Vue.android-Koshian-RecyclerView</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">Vue.android-Koshian-RecyclerView</a>&nbsp;/&nbsp;<a href="index.html">vue.koshian.recyclerview</a>&nbsp;/&nbsp;<a href="./-vue-holder-provider.html">VueHolderProvider</a><br/>
+<br/>
+<h1>VueHolderProvider</h1>
+<a name="vue.koshian.recyclerview$VueHolderProvider(vue.koshian.recyclerview.VueHolderProvider.I, kotlin.Function1((vue.koshian.recyclerview.VueHolder((vue.koshian.recyclerview.VueHolderProvider.I)), android.view.View)))"></a>
+<code><span class="keyword">inline</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">&gt;</span> <span class="identifier">VueHolderProvider</span><span class="symbol">(</span><span class="identifier" id="vue.koshian.recyclerview$VueHolderProvider(vue.koshian.recyclerview.VueHolderProvider.I, kotlin.Function1((vue.koshian.recyclerview.VueHolder((vue.koshian.recyclerview.VueHolderProvider.I)), android.view.View)))/item">item</span><span class="symbol">:</span>&nbsp;<span class="identifier">I</span><span class="symbol">, </span><span class="keyword">crossinline</span> <span class="identifier" id="vue.koshian.recyclerview$VueHolderProvider(vue.koshian.recyclerview.VueHolderProvider.I, kotlin.Function1((vue.koshian.recyclerview.VueHolder((vue.koshian.recyclerview.VueHolderProvider.I)), android.view.View)))/itemViewCreatorAction">itemViewCreatorAction</span><span class="symbol">:</span>&nbsp;<a href="-vue-holder/index.html"><span class="identifier">VueHolder</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="symbol">(</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://developer.android.com/reference/android/view/View.html"><span class="identifier">View</span></a><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">ViewHolderProvider</span><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">&gt;</span></code> <a href="https://github.com/wcaokaze/Vue.android/blob/master/vue-android-koshian-recyclerview/src/main/java/vue/koshian/recyclerview/viewHolderProvider.kt#L78">(source)</a>
+<p>Finally we no longer have to write ViewHolders. All we have to do is
+to write Koshian for every item.</p>
+<pre><code class="lang-kotlin">sealed class TimelineItem
+class StatusItem(val status: Status) : TimelineItem()
+object LoadingIndicatorItem : TimelineItem()
+
+class TimelineRecyclerViewAdapter : KoshianRecyclerViewAdapter&lt;TimelineItem&gt;() {
+   override fun selectViewHolderProvider
+         (position: Int, item: TimelineItem): ViewHolderProvider&lt;*&gt;
+   = when (item) {
+      is StatusItem -&gt; ViewHolderProvider(item) {
+         val status = getter { reactiveItem().status }
+         val formatter = DateTimeFormatter.ofFormat("d MMM yyyy HH:mm")
+         val formattedCreatedTime = getter { formatter.format(status().createdTime) }
+
+         val userComponent: UserComponent
+
+         koshian(context) {
+            LinearLayout {
+               view.orientation = VERTICAL
+
+               userComponent = Component(UserComponent(context)) {
+                  component.user { status().user }
+               }
+
+               TextView {
+                  vBind.text { status().content }
+               }
+
+               TextView {
+                  vBind.text { formattedCreatedTime() }
+               }
+            }
+         }
+      }
+
+      is LoadingIndicatorItem -&gt; ViewHolderProvider(item) {
+         koshian(context) {
+            FrameLayout {
+               layout.height = 48.dp
+
+               ProgressBar {
+                  layout.gravity = CENTER
+               }
+            }
+         }
+      }
+   }
+}
+</code></pre>
+</BODY>
+</HTML>

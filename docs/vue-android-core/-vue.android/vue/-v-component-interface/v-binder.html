@@ -1,0 +1,54 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VComponentInterface.vBinder - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="index.html">VComponentInterface</a>&nbsp;/&nbsp;<a href="./v-binder.html">vBinder</a><br/>
+<br/>
+<h1>vBinder</h1>
+<a name="vue.VComponentInterface$vBinder()"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">vBinder</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">ComponentVBinder</span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code>
+<p><a href="../-v-binder/index.html">VBinder</a> for a VComponent.</p>
+<p>Here is an example for VComponent.</p>
+<pre><code class="lang-kotlin">class CounterComponent(context: Context) : VComponent {
+   override val view: LinearLayout
+
+   val count = state(0)
+   val buttonText = vBinder&lt;String&gt;()
+   //               ^~~~~~~~~~~~~~~
+   //               Create a new VBinder
+
+   init {
+      view = koshian(context) {
+         LinearLayout {
+            TextView {
+               vBind.text { count().toString() }
+            }
+
+            Button {
+               vBind.text { buttonText() }
+               //           ^~~~~~~~~~~~
+               //           Usage like a ReactiveField
+
+               vOn.click { count.value++ }
+            }
+         }
+      }
+   }
+}
+</code></pre>
+<p>And this is an example for the use site:</p>
+<pre><code class="lang-kotlin">val componentButtonText = state("+")
+val component = CounterComponent()
+
+component.buttonText { componentButtonText() }
+//        ^~~~~~~~~~
+//        Usage like a VBinder
+
+// of course this is reactive.
+componentButtonText.value = "increment"
+</code></pre>
+</BODY>
+</HTML>

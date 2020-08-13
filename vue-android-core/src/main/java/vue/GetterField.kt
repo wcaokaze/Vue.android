@@ -18,8 +18,82 @@ package vue
 
 import androidx.annotation.*
 
+/**
+ * computes a value from other [ReactiveField]s. This is also a [ReactiveField].
+ * ```kotlin
+ * val user = state<User?>(null)
+ * val username = getter { user()?.name }
+ * ```
+ * ```kotlin
+ * assertEquals(null, username.value)
+ * user.value = User(name = "wcaokaze")
+ * assertEquals("wcaokaze", username.value)
+ * ```
+ *
+ * ## Poisoned
+ *
+ * A GetterField gets "poisoned" if an exception was thrown while its computing.
+ * ```kotlin
+ * val urlString = state("https://example.com")
+ * val url = getter { URL(urlString()) }
+ *
+ * urlString.value = "This is not a url"
+ * ```
+ * The GetterField computes `URL("This is not a url")` and
+ * a [java.net.MalformedURLException] is thrown.
+ * But the application does not crash on this time. GetterField 'url' gets
+ * poisoned and the MalformedURLException will be re-thrown by [GetterField.value].
+ * ```kotlin
+ * val urlString = state("https://example.com")
+ * val url = getter { URL(urlString()) }
+ *
+ * urlString.value = "This is not a url"
+ *
+ * try {
+ *    url.value
+ * } catch (e: MalformedURLException) {
+ * }
+ * ```
+ */
 fun <T> getter(reactivatee: ReactivateeScope.() -> T) = GetterField(reactivatee)
 
+/**
+ * computes a value from other [ReactiveField]s. This is also a [ReactiveField].
+ * ```kotlin
+ * val user = state<User?>(null)
+ * val username = getter { user()?.name }
+ * ```
+ * ```kotlin
+ * assertEquals(null, username.value)
+ * user.value = User(name = "wcaokaze")
+ * assertEquals("wcaokaze", username.value)
+ * ```
+ *
+ * ## Poisoned
+ *
+ * A GetterField gets "poisoned" if an exception was thrown while its computing.
+ * ```kotlin
+ * val urlString = state("https://example.com")
+ * val url = getter { URL(urlString()) }
+ *
+ * urlString.value = "This is not a url"
+ * ```
+ * The GetterField computes `URL("This is not a url")` and
+ * a [java.net.MalformedURLException] is thrown.
+ * But the application does not crash on this time. GetterField 'url' gets
+ * poisoned and the MalformedURLException will be re-thrown by [GetterField.value].
+ * ```kotlin
+ * val urlString = state("https://example.com")
+ * val url = getter { URL(urlString()) }
+ *
+ * urlString.value = "This is not a url"
+ *
+ * try {
+ *    url.value
+ * } catch (e: MalformedURLException) {
+ * }
+ * ```
+ */
 class GetterField<out T>
       internal constructor(
             @UiThread internal val reactivatee: ReactivateeScopeImpl.() -> T
@@ -237,24 +311,20 @@ class GetterField<out T>
  * ```kotlin
  * val user = state<User?>(null)
  *
- * val username: V<String?>
- *    = getter { // this lambda is a Reactivatee.
+ * //                    This lambda is a Reactivatee.
+ * //                      v~~~~~~~~~~~~~~~
+ * usernameView.vBind.text { user()?.name }
+ * //                        ^~~~~~
+ * //                Getting the value.
+ * //                And now this Reactivatee depends on a ReactiveField 'user'.
+ * //                This Reactivatee will be re-invoked when 'user' is updated.
  *
- *       user()?.toString()
- *       //  ^
- *       //  Getting the value.
- *       //  And now this Reactivatee depends on a ReactiveField 'user'.
- *       //  This Reactivatee will be re-invoked when 'user' is updated.
- *    }
  *
- * val usernameLength = getter { username()?.length ?: 0 }
+ * user.value = User(name = "wcaokaze")
+ * assertEquals("wcaokaze", usernameView.text.toString())
  *
- * fun someFunction() {
- *    user.value = User(name = "wcaokaze")
- *
- *    assert(username() == "wcaokaze")
- *    assert(usernameLength() == 8)
- * }
+ * user.value = User(name = "Vue.android")
+ * assertEquals("Vue.android", usernameView.text.toString())
  * ```
  */
 typealias Reactivatee<T> = ReactivateeScope.() -> T

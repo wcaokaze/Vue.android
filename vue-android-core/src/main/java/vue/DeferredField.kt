@@ -18,6 +18,16 @@ package vue
 
 import kotlinx.coroutines.*
 
+/**
+ * convert this Deferred to a ReactiveField.
+ *
+ * | Deferred State | ReactiveField value |
+ * |----------------|---------------------|
+ * | Active         | null                |
+ * | Completed      | The Result          |
+ * | Cancelled      | Poisoned            |
+ * | Failed         | Poisoned            |
+ */
 fun <T> Deferred<T>.toReactiveField(): ReactiveField<T?>
       = DeferredField(StateImpl<T?>(null), this)
 

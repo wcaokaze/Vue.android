@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-final VERSION = '0.1.0'
+final VERSION = '0.2.0'
 
 buildscript {
     ext.kotlin_version = '1.3.72'
@@ -25,7 +25,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'org.jetbrains.dokka:dokka-gradle-plugin:0.10.1'
 
@@ -41,11 +41,11 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName VERSION
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -78,7 +78,7 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3'
+    api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.8'
     api "androidx.annotation:annotation:1.1.0"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
@@ -94,7 +94,7 @@ dependencies {
 
 dokka {
     outputFormat = 'html'
-    outputDirectory = "$buildDir/docs"
+    outputDirectory = "$projectDir/../docs/vue-android-core"
 
     configuration {
         moduleName = 'Vue.android'
@@ -113,6 +113,10 @@ dokka {
 
         externalDocumentationLink {
             url = new URL("https://developer.android.com/reference/")
+        }
+
+        externalDocumentationLink {
+            url = new URL("https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/")
         }
     }
 }

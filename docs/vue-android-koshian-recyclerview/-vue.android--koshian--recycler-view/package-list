@@ -1,0 +1,4 @@
+$dokka.format:html
+$dokka.linkExtension:html
+$dokka.location:vue.koshian.recyclerview$view#koshian.Koshian((vue.koshian.VComponentApplicable((vue.koshian.recyclerview.RecyclerViewAdapterComponent((kotlin.Any, vue.vuex.VuexStore((vue.vuex.VuexState, vue.vuex.VuexMutation(()), vue.vuex.VuexAction((, , vue.vuex.VuexGetter(()))), )))))), , , koshian.KoshianMode))vue.koshian.recyclerview/koshian.-koshian/view.html
+vue.koshian.recyclerview

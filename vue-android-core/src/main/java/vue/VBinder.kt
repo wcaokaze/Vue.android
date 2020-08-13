@@ -18,19 +18,52 @@ package vue
 
 import androidx.annotation.*
 
+/**
+ * binds some property to a [ReactiveField].
+ *
+ * The bound property will be updated automatically.
+ * ```kotlin
+ * val textBinder: VBinder<CharSequence> = textView.vBind.text
+ * val state = state("Initial value")
+ *
+ * textBinder.bind(state)
+ * assertEquals("Initial value", textView.text.toString())
+ *
+ * state.value = "a new string"
+ * assertEquals("a new string", textView.text.toString())
+ * ```
+ *
+ * @see VComponentInterface.vBinder
+ * @see ViewBinder
+ */
 interface VBinder<in T> {
    @UiThread fun bind(reactiveField: ReactiveField<T>)
    @UiThread fun bind(nonReactiveValue: T)
 
+   /**
+    * A shorthand for [bind]
+    */
    @UiThread operator fun invoke(reactiveField: ReactiveField<T>) = bind(reactiveField)
-   @UiThread operator fun invoke(nonReactiveValue: T)             = bind(nonReactiveValue)
+
+   /**
+    * A shorthand for [bind]
+    */
+   @UiThread operator fun invoke(nonReactiveValue: T) = bind(nonReactiveValue)
 }
 
+/**
+ * A shorthand for [bind]
+ */
 @UiThread
 operator fun <T> VBinder<T>.invoke(reactivatee: Reactivatee<T>) {
    bind(reactivatee)
 }
 
+/**
+ * binds a [Reactivatee].
+ *
+ * This is equivalent to `bind(getter(reactivatee))`
+ */
 @UiThread
 fun <T> VBinder<T>.bind(reactivatee: Reactivatee<T>) {
    val reactiveField = GetterField(reactivatee)

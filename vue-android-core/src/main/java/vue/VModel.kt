@@ -18,10 +18,39 @@ package vue
 
 import androidx.annotation.*
 
+/**
+ * Two-way data binding.
+ *
+ * The property will be updated when the bound [StateField] is updated.
+ * The [StateField] will be updated when the bound property is updated.
+ *
+ * ```kotlin
+ * val vModel = editText.vModel.text
+ * val state = state("Initial value")
+ * vModel.bind(state)
+ *
+ * state.value = "a new string"
+ * assertEquals("a new string", editText.text.toString())
+ *
+ * editText.setText("a new string 2")
+ * assertEquals("a new string 2", state.value)
+ * ```
+ */
 interface VModel<in I, out O> {
    @UiThread fun bind(input: StateField<out I>, output: StateField<in O>)
 }
 
+@UiThread
+fun <I, O, T>
+      VModel<I, O>.bind(state: StateField<T>)
+      where T : I, O : T
+{
+   bind(state, state)
+}
+
+/**
+ * A shorthand for [bind]
+ */
 @UiThread
 operator fun <I, O, T>
       VModel<I, O>.invoke(state: StateField<T>)
