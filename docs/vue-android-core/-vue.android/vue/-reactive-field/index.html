@@ -1,0 +1,136 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ReactiveField - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="./index.html">ReactiveField</a><br/>
+<br/>
+<h1>ReactiveField</h1>
+<code><span class="keyword">interface </span><span class="identifier">ReactiveField</span><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">T</span><span class="symbol">&gt;</span></code>
+<p>An observable value.</p>
+<p>When the <a href="../value.html">value</a> of this ReactiveField is updated, observers are invoked.</p>
+<pre><code class="lang-kotlin">val reactiveField: ReactiveField&lt;Int&gt; = state(0)
+
+var i = 0
+
+reactiveField.addObserver(fun (newValue: Int) {
+   i = newValue
+})
+
+reactiveField.value = 1
+
+assertEquals(1, i)
+</code></pre>
+<p>Yes, this is a simple Observer-pattern.</p>
+<p>But wait, in Vue.android, we don't have to <a href="add-observer.html">add Observer</a>.
+Vue.android provides a more elegant feature called <a href="../-reactivatee.html">Reactivatee</a>.</p>
+<pre><code class="lang-kotlin">val user = state&lt;User?&gt;(null)
+
+usernameTextView.vBind.text { user()?.name }
+//                                ^
+// Here, () means "getting the current value of a ReactiveField 'user',
+// and adding THIS LAMBDA ITSELF into a ReactiveField 'user' as an observer."
+</code></pre>
+<p><strong>See Also</strong><br/>
+<p><a href="../-reactivatee.html">Reactivatee</a></p>
+</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="$vue-internal$value.html">$vueInternal$value</a></h4>
+</td>
+<td>
+<p>The current value of this ReactiveField.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><s><span class="identifier">$vueInternal$value</span></s><span class="symbol">: </span><span class="identifier">T</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="observer-count.html">observerCount</a></h4>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">observerCount</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-observer.html">addObserver</a></h4>
+</td>
+<td>
+<p>add an observer for the <a href="../value.html">value</a> of this ReactiveField.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addObserver</span><span class="symbol">(</span><span class="identifier" id="vue.ReactiveField$addObserver(kotlin.Function1((kotlin.Result((vue.ReactiveField.T)), kotlin.Unit)))/observer">observer</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-observer.html">removeObserver</a></h4>
+</td>
+<td>
+<p>remove an observer which was added via <a href="add-observer.html">addObserver</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeObserver</span><span class="symbol">(</span><span class="identifier" id="vue.ReactiveField$removeObserver(kotlin.Function1((kotlin.Result((vue.ReactiveField.T)), kotlin.Unit)))/observer">observer</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../value.html">value</a></h4>
+</td>
+<td>
+<p>The current value of this ReactiveField.</p>
+<code><span class="keyword">val </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <a href="./index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">value</span><span class="symbol">: </span><span class="identifier">T</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../invoke.html">invoke</a></h4>
+</td>
+<td>
+<p>A shorthand for <a href="../value.html">value</a>.</p>
+<code><span class="keyword">operator</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <a href="./index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">invoke</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">T</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-getter-field/index.html">GetterField</a></h4>
+</td>
+<td>
+<p>computes a value from other <a href="./index.html">ReactiveField</a>s. This is also a <a href="./index.html">ReactiveField</a>.</p>
+<code><span class="keyword">class </span><span class="identifier">GetterField</span><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">T</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../-state-field/index.html">StateField</a></h4>
+</td>
+<td>
+<p>The most basic <a href="./index.html">ReactiveField</a> which stores one value.</p>
+<code><span class="keyword">class </span><span class="identifier">StateField</span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../../vue.vuex.preference/-stub-preference-state/index.html">StubPreferenceState</a></h4>
+</td>
+<td>
+<p><a href="../../vue.vuex.preference/-preference-state-delegate/index.html">PreferenceStateDelegate</a> for a stub. But this may get ugly.</p>
+<code><span class="keyword">class </span><span class="identifier">StubPreferenceState</span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../vue.vuex.preference/-preference-state/index.html"><span class="identifier">PreferenceState</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">, </span><a href="../../vue.vuex.preference/-preference-state-delegate/index.html"><span class="identifier">PreferenceStateDelegate</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">, </span><a href="./index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

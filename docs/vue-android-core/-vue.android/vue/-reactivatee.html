@@ -1,0 +1,31 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Reactivatee - Vue.android</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="index.html">vue</a>&nbsp;/&nbsp;<a href="./-reactivatee.html">Reactivatee</a><br/>
+<br/>
+<h1>Reactivatee</h1>
+<code><span class="keyword">typealias </span><span class="identifier">Reactivatee</span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="-reactivatee-scope/index.html"><span class="identifier">ReactivateeScope</span></a><span class="symbol">.</span><span class="symbol">(</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<span class="identifier">T</span></code>
+<p>Function which will be re-invoked when any depending ReactiveField is updated.</p>
+<pre><code class="lang-kotlin">val user = state&lt;User?&gt;(null)
+
+//                    This lambda is a Reactivatee.
+//                      v~~~~~~~~~~~~~~~
+usernameView.vBind.text { user()?.name }
+//                        ^~~~~~
+//                Getting the value.
+//                And now this Reactivatee depends on a ReactiveField 'user'.
+//                This Reactivatee will be re-invoked when 'user' is updated.
+
+
+user.value = User(name = "wcaokaze")
+assertEquals("wcaokaze", usernameView.text.toString())
+
+user.value = User(name = "Vue.android")
+assertEquals("Vue.android", usernameView.text.toString())
+</code></pre>
+</BODY>
+</HTML>

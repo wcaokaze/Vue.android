@@ -1,0 +1,91 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VuexState - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue.vuex</a>&nbsp;/&nbsp;<a href="./index.html">VuexState</a><br/>
+<br/>
+<h1>VuexState</h1>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">VuexState</span></code>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-module-map/index.html">ModuleMap</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">ModuleMap</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-state-field.html">StateField</a></h4>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">StateField</span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../vue/-reactive-field/index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">VuexState</span><span class="symbol">(</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="modules.html">modules</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">modules</span><span class="symbol">: </span><span class="identifier">ModuleMap</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="root-module.html">rootModule</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">rootModule</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">VuexState</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="state.html">state</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><s><span class="identifier">state</span></s><span class="symbol">: </span><a href="./index.html"><span class="identifier">VuexState</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="get.html">get</a></h4>
+</td>
+<td>
+<p>shorthand for <code>modules[key]</code>.</p>
+<code><span class="keyword">operator</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">MS</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">VuexState</span></a><span class="symbol">, </span><span class="identifier">MM</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-vuex-mutation/index.html"><span class="identifier">VuexMutation</span></a><span class="symbol">&lt;</span><span class="identifier">MS</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier">MA</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-vuex-action/index.html"><span class="identifier">VuexAction</span></a><span class="symbol">&lt;</span><span class="identifier">MS</span><span class="symbol">,</span>&nbsp;<span class="identifier">MM</span><span class="symbol">,</span>&nbsp;<span class="identifier">MG</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier">MG</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-vuex-getter/index.html"><span class="identifier">VuexGetter</span></a><span class="symbol">&lt;</span><span class="identifier">MS</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span> <span class="identifier">get</span><span class="symbol">(</span><span class="identifier" id="vue.vuex.VuexState$get(vue.vuex.VuexStore.Module.Key((vue.vuex.VuexStore((vue.vuex.VuexState, vue.vuex.VuexMutation(()), vue.vuex.VuexAction((, , vue.vuex.VuexGetter(()))), )), vue.vuex.VuexState.get.MS, vue.vuex.VuexState.get.MM, vue.vuex.VuexState.get.MA, vue.vuex.VuexState.get.MG)))/key">key</span><span class="symbol">:</span>&nbsp;<span class="identifier">Key</span><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">MS</span><span class="symbol">,</span>&nbsp;<span class="identifier">MM</span><span class="symbol">,</span>&nbsp;<span class="identifier">MA</span><span class="symbol">,</span>&nbsp;<span class="identifier">MG</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">MS</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="state.html">state</a></h4>
+</td>
+<td>
+<p><a href="../../vue/state.html">state</a> that can be written only from <a href="../-vuex-mutation/index.html">VuexMutation</a></p>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">state</span><span class="symbol">(</span><span class="identifier" id="vue.vuex.VuexState$state(vue.vuex.VuexState.state.T)/initialValue">initialValue</span><span class="symbol">:</span>&nbsp;<span class="identifier">T</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">StateField</span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -1,0 +1,70 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VModel - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="./index.html">VModel</a><br/>
+<br/>
+<h1>VModel</h1>
+<code><span class="keyword">interface </span><span class="identifier">VModel</span><span class="symbol">&lt;</span><span class="keyword">in</span>&nbsp;<span class="identifier">I</span><span class="symbol">, </span><span class="keyword">out</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span></code>
+<p>Two-way data binding.</p>
+<p>The property will be updated when the bound <a href="../-state-field/index.html">StateField</a> is updated.
+The <a href="../-state-field/index.html">StateField</a> will be updated when the bound property is updated.</p>
+<pre><code class="lang-kotlin">val vModel = editText.vModel.text
+val state = state("Initial value")
+vModel.bind(state)
+
+state.value = "a new string"
+assertEquals("a new string", editText.text.toString())
+
+editText.setText("a new string 2")
+assertEquals("a new string 2", state.value)
+</code></pre>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="bind.html">bind</a></h4>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">bind</span><span class="symbol">(</span><span class="identifier" id="vue.VModel$bind(vue.StateField((vue.VModel.I)), vue.StateField((vue.VModel.O)))/input">input</span><span class="symbol">:</span>&nbsp;<a href="../-state-field/index.html"><span class="identifier">StateField</span></a><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">I</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="vue.VModel$bind(vue.StateField((vue.VModel.I)), vue.StateField((vue.VModel.O)))/output">output</span><span class="symbol">:</span>&nbsp;<a href="../-state-field/index.html"><span class="identifier">StateField</span></a><span class="symbol">&lt;</span><span class="keyword">in</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../bind.html">bind</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">, </span><span class="identifier">O</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">T</span><span class="symbol">, </span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">I</span><span class="symbol">&gt;</span> <a href="./index.html"><span class="identifier">VModel</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">,</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">bind</span><span class="symbol">(</span><span class="identifier" id="vue$bind(vue.VModel((vue.bind.I, vue.bind.O)), vue.StateField((vue.bind.T)))/state">state</span><span class="symbol">:</span>&nbsp;<a href="../-state-field/index.html"><span class="identifier">StateField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../invoke.html">invoke</a></h4>
+</td>
+<td>
+<p>A shorthand for <a href="../bind.html">bind</a></p>
+<code><span class="keyword">operator</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">, </span><span class="identifier">O</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">T</span><span class="symbol">, </span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">I</span><span class="symbol">&gt;</span> <a href="./index.html"><span class="identifier">VModel</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">,</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">invoke</span><span class="symbol">(</span><span class="identifier" id="vue$invoke(vue.VModel((vue.invoke.I, vue.invoke.O)), vue.StateField((vue.invoke.T)))/state">state</span><span class="symbol">:</span>&nbsp;<a href="../-state-field/index.html"><span class="identifier">StateField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-view-model/index.html">ViewModel</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">ViewModel</span><span class="symbol">&lt;</span><span class="identifier">V</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/view/View.html"><span class="identifier">View</span></a><span class="symbol">, </span><span class="keyword">in</span>&nbsp;<span class="identifier">I</span><span class="symbol">, </span><span class="keyword">out</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">VModel</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">,</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

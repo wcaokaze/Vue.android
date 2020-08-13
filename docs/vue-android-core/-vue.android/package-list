@@ -1,0 +1,8 @@
+$dokka.format:html
+$dokka.linkExtension:html
+$dokka.location:vue$completed(kotlinx.coroutines.Job.Key)vue/kotlinx.coroutines.-job/completed.html
+$dokka.location:vue$toReactiveField(kotlinx.coroutines.Deferred((vue.toReactiveField.T)))vue/kotlinx.coroutines.-deferred/to-reactive-field.html
+$dokka.location:vue$toReactiveField(kotlinx.coroutines.Job)vue/kotlinx.coroutines.-job/to-reactive-field.html
+vue
+vue.vuex
+vue.vuex.preference

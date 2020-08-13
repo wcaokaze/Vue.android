@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VuexStore - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue.vuex</a>&nbsp;/&nbsp;<a href="./index.html">VuexStore</a><br/>
+<br/>
+<h1>VuexStore</h1>
+<code><span class="keyword">abstract</span> <span class="keyword">class </span><span class="identifier">VuexStore</span><span class="symbol">&lt;</span><span class="identifier">S</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-vuex-state/index.html"><span class="identifier">VuexState</span></a><span class="symbol">, </span><span class="identifier">M</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-vuex-mutation/index.html"><span class="identifier">VuexMutation</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier">A</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-vuex-action/index.html"><span class="identifier">VuexAction</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">,</span>&nbsp;<span class="identifier">M</span><span class="symbol">,</span>&nbsp;<span class="identifier">G</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier">G</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-vuex-getter/index.html"><span class="identifier">VuexGetter</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-module/index.html">Module</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">Module</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-module-map/index.html">ModuleMap</a></h4>
+</td>
+<td>
+<code><span class="keyword">inner</span> <span class="keyword">class </span><span class="identifier">ModuleMap</span><span class="symbol">&lt;</span><span class="identifier">S</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-vuex-state/index.html"><span class="identifier">VuexState</span></a><span class="symbol">, </span><span class="identifier">M</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-vuex-mutation/index.html"><span class="identifier">VuexMutation</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier">A</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-vuex-action/index.html"><span class="identifier">VuexAction</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">,</span>&nbsp;<span class="identifier">M</span><span class="symbol">,</span>&nbsp;<span class="identifier">G</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier">G</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-vuex-getter/index.html"><span class="identifier">VuexGetter</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">VuexStore</span><span class="symbol">(</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="action.html">action</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">action</span><span class="symbol">: </span><span class="identifier">A</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="getter.html">getter</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">getter</span><span class="symbol">: </span><span class="identifier">G</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="modules.html">modules</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">modules</span><span class="symbol">: </span><span class="identifier">ModuleMap</span><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">,</span>&nbsp;<span class="identifier">M</span><span class="symbol">,</span>&nbsp;<span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">G</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="mutation.html">mutation</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">mutation</span><span class="symbol">: </span><span class="identifier">M</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="root-module.html">rootModule</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">rootModule</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">VuexStore</span></a><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="state.html">state</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">state</span><span class="symbol">: </span><span class="identifier">S</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="create-action.html">createAction</a></h4>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">createAction</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">A</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="create-getter.html">createGetter</a></h4>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">createGetter</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">G</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="create-modules.html">createModules</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">createModules</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><span class="identifier">Module</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="create-mutation.html">createMutation</a></h4>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">createMutation</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">M</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="create-state.html">createState</a></h4>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">createState</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">S</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

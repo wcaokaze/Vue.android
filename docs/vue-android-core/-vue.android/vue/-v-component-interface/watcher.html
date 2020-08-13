@@ -1,0 +1,21 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VComponentInterface.watcher - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="index.html">VComponentInterface</a>&nbsp;/&nbsp;<a href="./watcher.html">watcher</a><br/>
+<br/>
+<h1>watcher</h1>
+<a name="vue.VComponentInterface$watcher(vue.ReactiveField((vue.VComponentInterface.watcher.T)), kotlin.Boolean, kotlin.Function1((vue.VComponentInterface.watcher.T, kotlin.Unit)))"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">watcher</span><span class="symbol">(</span><span class="identifier" id="vue.VComponentInterface$watcher(vue.ReactiveField((vue.VComponentInterface.watcher.T)), kotlin.Boolean, kotlin.Function1((vue.VComponentInterface.watcher.T, kotlin.Unit)))/watchedReactiveField">watchedReactiveField</span><span class="symbol">:</span>&nbsp;<a href="../-reactive-field/index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="vue.VComponentInterface$watcher(vue.ReactiveField((vue.VComponentInterface.watcher.T)), kotlin.Boolean, kotlin.Function1((vue.VComponentInterface.watcher.T, kotlin.Unit)))/immediate">immediate</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;false<span class="symbol">, </span><span class="identifier" id="vue.VComponentInterface$watcher(vue.ReactiveField((vue.VComponentInterface.watcher.T)), kotlin.Boolean, kotlin.Function1((vue.VComponentInterface.watcher.T, kotlin.Unit)))/watcher">watcher</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">T</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>observes a <a href="../-reactive-field/index.html">ReactiveField</a>.</p>
+<p>watcher invokes <a href="../-reactive-field/remove-observer.html">removeObserver</a> automatically.
+You don't have to manage the Component's lifetime.</p>
+<h3>Parameters</h3>
+<p><a name="immediate"></a>
+<code>immediate</code> - if <code>true</code>, the watcher function will be triggered immediately with the
+current value of the ReactiveField.</p>
+</BODY>
+</HTML>

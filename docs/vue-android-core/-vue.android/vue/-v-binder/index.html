@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VBinder - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="./index.html">VBinder</a><br/>
+<br/>
+<h1>VBinder</h1>
+<code><span class="keyword">interface </span><span class="identifier">VBinder</span><span class="symbol">&lt;</span><span class="keyword">in</span>&nbsp;<span class="identifier">T</span><span class="symbol">&gt;</span></code>
+<p>binds some property to a <a href="../-reactive-field/index.html">ReactiveField</a>.</p>
+<p>The bound property will be updated automatically.</p>
+<pre><code class="lang-kotlin">val textBinder: VBinder&lt;CharSequence&gt; = textView.vBind.text
+val state = state("Initial value")
+
+textBinder.bind(state)
+assertEquals("Initial value", textView.text.toString())
+
+state.value = "a new string"
+assertEquals("a new string", textView.text.toString())
+</code></pre>
+<p><strong>See Also</strong><br/>
+<p><a href="../-v-component-interface/v-binder.html">VComponentInterface.vBinder</a></p>
+<p><a href="../-view-binder/index.html">ViewBinder</a></p>
+</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="bind.html">bind</a></h4>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">bind</span><span class="symbol">(</span><span class="identifier" id="vue.VBinder$bind(vue.ReactiveField((vue.VBinder.T)))/reactiveField">reactiveField</span><span class="symbol">:</span>&nbsp;<a href="../-reactive-field/index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code><br/>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">bind</span><span class="symbol">(</span><span class="identifier" id="vue.VBinder$bind(vue.VBinder.T)/nonReactiveValue">nonReactiveValue</span><span class="symbol">:</span>&nbsp;<span class="identifier">T</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="invoke.html">invoke</a></h4>
+</td>
+<td>
+<p>A shorthand for <a href="bind.html">bind</a></p>
+<code><span class="keyword">open</span> <span class="keyword">operator</span> <span class="keyword">fun </span><span class="identifier">invoke</span><span class="symbol">(</span><span class="identifier" id="vue.VBinder$invoke(vue.ReactiveField((vue.VBinder.T)))/reactiveField">reactiveField</span><span class="symbol">:</span>&nbsp;<a href="../-reactive-field/index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code><br/>
+<code><span class="keyword">open</span> <span class="keyword">operator</span> <span class="keyword">fun </span><span class="identifier">invoke</span><span class="symbol">(</span><span class="identifier" id="vue.VBinder$invoke(vue.VBinder.T)/nonReactiveValue">nonReactiveValue</span><span class="symbol">:</span>&nbsp;<span class="identifier">T</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../bind.html">bind</a></h4>
+</td>
+<td>
+<p>binds a <a href="../-reactivatee.html">Reactivatee</a>.</p>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <a href="./index.html"><span class="identifier">VBinder</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">bind</span><span class="symbol">(</span><span class="identifier" id="vue$bind(vue.VBinder((vue.bind.T)), kotlin.Function1((vue.ReactivateeScope, vue.bind.T)))/reactivatee">reactivatee</span><span class="symbol">:</span>&nbsp;<a href="../-reactivatee.html"><span class="identifier">Reactivatee</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../invoke.html">invoke</a></h4>
+</td>
+<td>
+<p>A shorthand for <a href="../bind.html">bind</a></p>
+<code><span class="keyword">operator</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <a href="./index.html"><span class="identifier">VBinder</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">invoke</span><span class="symbol">(</span><span class="identifier" id="vue$invoke(vue.VBinder((vue.invoke.T)), kotlin.Function1((vue.ReactivateeScope, vue.invoke.T)))/reactivatee">reactivatee</span><span class="symbol">:</span>&nbsp;<a href="../-reactivatee.html"><span class="identifier">Reactivatee</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-view-binder/index.html">ViewBinder</a></h4>
+</td>
+<td>
+<p><a href="./index.html">VBinder</a> for <a href="https://developer.android.com/reference/android/view/View.html">View</a>s</p>
+<code><span class="keyword">class </span><span class="identifier">ViewBinder</span><span class="symbol">&lt;</span><span class="identifier">V</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/view/View.html"><span class="identifier">View</span></a><span class="symbol">, </span><span class="identifier">T</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">VBinder</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

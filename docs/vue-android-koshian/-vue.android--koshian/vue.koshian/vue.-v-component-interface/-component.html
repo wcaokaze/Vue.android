@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>Component - Vue.android-Koshian</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android-Koshian</a>&nbsp;/&nbsp;<a href="../index.html">vue.koshian</a>&nbsp;/&nbsp;<a href="index.html">vue.VComponentInterface</a>&nbsp;/&nbsp;<a href="./-component.html">Component</a><br/>
+<br/>
+<h1>Component</h1>
+<a name="vue.koshian$Component#vue.VComponentInterface((vue.koshian.Component.S))"></a>
+<code><span class="keyword">val </span><span class="symbol">&lt;</span><span class="identifier">S</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">VuexStore</span><span class="symbol">&lt;</span><span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span> <span class="identifier">VComponentInterface</span><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">Component</span><span class="symbol">: </span><a href="../-store-injector-v-component-applicable-provider/index.html"><span class="identifier">StoreInjectorVComponentApplicableProvider</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">&gt;</span></code>
+<p>We can create the component in Koshian DSL.</p>
+<pre><code class="lang-kotlin">koshian(context) {
+   FrameLayout {
+      Component[::FooComponent, fooStore] {
+      }
+   }
+}
+</code></pre>
+<p>Note that the Component must have <code>constructor(Context, VuexStore)</code> or
+<code>constructor(Context)</code>.</p>
+</BODY>
+</HTML>

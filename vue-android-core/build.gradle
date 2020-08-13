@@ -94,7 +94,7 @@ dependencies {
 
 dokka {
     outputFormat = 'html'
-    outputDirectory = "$buildDir/docs"
+    outputDirectory = "$projectDir/../docs/vue-android-core"
 
     configuration {
         moduleName = 'Vue.android'

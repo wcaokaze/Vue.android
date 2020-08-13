@@ -1,0 +1,9 @@
+$dokka.format:html
+$dokka.linkExtension:html
+$dokka.location:vue.koshian$Component#vue.VComponentInterface((vue.koshian.Component.S))vue.koshian/vue.-v-component-interface/-component.html
+$dokka.location:vue.koshian$component#koshian.Koshian((vue.koshian.VComponentApplicable((vue.koshian.component.C)), kotlin.Any, , koshian.KoshianMode))vue.koshian/koshian.-koshian/component.html
+$dokka.location:vue.koshian$layout#koshian.Koshian((vue.koshian.VComponentApplicable((vue.VComponentInterface((vue.vuex.VuexStore((vue.vuex.VuexState, vue.vuex.VuexMutation(()), vue.vuex.VuexAction((, , vue.vuex.VuexGetter(()))), )))))), vue.koshian.layout.L, kotlin.Any, koshian.KoshianMode))vue.koshian/koshian.-koshian/layout.html
+$dokka.location:vue.koshian$vBind#koshian.Koshian((vue.koshian.vBind.V, kotlin.Any, , koshian.KoshianMode))vue.koshian/koshian.-koshian/v-bind.html
+$dokka.location:vue.koshian$vModel#koshian.Koshian((vue.koshian.vModel.V, kotlin.Any, , koshian.KoshianMode))vue.koshian/koshian.-koshian/v-model.html
+$dokka.location:vue.koshian$vOn#koshian.Koshian((vue.koshian.vOn.V, kotlin.Any, , koshian.KoshianMode))vue.koshian/koshian.-koshian/v-on.html
+vue.koshian

@@ -1,0 +1,34 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>PreferenceState.invoke - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue.vuex.preference</a>&nbsp;/&nbsp;<a href="index.html">PreferenceState</a>&nbsp;/&nbsp;<a href="./invoke.html">invoke</a><br/>
+<br/>
+<h1>invoke</h1>
+<a name="vue.vuex.preference.PreferenceState.Companion$invoke(vue.vuex.preference.PreferenceState.Loader((vue.vuex.preference.PreferenceState.Companion.invoke.T)), android.content.Context, vue.vuex.preference.PreferenceFile, kotlin.String, vue.vuex.preference.PreferenceState.Companion.invoke.T)"></a>
+<code><span class="keyword">operator</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">invoke</span><span class="symbol">(</span><span class="identifier" id="vue.vuex.preference.PreferenceState.Companion$invoke(vue.vuex.preference.PreferenceState.Loader((vue.vuex.preference.PreferenceState.Companion.invoke.T)), android.content.Context, vue.vuex.preference.PreferenceFile, kotlin.String, vue.vuex.preference.PreferenceState.Companion.invoke.T)/loader">loader</span><span class="symbol">:</span>&nbsp;<span class="identifier">Loader</span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="vue.vuex.preference.PreferenceState.Companion$invoke(vue.vuex.preference.PreferenceState.Loader((vue.vuex.preference.PreferenceState.Companion.invoke.T)), android.content.Context, vue.vuex.preference.PreferenceFile, kotlin.String, vue.vuex.preference.PreferenceState.Companion.invoke.T)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="vue.vuex.preference.PreferenceState.Companion$invoke(vue.vuex.preference.PreferenceState.Loader((vue.vuex.preference.PreferenceState.Companion.invoke.T)), android.content.Context, vue.vuex.preference.PreferenceFile, kotlin.String, vue.vuex.preference.PreferenceState.Companion.invoke.T)/file">file</span><span class="symbol">:</span>&nbsp;<a href="../-preference-file/index.html"><span class="identifier">PreferenceFile</span></a><span class="symbol">, </span><span class="identifier" id="vue.vuex.preference.PreferenceState.Companion$invoke(vue.vuex.preference.PreferenceState.Loader((vue.vuex.preference.PreferenceState.Companion.invoke.T)), android.content.Context, vue.vuex.preference.PreferenceFile, kotlin.String, vue.vuex.preference.PreferenceState.Companion.invoke.T)/key">key</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="vue.vuex.preference.PreferenceState.Companion$invoke(vue.vuex.preference.PreferenceState.Loader((vue.vuex.preference.PreferenceState.Companion.invoke.T)), android.content.Context, vue.vuex.preference.PreferenceFile, kotlin.String, vue.vuex.preference.PreferenceState.Companion.invoke.T)/default">default</span><span class="symbol">:</span>&nbsp;<span class="identifier">T</span><span class="symbol">)</span><span class="symbol">: </span><a href="index.html"><span class="identifier">PreferenceState</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code>
+<p><a href="../../vue.vuex/-vuex-state/-state-field.html">StateField</a> to automatically save/load from <a href="https://developer.android.com/reference/android/content/SharedPreferences.html">SharedPreferences</a></p>
+<pre><code class="lang-kotlin">class AppearancePreferenceState(private val context: Context) : VuexState() {
+   private val file = PreferenceFile("credential")
+
+   val mainTextSize by intPreferenceState(context, file, default = 14)
+   val iconSize by intPreferenceState(context, file, default = 48)
+
+   val primaryTextColor by intPreferenceState(context, file, default = 0xff2196f3.toInt())
+   //                   ^^
+   // Note that we must use `by` here. not `=`
+}
+</code></pre>
+<p>Of course this is <a href="../../vue/-reactive-field/index.html">ReactiveField</a>. We can bind them to Views.</p>
+<pre><code class="lang-kotlin">textView.vBind.textColor(state.primaryTextColor)
+</code></pre>
+<h3>Parameters</h3>
+<p><a name="context"></a>
+<code>context</code> - Context. This State should not live longer than Context.
+The easiest way to ensure it is using Application as Context,
+and let Application have the VuexStore.</p>
+</BODY>
+</HTML>

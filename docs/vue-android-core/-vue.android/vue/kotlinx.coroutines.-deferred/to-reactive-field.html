@@ -1,0 +1,21 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>toReactiveField - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="index.html">kotlinx.coroutines.Deferred</a>&nbsp;/&nbsp;<a href="./to-reactive-field.html">toReactiveField</a><br/>
+<br/>
+<h1>toReactiveField</h1>
+<a name="vue$toReactiveField(kotlinx.coroutines.Deferred((vue.toReactiveField.T)))"></a>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-deferred/index.html"><span class="identifier">Deferred</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">toReactiveField</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-reactive-field/index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">?</span><span class="symbol">&gt;</span></code>
+<p>convert this Deferred to a ReactiveField.</p>
+<p>| Deferred State | ReactiveField value |
+|----------------|---------------------|
+| Active         | null                |
+| Completed      | The Result          |
+| Cancelled      | Poisoned            |
+| Failed         | Poisoned            |</p>
+</BODY>
+</HTML>

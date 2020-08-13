@@ -1,0 +1,108 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>GetterField - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="./index.html">GetterField</a><br/>
+<br/>
+<h1>GetterField</h1>
+<code><span class="keyword">class </span><span class="identifier">GetterField</span><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">T</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-reactive-field/index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code>
+<p>computes a value from other <a href="../-reactive-field/index.html">ReactiveField</a>s. This is also a <a href="../-reactive-field/index.html">ReactiveField</a>.</p>
+<pre><code class="lang-kotlin">val user = state&lt;User?&gt;(null)
+val username = getter { user()?.name }
+</code></pre><pre><code class="lang-kotlin">assertEquals(null, username.value)
+user.value = User(name = "wcaokaze")
+assertEquals("wcaokaze", username.value)
+</code></pre>
+<h2>Poisoned</h2>
+<p>A GetterField gets "poisoned" if an exception was thrown while its computing.</p>
+<pre><code class="lang-kotlin">val urlString = state("https://example.com")
+val url = getter { URL(urlString()) }
+
+urlString.value = "This is not a url"
+</code></pre>
+<p>The GetterField computes <code>URL("This is not a url")</code> and
+a <a href="https://docs.oracle.com/javase/6/docs/api/java/net/MalformedURLException.html">java.net.MalformedURLException</a> is thrown.
+But the application does not crash on this time. GetterField 'url' gets
+poisoned and the MalformedURLException will be re-thrown by <a href="../value.html">GetterField.value</a>.</p>
+<pre><code class="lang-kotlin">val urlString = state("https://example.com")
+val url = getter { URL(urlString()) }
+
+urlString.value = "This is not a url"
+
+try {
+   url.value
+} catch (e: MalformedURLException) {
+}
+</code></pre>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="$vue-internal$value.html">$vueInternal$value</a></h4>
+</td>
+<td>
+<p>The current value of this ReactiveField.</p>
+<code><span class="keyword">val </span><span class="identifier">$vueInternal$value</span><span class="symbol">: </span><span class="identifier">T</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="observer-count.html">observerCount</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">observerCount</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-observer.html">addObserver</a></h4>
+</td>
+<td>
+<p>add an observer for the <a href="../value.html">value</a> of this ReactiveField.</p>
+<code><span class="keyword">fun </span><span class="identifier">addObserver</span><span class="symbol">(</span><span class="identifier" id="vue.GetterField$addObserver(kotlin.Function1((kotlin.Result((vue.GetterField.T)), kotlin.Unit)))/observer">observer</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-observer.html">removeObserver</a></h4>
+</td>
+<td>
+<p>remove an observer which was added via <a href="../-reactive-field/add-observer.html">addObserver</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">removeObserver</span><span class="symbol">(</span><span class="identifier" id="vue.GetterField$removeObserver(kotlin.Function1((kotlin.Result((vue.GetterField.T)), kotlin.Unit)))/observer">observer</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../value.html">value</a></h4>
+</td>
+<td>
+<p>The current value of this ReactiveField.</p>
+<code><span class="keyword">val </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <a href="../-reactive-field/index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">value</span><span class="symbol">: </span><span class="identifier">T</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../invoke.html">invoke</a></h4>
+</td>
+<td>
+<p>A shorthand for <a href="../value.html">value</a>.</p>
+<code><span class="keyword">operator</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <a href="../-reactive-field/index.html"><span class="identifier">ReactiveField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">invoke</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">T</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

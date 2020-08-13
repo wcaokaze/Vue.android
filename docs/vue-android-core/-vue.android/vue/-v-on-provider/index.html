@@ -1,0 +1,139 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VOnProvider - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="./index.html">VOnProvider</a><br/>
+<br/>
+<h1>VOnProvider</h1>
+<code><span class="keyword">class </span><span class="identifier">VOnProvider</span><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">V</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/view/View.html"><span class="identifier">View</span></a><span class="symbol">&gt;</span></code>
+<p>provides <a href="-v-event0.html">VEvent</a>s.</p>
+<pre><code class="lang-kotlin">//               VEvent
+//               v~~~~
+submitButton.vOn.click { submit() }
+//           ^~~
+//           VOnProvider
+</code></pre>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p>provides <a href="-v-event0.html">VEvent</a>s.</p>
+<code><span class="identifier">VOnProvider</span><span class="symbol">(</span><span class="identifier" id="vue.VOnProvider$<init>(kotlinx.coroutines.CoroutineScope, vue.VOnProvider.V)/coroutineScope">coroutineScope</span><span class="symbol">:</span>&nbsp;<a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/index.html"><span class="identifier">CoroutineScope</span></a><span class="symbol">, </span><span class="identifier" id="vue.VOnProvider$<init>(kotlinx.coroutines.CoroutineScope, vue.VOnProvider.V)/substance">substance</span><span class="symbol">:</span>&nbsp;<span class="identifier">V</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="coroutine-scope.html">coroutineScope</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">coroutineScope</span><span class="symbol">: </span><a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-scope/index.html"><span class="identifier">CoroutineScope</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="substance.html">substance</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">substance</span><span class="symbol">: </span><span class="identifier">V</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-v-event0.html">VEvent0</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">VEvent0</span><span class="symbol">(</span><span class="identifier" id="vue.VOnProvider$VEvent0(kotlin.Function1((kotlin.Function0((kotlin.Unit)), )))/binder">binder</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">actionDispatcher</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-v-event0/index.html"><span class="identifier">VEvent0</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-v-event1.html">VEvent1</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">&gt;</span> <span class="identifier">VEvent1</span><span class="symbol">(</span><span class="identifier" id="vue.VOnProvider$VEvent1(kotlin.Function1((kotlin.Function1((vue.VOnProvider.VEvent1.A, kotlin.Unit)), )))/binder">binder</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">actionDispatcher</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">A</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-v-event1/index.html"><span class="identifier">VEvent1</span></a><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-v-event2.html">VEvent2</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">B</span><span class="symbol">&gt;</span> <span class="identifier">VEvent2</span><span class="symbol">(</span><span class="identifier" id="vue.VOnProvider$VEvent2(kotlin.Function1((kotlin.Function2((vue.VOnProvider.VEvent2.A, vue.VOnProvider.VEvent2.B, kotlin.Unit)), )))/binder">binder</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">actionDispatcher</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-v-event2/index.html"><span class="identifier">VEvent2</span></a><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-v-event3.html">VEvent3</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">B</span><span class="symbol">, </span><span class="identifier">C</span><span class="symbol">&gt;</span> <span class="identifier">VEvent3</span><span class="symbol">(</span><span class="identifier" id="vue.VOnProvider$VEvent3(kotlin.Function1((kotlin.Function3((vue.VOnProvider.VEvent3.A, vue.VOnProvider.VEvent3.B, vue.VOnProvider.VEvent3.C, kotlin.Unit)), )))/binder">binder</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">actionDispatcher</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-v-event3/index.html"><span class="identifier">VEvent3</span></a><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-v-event4.html">VEvent4</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">B</span><span class="symbol">, </span><span class="identifier">C</span><span class="symbol">, </span><span class="identifier">D</span><span class="symbol">&gt;</span> <span class="identifier">VEvent4</span><span class="symbol">(</span><span class="identifier" id="vue.VOnProvider$VEvent4(kotlin.Function1((kotlin.Function4((vue.VOnProvider.VEvent4.A, vue.VOnProvider.VEvent4.B, vue.VOnProvider.VEvent4.C, vue.VOnProvider.VEvent4.D, kotlin.Unit)), )))/binder">binder</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">actionDispatcher</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-v-event4/index.html"><span class="identifier">VEvent4</span></a><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-v-event5.html">VEvent5</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">B</span><span class="symbol">, </span><span class="identifier">C</span><span class="symbol">, </span><span class="identifier">D</span><span class="symbol">, </span><span class="identifier">E</span><span class="symbol">&gt;</span> <span class="identifier">VEvent5</span><span class="symbol">(</span><span class="identifier" id="vue.VOnProvider$VEvent5(kotlin.Function1((kotlin.Function5((vue.VOnProvider.VEvent5.A, vue.VOnProvider.VEvent5.B, vue.VOnProvider.VEvent5.C, vue.VOnProvider.VEvent5.D, vue.VOnProvider.VEvent5.E, kotlin.Unit)), )))/binder">binder</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">actionDispatcher</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">,</span>&nbsp;<span class="identifier">E</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-v-event5/index.html"><span class="identifier">VEvent5</span></a><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">,</span>&nbsp;<span class="identifier">E</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-v-event6.html">VEvent6</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">B</span><span class="symbol">, </span><span class="identifier">C</span><span class="symbol">, </span><span class="identifier">D</span><span class="symbol">, </span><span class="identifier">E</span><span class="symbol">, </span><span class="identifier">F</span><span class="symbol">&gt;</span> <span class="identifier">VEvent6</span><span class="symbol">(</span><span class="identifier" id="vue.VOnProvider$VEvent6(kotlin.Function1((kotlin.Function6((vue.VOnProvider.VEvent6.A, vue.VOnProvider.VEvent6.B, vue.VOnProvider.VEvent6.C, vue.VOnProvider.VEvent6.D, vue.VOnProvider.VEvent6.E, vue.VOnProvider.VEvent6.F, kotlin.Unit)), )))/binder">binder</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">actionDispatcher</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">,</span>&nbsp;<span class="identifier">E</span><span class="symbol">,</span>&nbsp;<span class="identifier">F</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-v-event6/index.html"><span class="identifier">VEvent6</span></a><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">,</span>&nbsp;<span class="identifier">E</span><span class="symbol">,</span>&nbsp;<span class="identifier">F</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-v-event7.html">VEvent7</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">B</span><span class="symbol">, </span><span class="identifier">C</span><span class="symbol">, </span><span class="identifier">D</span><span class="symbol">, </span><span class="identifier">E</span><span class="symbol">, </span><span class="identifier">F</span><span class="symbol">, </span><span class="identifier">G</span><span class="symbol">&gt;</span> <span class="identifier">VEvent7</span><span class="symbol">(</span><span class="identifier" id="vue.VOnProvider$VEvent7(kotlin.Function1((kotlin.Function7((vue.VOnProvider.VEvent7.A, vue.VOnProvider.VEvent7.B, vue.VOnProvider.VEvent7.C, vue.VOnProvider.VEvent7.D, vue.VOnProvider.VEvent7.E, vue.VOnProvider.VEvent7.F, vue.VOnProvider.VEvent7.G, kotlin.Unit)), )))/binder">binder</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">actionDispatcher</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">,</span>&nbsp;<span class="identifier">E</span><span class="symbol">,</span>&nbsp;<span class="identifier">F</span><span class="symbol">,</span>&nbsp;<span class="identifier">G</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-v-event7/index.html"><span class="identifier">VEvent7</span></a><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">,</span>&nbsp;<span class="identifier">E</span><span class="symbol">,</span>&nbsp;<span class="identifier">F</span><span class="symbol">,</span>&nbsp;<span class="identifier">G</span><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-v-event8.html">VEvent8</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">, </span><span class="identifier">B</span><span class="symbol">, </span><span class="identifier">C</span><span class="symbol">, </span><span class="identifier">D</span><span class="symbol">, </span><span class="identifier">E</span><span class="symbol">, </span><span class="identifier">F</span><span class="symbol">, </span><span class="identifier">G</span><span class="symbol">, </span><span class="identifier">H</span><span class="symbol">&gt;</span> <span class="identifier">VEvent8</span><span class="symbol">(</span><span class="identifier" id="vue.VOnProvider$VEvent8(kotlin.Function1((kotlin.Function8((vue.VOnProvider.VEvent8.A, vue.VOnProvider.VEvent8.B, vue.VOnProvider.VEvent8.C, vue.VOnProvider.VEvent8.D, vue.VOnProvider.VEvent8.E, vue.VOnProvider.VEvent8.F, vue.VOnProvider.VEvent8.G, vue.VOnProvider.VEvent8.H, kotlin.Unit)), )))/binder">binder</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">actionDispatcher</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">,</span>&nbsp;<span class="identifier">E</span><span class="symbol">,</span>&nbsp;<span class="identifier">F</span><span class="symbol">,</span>&nbsp;<span class="identifier">G</span><span class="symbol">,</span>&nbsp;<span class="identifier">H</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-v-event8/index.html"><span class="identifier">VEvent8</span></a><span class="symbol">&lt;</span><span class="identifier">A</span><span class="symbol">,</span>&nbsp;<span class="identifier">B</span><span class="symbol">,</span>&nbsp;<span class="identifier">C</span><span class="symbol">,</span>&nbsp;<span class="identifier">D</span><span class="symbol">,</span>&nbsp;<span class="identifier">E</span><span class="symbol">,</span>&nbsp;<span class="identifier">F</span><span class="symbol">,</span>&nbsp;<span class="identifier">G</span><span class="symbol">,</span>&nbsp;<span class="identifier">H</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../click.html">click</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><a href="./index.html"><span class="identifier">VOnProvider</span></a><span class="symbol">&lt;</span><a href="https://developer.android.com/reference/android/view/View.html"><span class="identifier">View</span></a><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">click</span><span class="symbol">: </span><a href="../-v-event0/index.html"><span class="identifier">VEvent0</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../text-changed.html">textChanged</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><a href="./index.html"><span class="identifier">VOnProvider</span></a><span class="symbol">&lt;</span><a href="https://developer.android.com/reference/android/widget/EditText.html"><span class="identifier">EditText</span></a><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">textChanged</span><span class="symbol">: </span><a href="../-v-event1/index.html"><span class="identifier">VEvent1</span></a><span class="symbol">&lt;</span><a href="https://developer.android.com/reference/android/text/Editable.html"><span class="identifier">Editable</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

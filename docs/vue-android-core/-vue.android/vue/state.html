@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>state - Vue.android</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="index.html">vue</a>&nbsp;/&nbsp;<a href="./state.html">state</a><br/>
+<br/>
+<h1>state</h1>
+<a name="vue$state(vue.state.T)"></a>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">state</span><span class="symbol">(</span><span class="identifier" id="vue$state(vue.state.T)/initialValue">initialValue</span><span class="symbol">:</span>&nbsp;<span class="identifier">T</span><span class="symbol">)</span><span class="symbol">: </span><a href="-state-field/index.html"><span class="identifier">StateField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span></code>
+<p>The most basic <a href="-reactive-field/index.html">ReactiveField</a> which stores one value.</p>
+<h3>Initialization</h3>
+<pre><code class="lang-kotlin">val user = state&lt;User?&gt;(null)
+</code></pre>
+<h3>Getting the Value</h3>
+<pre><code class="lang-kotlin">user.value
+
+// or shorter
+user()
+</code></pre>
+<h3>Reassignment</h3>
+<pre><code class="lang-kotlin">user.value = User(...)
+</code></pre><a name="vue$state#vue.VComponentInterface((vue.state.Store))"></a>
+<code><span class="keyword">val </span><span class="symbol">&lt;</span><span class="identifier">Store</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../vue.vuex/-vuex-store/index.html"><span class="identifier">VuexStore</span></a><span class="symbol">&lt;</span><span class="identifier">S</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">,</span>&nbsp;<span class="identifier">*</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier">S</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../vue.vuex/-vuex-state/index.html"><span class="identifier">VuexState</span></a><span class="symbol">&gt;</span> <a href="-v-component-interface/index.html"><span class="identifier">VComponentInterface</span></a><span class="symbol">&lt;</span><span class="identifier">Store</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">state</span><span class="symbol">: </span><span class="identifier">S</span></code>
+</BODY>
+</HTML>

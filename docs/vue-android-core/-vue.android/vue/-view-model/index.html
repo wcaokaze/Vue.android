@@ -1,0 +1,57 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ViewModel - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="./index.html">ViewModel</a><br/>
+<br/>
+<h1>ViewModel</h1>
+<code><span class="keyword">class </span><span class="identifier">ViewModel</span><span class="symbol">&lt;</span><span class="identifier">V</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/view/View.html"><span class="identifier">View</span></a><span class="symbol">, </span><span class="keyword">in</span>&nbsp;<span class="identifier">I</span><span class="symbol">, </span><span class="keyword">out</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-v-model/index.html"><span class="identifier">VModel</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">,</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">ViewModel</span><span class="symbol">(</span><span class="identifier" id="vue.ViewModel$<init>(vue.ViewModel.V, kotlin.Function1((kotlin.Function1((vue.ViewModel.O, kotlin.Unit)), )), kotlin.Function1((kotlin.Result((vue.ViewModel.I)), kotlin.Unit)))/view">view</span><span class="symbol">:</span>&nbsp;<span class="identifier">V</span><span class="symbol">, </span><span class="identifier" id="vue.ViewModel$<init>(vue.ViewModel.V, kotlin.Function1((kotlin.Function1((vue.ViewModel.O, kotlin.Unit)), )), kotlin.Function1((kotlin.Result((vue.ViewModel.I)), kotlin.Unit)))/viewPropertyChangeEventListenerSetter">viewPropertyChangeEventListenerSetter</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">onChanged</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">O</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">, </span><span class="identifier" id="vue.ViewModel$<init>(vue.ViewModel.V, kotlin.Function1((kotlin.Function1((vue.ViewModel.O, kotlin.Unit)), )), kotlin.Function1((kotlin.Result((vue.ViewModel.I)), kotlin.Unit)))/viewBinder">viewBinder</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">&gt;</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="bind.html">bind</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">bind</span><span class="symbol">(</span><span class="identifier" id="vue.ViewModel$bind(vue.StateField((vue.ViewModel.I)), vue.StateField((vue.ViewModel.O)))/input">input</span><span class="symbol">:</span>&nbsp;<a href="../-state-field/index.html"><span class="identifier">StateField</span></a><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">I</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="vue.ViewModel$bind(vue.StateField((vue.ViewModel.I)), vue.StateField((vue.ViewModel.O)))/output">output</span><span class="symbol">:</span>&nbsp;<a href="../-state-field/index.html"><span class="identifier">StateField</span></a><span class="symbol">&lt;</span><span class="keyword">in</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../bind.html">bind</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">, </span><span class="identifier">O</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">T</span><span class="symbol">, </span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">I</span><span class="symbol">&gt;</span> <a href="../-v-model/index.html"><span class="identifier">VModel</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">,</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">bind</span><span class="symbol">(</span><span class="identifier" id="vue$bind(vue.VModel((vue.bind.I, vue.bind.O)), vue.StateField((vue.bind.T)))/state">state</span><span class="symbol">:</span>&nbsp;<a href="../-state-field/index.html"><span class="identifier">StateField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../invoke.html">invoke</a></h4>
+</td>
+<td>
+<p>A shorthand for <a href="../bind.html">bind</a></p>
+<code><span class="keyword">operator</span> <span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">, </span><span class="identifier">O</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">T</span><span class="symbol">, </span><span class="identifier">T</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">I</span><span class="symbol">&gt;</span> <a href="../-v-model/index.html"><span class="identifier">VModel</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">,</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">invoke</span><span class="symbol">(</span><span class="identifier" id="vue$invoke(vue.VModel((vue.invoke.I, vue.invoke.O)), vue.StateField((vue.invoke.T)))/state">state</span><span class="symbol">:</span>&nbsp;<a href="../-state-field/index.html"><span class="identifier">StateField</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

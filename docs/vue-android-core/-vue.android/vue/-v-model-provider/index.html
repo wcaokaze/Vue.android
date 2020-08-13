@@ -1,0 +1,70 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VModelProvider - Vue.android</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">Vue.android</a>&nbsp;/&nbsp;<a href="../index.html">vue</a>&nbsp;/&nbsp;<a href="./index.html">VModelProvider</a><br/>
+<br/>
+<h1>VModelProvider</h1>
+<code><span class="keyword">class </span><span class="identifier">VModelProvider</span><span class="symbol">&lt;</span><span class="keyword">out</span>&nbsp;<span class="identifier">V</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/view/View.html"><span class="identifier">View</span></a><span class="symbol">&gt;</span></code>
+<p>provides <a href="../-v-model/index.html">VModel</a>s.</p>
+<pre><code class="lang-kotlin">//                      VModel
+//                      v~~~
+commentInputView.vModel.text(inputComment)
+//               ^~~~~~
+//               VModelProvider
+</code></pre>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p>provides <a href="../-v-model/index.html">VModel</a>s.</p>
+<code><span class="identifier">VModelProvider</span><span class="symbol">(</span><span class="identifier" id="vue.VModelProvider$<init>(vue.VModelProvider.V)/substance">substance</span><span class="symbol">:</span>&nbsp;<span class="identifier">V</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="substance.html">substance</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">substance</span><span class="symbol">: </span><span class="identifier">V</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="create-v-model.html">createVModel</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">, </span><span class="identifier">O</span><span class="symbol">&gt;</span> <span class="identifier">createVModel</span><span class="symbol">(</span><span class="identifier" id="vue.VModelProvider$createVModel(kotlin.reflect.KCallable((vue.VModel((vue.VModelProvider.createVModel.I, vue.VModelProvider.createVModel.O)))), kotlin.Function1((kotlin.Function1((vue.VModelProvider.createVModel.O, kotlin.Unit)), )), kotlin.Function2((vue.VModelProvider.V, vue.VModelProvider.createVModel.I, kotlin.Unit)))/prop">prop</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-callable/index.html"><span class="identifier">KCallable</span></a><span class="symbol">&lt;</span><a href="../-v-model/index.html"><span class="identifier">VModel</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">,</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="vue.VModelProvider$createVModel(kotlin.reflect.KCallable((vue.VModel((vue.VModelProvider.createVModel.I, vue.VModelProvider.createVModel.O)))), kotlin.Function1((kotlin.Function1((vue.VModelProvider.createVModel.O, kotlin.Unit)), )), kotlin.Function2((vue.VModelProvider.V, vue.VModelProvider.createVModel.I, kotlin.Unit)))/viewPropertyChangeEventListenerSetter">viewPropertyChangeEventListenerSetter</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">onChanged</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">O</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">, </span><span class="identifier" id="vue.VModelProvider$createVModel(kotlin.reflect.KCallable((vue.VModel((vue.VModelProvider.createVModel.I, vue.VModelProvider.createVModel.O)))), kotlin.Function1((kotlin.Function1((vue.VModelProvider.createVModel.O, kotlin.Unit)), )), kotlin.Function2((vue.VModelProvider.V, vue.VModelProvider.createVModel.I, kotlin.Unit)))/binderAction">binderAction</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">view</span><span class="symbol">:</span>&nbsp;<span class="identifier">V</span><span class="symbol">,</span>&nbsp;<span class="identifier">value</span><span class="symbol">:</span>&nbsp;<span class="identifier">I</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-v-model/index.html"><span class="identifier">VModel</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">,</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span></code><br/>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">, </span><span class="identifier">O</span><span class="symbol">&gt;</span> <span class="identifier">createVModel</span><span class="symbol">(</span><span class="identifier" id="vue.VModelProvider$createVModel(kotlin.reflect.KCallable((vue.VModel((vue.VModelProvider.createVModel.I, vue.VModelProvider.createVModel.O)))), kotlin.Function1((kotlin.Function1((vue.VModelProvider.createVModel.O, kotlin.Unit)), )), kotlin.Function1((kotlin.Result((vue.VModelProvider.createVModel.I)), kotlin.Unit)))/prop">prop</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-callable/index.html"><span class="identifier">KCallable</span></a><span class="symbol">&lt;</span><a href="../-v-model/index.html"><span class="identifier">VModel</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">,</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="vue.VModelProvider$createVModel(kotlin.reflect.KCallable((vue.VModel((vue.VModelProvider.createVModel.I, vue.VModelProvider.createVModel.O)))), kotlin.Function1((kotlin.Function1((vue.VModelProvider.createVModel.O, kotlin.Unit)), )), kotlin.Function1((kotlin.Result((vue.VModelProvider.createVModel.I)), kotlin.Unit)))/viewPropertyChangeEventListenerSetter">viewPropertyChangeEventListenerSetter</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">onChanged</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><span class="identifier">O</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">, </span><span class="identifier" id="vue.VModelProvider$createVModel(kotlin.reflect.KCallable((vue.VModel((vue.VModelProvider.createVModel.I, vue.VModelProvider.createVModel.O)))), kotlin.Function1((kotlin.Function1((vue.VModelProvider.createVModel.O, kotlin.Unit)), )), kotlin.Function1((kotlin.Result((vue.VModelProvider.createVModel.I)), kotlin.Unit)))/binderAction">binderAction</span><span class="symbol">:</span>&nbsp;<span class="symbol">(</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/index.html"><span class="identifier">Result</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">&gt;</span><span class="symbol">)</span>&nbsp;<span class="symbol">-&gt;</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-v-model/index.html"><span class="identifier">VModel</span></a><span class="symbol">&lt;</span><span class="identifier">I</span><span class="symbol">,</span>&nbsp;<span class="identifier">O</span><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extension Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../text.html">text</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><a href="./index.html"><span class="identifier">VModelProvider</span></a><span class="symbol">&lt;</span><a href="https://developer.android.com/reference/android/widget/EditText.html"><span class="identifier">EditText</span></a><span class="symbol">&gt;</span><span class="symbol">.</span><span class="identifier">text</span><span class="symbol">: </span><a href="../-v-model/index.html"><span class="identifier">VModel</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-char-sequence/index.html"><span class="identifier">CharSequence</span></a><span class="symbol">?</span><span class="symbol">,</span>&nbsp;<a href="https://developer.android.com/reference/android/text/Editable.html"><span class="identifier">Editable</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

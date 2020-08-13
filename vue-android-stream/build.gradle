@@ -96,7 +96,7 @@ configurations.all {
 
 dokka {
     outputFormat = 'html'
-    outputDirectory = "$buildDir/docs"
+    outputDirectory = "$projectDir/../docs/vue-android-stream"
 
     configuration {
         moduleName = 'Vue.android-stream'
