@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-def VERSION = '0.1.0'
+def VERSION = '0.2.0'
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
