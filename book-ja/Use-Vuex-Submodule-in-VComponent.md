@@ -6,7 +6,9 @@ VComponentへのサブモジュールの注入
 
 ```kotlin
 class CartButtonComponent(context: Context, override val store: CartStore)
+   //                                                           ^~~~~~~~~
    : VComponent<CartStore>()
+   //           ^~~~~~~~~
 {
    override val componentView: View
 
