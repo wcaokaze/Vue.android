@@ -69,7 +69,7 @@ koshian(context) {
 [VuexStore](book-ja/VuexStores.md)  
 [VComponentでVuexを使う](book-ja/Use-Vuex-in-VComponent.md)  
 [モジュール](book-ja/VuexModules.md)  
-[VComponentへのサブモジュールの注入](Use-Vuex-Submodule-in-VComponent.md)  
+[VComponentへのサブモジュールの注入](book-ja/Use-Vuex-Submodule-in-VComponent.md)  
 
 
 サンプル
