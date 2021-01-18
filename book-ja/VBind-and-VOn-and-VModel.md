@@ -56,8 +56,15 @@ editText.doAfterTextChanged { editTextContent.value = it }
 
 もちろん実際にはもっと複雑ですが、極端に単純化すれば、2つの動作から成り立っています。
 
-1. editTextContentの新しい値をeditTextにセットする
-1. editTextの新しい値をeditTextContentにセットする
+1. editTextContentの新しい値をeditTextにセットする  
+    ```kotlin
+    editTextContent.addObserver { editText.setText(it) }
+    ```
+
+1. editTextの新しい値をeditTextContentにセットする  
+    ```kotlin
+    editText.doAfterTextChanged { editTextContent.value = it }
+    ```
 
 ここで問題になるのは、EditTextから受け取る値の型とEditTextに渡せる値の型が
 実は一致していないということです。
@@ -91,6 +98,7 @@ fun doAfterTextChanged(action: (Editable) -> Unit)
     ```kotlin
     val editTextContent = state<String>("")
     editText.doAfterTextChanged { text: Editable -> editTextContent.value = text }
+    //                                                              ^~~~~
     ```
     `Editable` は `String` のサブタイプではありませんので
     editTextContentへ格納することはできません。  
