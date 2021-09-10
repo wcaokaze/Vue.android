@@ -43,13 +43,19 @@ koshian(context) {
 
 0のときだけ特別に `"-"` と表示することにしましょう。
 ```kotlin
-LinearLayout {
-   view.orientation = HORIZONTAL
+val count = state(0)
 
-   TextView {
-      vBind.text {
-         if (count() == 0) { "-" } else { count().toString() }
+koshian(context) {
+   LinearLayout {
+      view.orientation = HORIZONTAL
+
+      TextView {
+-        vBind.text { count().toString() }
++        vBind.text { if (count() == 0) { "-" } else { count().toString() } }
+         }
       }
+
+      ...
    }
 }
 ```
