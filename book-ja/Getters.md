@@ -52,7 +52,6 @@ koshian(context) {
       TextView {
 -        vBind.text { count().toString() }
 +        vBind.text { if (count() == 0) { "-" } else { count().toString() } }
-         }
       }
 
       ...
