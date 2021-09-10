@@ -96,7 +96,7 @@ contentView.addView(cartButtonComponent.componentView,
 `Component[::VComponent, store]` でVComponentにVuexStoreを注入して
 インスタンス化できます。
 このとき内部的には `constructor(Context, VuexStore)` を呼んでいますから、
-このコンストラクタがないVComponentには注入できません。
+このコンストラクタがないVComponentには注入できません(コンパイルエラーになります)。
 
 ```kotlin
 class ShoppingActivity : Activity() {
@@ -158,6 +158,8 @@ class ToolbarComponent(context: Context, override val store: ApplicationStore)
    }
 }
 ```
+
+親Componentのstoreの型と子Componentのstoreの型が一致しない場合はコンパイルエラーになります。
 
 
 VComponentのテンプレート
