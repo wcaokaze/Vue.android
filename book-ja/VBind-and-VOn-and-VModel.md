@@ -56,14 +56,25 @@ editText.doAfterTextChanged { editTextContent.value = it }
 
 もちろん実際にはもっと複雑ですが、極端に単純化すれば、2つの動作から成り立っています。
 
-1. editTextContentの新しい値をeditTextにセットする
-1. editTextの新しい値をeditTextContentにセットする
+1. editTextContentの新しい値をeditTextにセットする  
+    ```kotlin
+    editTextContent.addObserver { editText.setText(it) }
+    ```
 
-ここで問題になるのは、EditTextから受け取る値の型とEditTextに渡せる値の型が
+1. editTextの新しい値をeditTextContentにセットする  
+    ```kotlin
+    editText.doAfterTextChanged { editTextContent.value = it }
+    ```
+
+ここで問題になるのは、EditTextに渡せる値の型とEditTextから受け取る値の型が
 実は一致していないということです。
 ```kotlin
-fun setText(text: CharSequence?)
-fun doAfterTextChanged(action: (Editable) -> Unit)
+class EditText {
+   fun setText(text: CharSequence?)
+                     ^^^^^^^^^^^^^
+   fun doAfterTextChanged(action: (Editable) -> Unit)
+                                   ^^^^^^^^
+}
 ```
 
 継承関係は次のようになっています。
@@ -77,7 +88,7 @@ fun doAfterTextChanged(action: (Editable) -> Unit)
 普通にいままで通りの感覚で `state("")` と書いてしまうと
 型は `state<String>("")` になってしまいます。
 
-`state<String>("")` を使った場合の、先程挙げたVModelの動作をひとつずつ見てみましょう。
+`state<String>("")` を使った場合のVModelの動作をひとつずつ見てみましょう。
 
 1. editTextContentの新しい値をeditTextにセットする  
     ```kotlin
@@ -91,6 +102,7 @@ fun doAfterTextChanged(action: (Editable) -> Unit)
     ```kotlin
     val editTextContent = state<String>("")
     editText.doAfterTextChanged { text: Editable -> editTextContent.value = text }
+    //                                                              ^~~~~
     ```
     `Editable` は `String` のサブタイプではありませんので
     editTextContentへ格納することはできません。  

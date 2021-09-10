@@ -2,6 +2,8 @@
 Getter
 ================================================================================
 
+[ReactiveFieldとReactivatee](ReactiveFields-and-Reactivatees.md)の例で見たように、
+`state` をViewにバインドするのがVue.androidの最も基本的な使い方です。
 ```kotlin
 val textView = ...
 val textState = state("Hello, World!")
@@ -9,9 +11,6 @@ val textState = state("Hello, World!")
 textView.vBind.text { textState() }
 textView.vBind.isVisible { textState().isNotEmpty() }
 ```
-[ReactiveFieldとReactivatee](ReactiveFields-and-Reactivatees.md)の例で見たように、
-`state` をViewにバインドするのがVue.androidの最も基本的な使い方です。
-
 しかしこの方法だけで戦っていくのは無謀です。
 すぐに限界が来ることは簡単に想像できるでしょう。
 
@@ -44,13 +43,19 @@ koshian(context) {
 
 0のときだけ特別に `"-"` と表示することにしましょう。
 ```kotlin
-LinearLayout {
-   view.orientation = HORIZONTAL
+val count = state(0)
 
-   TextView {
-      vBind.text {
-         if (count() == 0) { "-" } else { count().toString() }
+koshian(context) {
+   LinearLayout {
+      view.orientation = HORIZONTAL
+
+      TextView {
+-        vBind.text { count().toString() }
++        vBind.text { if (count() == 0) { "-" } else { count().toString() } }
+         }
       }
+
+      ...
    }
 }
 ```
